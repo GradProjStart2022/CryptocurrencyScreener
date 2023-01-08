@@ -1,0 +1,7 @@
+__pychche__
+db.sqlite3
+/static
+/media
+venv
+.venv
+.idea

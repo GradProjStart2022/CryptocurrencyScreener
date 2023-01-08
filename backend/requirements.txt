@@ -1,0 +1,7 @@
+django~=4.0.0
+pillow
+black
+ipython
+pandas
+django-extensions
+django-debug-toolbar
