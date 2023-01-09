@@ -5,3 +5,45 @@ db.sqlite3
 venv
 .venv
 .idea
+
+#####################################
+# Frontend gitignore settings start
+#####################################
+# Logs
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# dependencies
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+frontend/.pnp
+frontend/.pnp.js
+
+# testing
+frontend/coverage
+
+# production
+frontend/build
+
+# Editor directories and files
+frontend/.vscode/*
+frontend/!.vscode/extensions.json
+frontend/.DS_Store
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sw?
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+#####################################
+# Frontend gitignore settings end
+#####################################
