@@ -5,3 +5,4 @@ ipython
 pandas
 django-extensions
 django-debug-toolbar
+djangorestframework
