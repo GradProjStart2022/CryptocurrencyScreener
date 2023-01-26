@@ -1,41 +1,37 @@
+import { Routes, Route } from "react-router-dom";
+
 import "./App.css";
 
+import LoginInfo from "./component/LoginInfo.jsx";
+import SearchBar from "./component/SearchBar.jsx";
+import SideNavBar from "./component/SideNavbar.jsx";
+import { Page404 } from "./page/404";
+import SigninPage from "./page/Signin.jsx";
+
 function App() {
+  const MainPage = (props) => {
+    return (
+      <div className="App">
+        <SideNavBar />
+        <div className="content-outer">
+          <div className="top-bar">
+            <SearchBar />
+            <LoginInfo />
+          </div>
+          <div className="content-view">
+            <p>영역구분 테스트용 텍스트</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="App">
-      <div className="nav-list">
-        <div className="testbox"></div>
-        <div className="testbox"></div>
-        <div className="testbox"></div>
-        <div className="testbox"></div>
-        <div className="testbox"></div>
-      </div>
-      <div className="content-outer">
-        <div className="top-bar">
-          <div className="search-bar">
-            <i className="fa fa-search"></i>
-            <input
-              type="text"
-              className="form-control form-input"
-              placeholder="Search..."
-            />
-          </div>
-
-          <div className="account-area">
-            {/* <button className="login-btn">로그인</button> */}
-
-            <div className="user-noti"></div>
-            <div className="account-info">
-              <img src={""} alt={"사진"} className="acc-profile"></img>
-              <span className="acc-name">계정명</span>
-            </div>
-          </div>
-        </div>
-        <div className="content-view">
-          <p>영역구분 테스트용 텍스트</p>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/login" element={<SigninPage />} />
+      <Route path="*" element={<Page404 />} />
+    </Routes>
   );
 }
 
