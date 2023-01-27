@@ -42,7 +42,14 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "bootstrap4",
     "django_pydenticon",
+    # django-rest-framework
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
+    "rest_framework.authtoken",
+    # dj-rest-auth
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    # django-allauth
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -144,3 +151,32 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
+
+# django-rest-framework 설정
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
+    ),
+}
+
+AUTH_USER_MODEL = "users.User"
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+REST_USE_JWT = True
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+# TODO 삭제
+KAKAO_REST_API_KEY = "929a5207f19097a18ebfa095a688914e"

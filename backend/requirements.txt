@@ -6,4 +6,6 @@ pandas
 django-extensions
 django-debug-toolbar
 djangorestframework
+djangorestframework-simplejwt
 django-allauth
+dj-rest-auth
