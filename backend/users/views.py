@@ -11,6 +11,7 @@ from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
+from allauth.socialaccount.providers.google import views as google_view
 
 BASE_URL = "http://localhost:8000/"
 KAKAO_CALLBACK_URI = BASE_URL + "users/kakao/callback/"
@@ -94,7 +95,7 @@ def kakao_callback(request):
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
         accept_json = accept.json()
         accept_json.pop("user", None)
-        return JsonResponse(accept_json)
+        return JsonResponse(accept_json, status=200)
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         data = {"access_token": access_token, "code": code}
@@ -105,7 +106,7 @@ def kakao_callback(request):
         # user의 pk, email, first name, last name과 Access Token, Refresh token 가져옴
         accept_json = accept.json()
         accept_json.pop("user", None)
-        return JsonResponse(accept_json)
+        return JsonResponse(accept_json, status=200)
 
 
 class KakaoLogin(SocialLoginView):
