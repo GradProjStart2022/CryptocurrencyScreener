@@ -40,7 +40,7 @@ def kakao_callback(request):
     Access Token Request
     """
     token_req = requests.get(
-        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}"
+        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=%7Brest_api_key%7D&redirect_uri=http://localhost:3000/users/kakao/callback&code=%7Bcode%7D"
     )
     token_req_json = token_req.json()
     error = token_req_json.get("error")
@@ -93,6 +93,7 @@ def kakao_callback(request):
         accept_status = accept.status_code
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
+
         accept_json = accept.json()
         accept_json.pop("user", None)
         return JsonResponse(accept_json, status=status.HTTP_200_OK)
@@ -104,6 +105,7 @@ def kakao_callback(request):
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signup"}, status=accept_status)
         # user의 pk, email, first name, last name과 Access Token, Refresh token 가져옴
+
         accept_json = accept.json()
         accept_json.pop("user", None)
         return JsonResponse(accept_json, status=status.HTTP_200_OK)
