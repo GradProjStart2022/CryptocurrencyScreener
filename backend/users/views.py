@@ -95,7 +95,7 @@ def kakao_callback(request):
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
         accept_json = accept.json()
         accept_json.pop("user", None)
-        return JsonResponse(accept_json, status=200)
+        return JsonResponse(accept_json, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         data = {"access_token": access_token, "code": code}
@@ -106,7 +106,7 @@ def kakao_callback(request):
         # user의 pk, email, first name, last name과 Access Token, Refresh token 가져옴
         accept_json = accept.json()
         accept_json.pop("user", None)
-        return JsonResponse(accept_json, status=200)
+        return JsonResponse(accept_json, status=status.HTTP_200_OK)
 
 
 class KakaoLogin(SocialLoginView):
