@@ -9,3 +9,5 @@ djangorestframework
 djangorestframework-simplejwt
 django-allauth
 dj-rest-auth
+bootstrap4
+django_pydenticon

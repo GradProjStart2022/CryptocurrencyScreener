@@ -25,6 +25,7 @@ def example(request):
     return render(request, "users/logintest.html")
 
 
+# 프론트에서 진행
 def kakao_login(request):
     rest_api_key = getattr(settings, "KAKAO_REST_API_KEY")
     return redirect(
@@ -64,8 +65,15 @@ def kakao_callback(request):
     카카오톡 프로필 이미지, 배경 이미지 url 가져올 수 있음
     print(kakao_account) 참고
     """
-    # print(kakao_account)
+    print(access_token)
+    print(code)
+    print(kakao_account)
+    name = kakao_account.get("profile").get("nickname")
     email = kakao_account.get("email")
+    thumbnail_image = kakao_account.get("profile").get("thumbnail_image_url")
+
+    print(thumbnail_image)
+
     """
     Signup or Signin Request
     """
@@ -86,7 +94,7 @@ def kakao_callback(request):
             )
         # 기존에 Google로 가입된 유저
         data = {"access_token": access_token, "code": code}
-        accept = requests.post(f"{BASE_URL}accounts/kakao/login/finish/", data=data)
+        accept = requests.post(f"{BASE_URL}users/kakao/login/finish/", data=data)
         accept_status = accept.status_code
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
@@ -96,7 +104,7 @@ def kakao_callback(request):
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         data = {"access_token": access_token, "code": code}
-        accept = requests.post(f"{BASE_URL}accounts/kakao/login/finish/", data=data)
+        accept = requests.post(f"{BASE_URL}users/kakao/login/finish/", data=data)
         accept_status = accept.status_code
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signup"}, status=accept_status)
