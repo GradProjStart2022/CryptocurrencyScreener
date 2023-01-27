@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-n(^-jk3f@7(mhfc(do6j4t8*t#6i$5l8bk@&e+38+#e$m2=+xn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "bootstrap4",
     "django_pydenticon",
+    "corsheaders",
     # django-rest-framework
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "screener.urls"
@@ -86,6 +88,8 @@ TEMPLATES = [
         },
     },
 ]
+
+SECURE_SSL_REDIRECT = False
 
 WSGI_APPLICATION = "screener.wsgi.application"
 
@@ -181,3 +185,6 @@ SIMPLE_JWT = {
 
 # TODO 삭제
 KAKAO_REST_API_KEY = "929a5207f19097a18ebfa095a688914e"
+
+CORS_ORIGIN_WHITELIST = ("http://127.0.0.1:3000", "http://localhost:3000")
+CORS_ALLOW_CREDENTIALS = True
