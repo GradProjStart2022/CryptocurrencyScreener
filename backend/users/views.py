@@ -7,9 +7,7 @@ from json.decoder import JSONDecodeError
 from rest_framework import status
 from rest_framework.response import Response
 from dj_rest_auth.registration.views import SocialLoginView
-from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.kakao import views as kakao_view
-from allauth.socialaccount.providers.github import views as github_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
@@ -65,14 +63,10 @@ def kakao_callback(request):
     카카오톡 프로필 이미지, 배경 이미지 url 가져올 수 있음
     print(kakao_account) 참고
     """
-    print(access_token)
-    print(code)
-    print(kakao_account)
+
     name = kakao_account.get("profile").get("nickname")
     email = kakao_account.get("email")
     thumbnail_image = kakao_account.get("profile").get("thumbnail_image_url")
-
-    print(thumbnail_image)
 
     """
     Signup or Signin Request
