@@ -148,9 +148,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/admin/"
-ACCOUNT_LOGOUT_REDIRECT_URL = "http://127.0.0.1:8000/admin/"
-ACCOUNT_LOGOUT_ON_GET = True
+# TODO 프론트 단에서 처리하므로 나중에 삭제
+# LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/admin/"
+# ACCOUNT_LOGOUT_REDIRECT_URL = "http://127.0.0.1:8000/admin/"
+# ACCOUNT_LOGOUT_ON_GET = True
 
 # django-rest-framework 설정
 REST_FRAMEWORK = {
