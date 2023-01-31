@@ -2,13 +2,14 @@ import { Routes, Route } from "react-router-dom";
 
 import "./App.css";
 
+import { Page404 } from "./page/404.jsx";
 import MainPage from "./page/MainPage.jsx";
 import SigninPage from "./page/Signin.jsx";
 import ChartListPage from "./page/ChartListPage.jsx";
 import ChartPage from "./page/ChartPage.jsx";
 import FilterSettingsPage from "./page/FilterSettingsPage.jsx";
 import AlarmSettingsPage from "./page/AlarmSettingsPage.jsx";
-import { Page404 } from "./page/404.jsx";
+import BookmarkPage from "./page/BookmarkPage.jsx";
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
       <Route path="/filter/:id" element={<FilterSettingsPage />} />
       {/* todo: 필터에 따른 알람 설정 화면 생성 */}
       <Route path="/alarm/:id" element={<AlarmSettingsPage />} />
+      {/* todo: 사용자별 즐겨찾기 종목 페이지 생성 */}
+      <Route path="/bookmark/:id" element={<BookmarkPage />} />
       <Route path="*" element={<Page404 />} />
     </Routes>
   );

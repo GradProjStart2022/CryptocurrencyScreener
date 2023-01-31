@@ -32,7 +32,7 @@ const SideNavBar = (props) => {
       <div
         className="testbox"
         onClick={() => {
-          navigate("/경로지정예정");
+          navigate("/filter/id예정");
         }}
       >
         <SvgIcon
@@ -46,7 +46,7 @@ const SideNavBar = (props) => {
       <div
         className="testbox"
         onClick={() => {
-          navigate("/경로지정예정");
+          navigate("/alarm/id예정");
         }}
       >
         <NotificationsIcon />
@@ -54,7 +54,7 @@ const SideNavBar = (props) => {
       <div
         className="testbox"
         onClick={() => {
-          navigate("/경로지정예정");
+          navigate("/bookmark/id예정");
         }}
       >
         <BookmarkIcon />
