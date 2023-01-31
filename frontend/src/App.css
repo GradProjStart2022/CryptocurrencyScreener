@@ -16,6 +16,9 @@
 }
 
 .testbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 5vw;
   max-width: 42px;
   height: 5vw;
@@ -24,6 +27,7 @@
   background-color: #0e4ac6;
   border-radius: 32%;
   border: none;
+  cursor: pointer;
 }
 
 .content-view {
@@ -93,6 +97,7 @@
   border: none;
   background-color: #165ae7;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .user-noti {
