@@ -24,7 +24,7 @@ const SideNavBar = (props) => {
       <div
         className="testbox"
         onClick={() => {
-          navigate("/경로지정예정");
+          navigate("/chart/");
         }}
       >
         <BarChartIcon />
