@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.models import User
+from users.models import User, Attention
 
 
 class CustomTokenRefreshSerializer(serializers.Serializer):
@@ -17,4 +17,16 @@ class CustomTokenRefreshSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name"]
+        fields = ["id", "email"]
+
+
+class AttentionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attention
+        fields = ["cryptoname", "symbol"]
+
+    # attentions = serializers.StringRelatedField(many=True)
+    #
+    # class Meta:
+    #     model = User
+    #     fields = ["id", "attentions"]

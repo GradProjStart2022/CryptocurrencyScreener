@@ -5,13 +5,19 @@ from django.utils.translation import gettext_lazy as _
 from django.http import JsonResponse
 from json.decoder import JSONDecodeError
 from rest_framework import status
+from rest_framework.decorators import action, api_view
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
-from .models import User
-from allauth.socialaccount.providers.google import views as google_view
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter
+from .models import User, Attention
+
+
+from .serializers import AttentionSerializer, UserSerializer
 
 BASE_URL = "http://localhost:8000/"
 KAKAO_CALLBACK_URI = BASE_URL + "users/kakao/callback/"
@@ -40,8 +46,10 @@ def kakao_callback(request):
     Access Token Request
     """
     token_req = requests.get(
-        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=%7Brest_api_key%7D&redirect_uri=http://localhost:3000/users/kakao/callback&code=%7Bcode%7D"
+        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}"
+        # f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=%7Brest_api_key%7D&redirect_uri=http://localhost:3000/users/kakao/callback&code=%7Bcode%7D"
     )
+
     token_req_json = token_req.json()
     error = token_req_json.get("error")
     if error is not None:
@@ -65,15 +73,17 @@ def kakao_callback(request):
     print(kakao_account) 참고
     """
 
-    name = kakao_account.get("profile").get("nickname")
+    nickname = kakao_account.get("profile").get("nickname")
     email = kakao_account.get("email")
-    thumbnail_image = kakao_account.get("profile").get("thumbnail_image_url")
+    # thumbnail_image = kakao_account.get("profile").get("thumbnail_image_url")
 
     """
     Signup or Signin Request
     """
     try:
         user = User.objects.get(email=email)
+        user.nickname = nickname
+        user.save()
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
@@ -115,3 +125,46 @@ class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
     callback_url = KAKAO_CALLBACK_URI
+
+
+@api_view(["GET"])
+def list(request):
+    email = request.GET.get("email")
+    try:
+        queryset = User.objects.get(email=email)
+        serializer = UserSerializer(queryset)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return JsonResponse({"err_msg": "DoesNotExist Email"})
+
+
+# class UserViewSet(RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     filter_backends = [SearchFilter]
+#     search_field = ["=email"]
+
+
+# @action(detail=False, methods=["GET"])
+# def email(self, email):
+#     qs = self.get_queryset().filter(email=email)
+#     serializer = self.get_serializer(qs)
+#     return Response(serializer.data)
+
+
+class AttentionViewSet(ModelViewSet):
+    queryset = Attention.objects.all()
+    serializer_class = AttentionSerializer
+    # filter_backends = [SearchFilter]
+    # search_field = ["user"]
+
+    # email 검색
+    def list(self, request, *args, **kwargs):
+        email = request.GET.get("email")
+        qs = Attention.objects.filter(user__email=email)
+        for q in qs:
+            print(q)
+        # id = request.GET.get("id")
+        # qs = User.objects.get(id=id)
+        serializer = AttentionSerializer(qs, many=True)
+        return Response(serializer.data)
