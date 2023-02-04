@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AttentionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attention
-        fields = ["cryptoname", "symbol"]
+        fields = ["id", "user", "cryptoname", "symbol"]
 
     # attentions = serializers.StringRelatedField(many=True)
     #

@@ -161,9 +161,10 @@ class AttentionViewSet(ModelViewSet):
     # email 검색
     def list(self, request, *args, **kwargs):
         email = request.GET.get("email")
-        qs = Attention.objects.filter(user__email=email)
-        for q in qs:
-            print(q)
+        try:
+            qs = Attention.objects.filter(user__email=email)
+        except Attention.DoesNotExist:
+            return JsonResponse({"err_msg": "DoesNotExist Email"})
         # id = request.GET.get("id")
         # qs = User.objects.get(id=id)
         serializer = AttentionSerializer(qs, many=True)
