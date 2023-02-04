@@ -42,7 +42,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(max_length=255, verbose_name="사용자 이메일")
+    # nickname = models.CharField(max_length=128, null=True, verbose_name="닉네임")
+    email = models.EmailField(max_length=255, unique=True, verbose_name="사용자 이메일")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -51,3 +52,23 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Attention(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="attentions")
+    cryptoname = models.CharField(max_length=100)
+    symbol = models.CharField(max_length=100)
+
+    def __str__(self):
+        field_values = []
+        for field in self._meta.get_fields():
+            field_values.append(str(getattr(self, field.name, "")))
+        return " ".join(field_values)
+
+    # 최대 3개까지 저장
+    def save(self, *args, **kwargs):
+        if Attention.objects.filter(user=self.user).count() == 3:
+            objects_filter = Attention.objects.filter(user=self.user)
+            objects_filter[0].delete()
+
+        super(Attention, self).save(*args, **kwargs)
