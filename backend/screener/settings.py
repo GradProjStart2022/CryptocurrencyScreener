@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     # Third Apps
     "debug_toolbar",
-    "bootstrap4",
     "django_pydenticon",
     "corsheaders",
     # django-rest-framework
