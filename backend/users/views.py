@@ -82,8 +82,8 @@ def kakao_callback(request):
     """
     try:
         user = User.objects.get(email=email)
-        user.nickname = nickname
-        user.save()
+        # user.nickname = nickname
+        # user.save()
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
