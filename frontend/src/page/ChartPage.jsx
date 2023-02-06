@@ -21,18 +21,18 @@ import SideNavBar from "../component/SideNavbar.jsx";
 const ChartPage = (props) => {
   const SYMBOL = "BTCUSD";
 
-  let [idx, setIdx] = useState(0);
+  let [isFavorite, setIsFavorite] = useState(0);
   const changeIdx = () => {
-    console.log("idx :>> ", idx);
-    switch (idx) {
+    console.log("Debug/isFavorite :>> ", isFavorite);
+    switch (isFavorite) {
       case 0:
-        setIdx(1);
+        setIsFavorite(1);
         break;
       case 1:
-        setIdx(0);
+        setIsFavorite(0);
         break;
       default:
-        setIdx(0);
+        setIsFavorite(0);
         break;
     }
   };
@@ -46,22 +46,27 @@ const ChartPage = (props) => {
           <LoginInfo />
         </div>
         <div className="content-view">
-          <Grid container={true} spacing={1}>
+          <Grid
+            container={true}
+            spacing={1}
+            sx={{ marginLeft: "12px", marginTop: "24px" }}
+          >
             <Grid item xs={12}>
               <span style={{ display: "flex", alignItems: "center" }}>
                 <h1 style={{ display: "inline-block" }}>{SYMBOL}</h1>
                 <IconButton
                   aria-label="star"
+                  // todo: 색상 오버라이드
                   color="secondary"
                   onClick={changeIdx}
                 >
-                  {[<StarBorderIcon />, <StarIcon />][idx]}
+                  {[<StarBorderIcon />, <StarIcon />][isFavorite]}
                 </IconButton>
               </span>
             </Grid>
           </Grid>
 
-          <Grid container spacing={0}>
+          <Grid container spacing={0} sx={{ marginLeft: "12px" }}>
             <Grid item xs>
               <AdvancedRealTimeChart
                 symbol="UPBIT:BTCKRW"

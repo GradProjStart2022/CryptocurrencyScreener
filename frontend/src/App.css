@@ -15,29 +15,16 @@
   background-color: #165ae7;
 }
 
-.testbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 5vw;
-  max-width: 42px;
-  height: 5vw;
-  max-height: 42px;
-  margin: 0 0 24px 0;
-  background-color: #0e4ac6;
-  border-radius: 32%;
-  border: none;
-  cursor: pointer;
-}
-
+/* main content layout styling */
 .content-view {
-  width: 92%;
+  width: 90%;
   height: 100%;
   float: left;
-  padding: 8px 8px 0 24px;
 }
 
+/* search/account area styling */
 .top-bar {
+  width: 90%;
   display: flex;
   justify-content: space-between;
 }
