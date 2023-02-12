@@ -1,4 +1,6 @@
-import { Card, Grid, Typography } from "@mui/material";
+import { Button, Card, Grid, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
@@ -22,9 +24,25 @@ const FilterSettingsPage = (props) => {
             sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
           >
             <Grid item xs={2}>
-              <Card>
+              <Card sx={{ height: "72vh" }}>
                 <Typography variant="h6" component="div">
-                  사용자 필터 목록
+                  <span
+                    style={{
+                      display: "flex",
+                      // flexDirection: "column",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}
+                  >
+                    {/* <h4 style={{ display: "inline" }}> */}
+                    사용자
+                    <br />
+                    필터 목록
+                    {/* </h4> */}
+                    <Button variant="contained" size="small">
+                      <AddIcon fontSize="small" />
+                    </Button>
+                  </span>
                 </Typography>
               </Card>
             </Grid>
@@ -32,13 +50,16 @@ const FilterSettingsPage = (props) => {
               <Card
                 sx={{
                   display: "flex",
-                  alignContent: "center",
-                  flexDirection: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "72vh",
                 }}
               >
                 <Typography variant="body1" component="div">
-                  필터를 선택해 속성을 보거나
-                  <br />+ 버튼을 눌러 새 필터를 생성하세요
+                  <p>
+                    필터를 선택해 속성을 보거나
+                    <br />+ 버튼을 눌러 새 필터를 생성하세요
+                  </p>
                 </Typography>
               </Card>
             </Grid>
