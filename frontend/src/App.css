@@ -96,6 +96,10 @@
   border: none;
   border-radius: 100%;
   background-color: #ebecee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .account-info {
