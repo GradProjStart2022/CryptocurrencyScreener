@@ -11,7 +11,7 @@ class FilterViewSet(ModelViewSet):
     serializer_class = FilterSerializer
 
     def list(self, request, *args, **kwargs):
-        email = request.Get.get("email")
+        email = request.GET.get("email")
 
         try:
             qs = Filter.objects.filter(user__email=email)
@@ -26,7 +26,7 @@ class SettingViewSet(ModelViewSet):
     serializer_class = SettingSerializer
 
     def list(self, request, *args, **kwargs):
-        id = request.Get.get("id")
+        id = request.GET.get("id")
         try:
             qs = Setting.objects.filter(filter_id=id)
         except Setting.DoesNotExist:
