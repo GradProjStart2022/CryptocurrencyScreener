@@ -32,14 +32,13 @@ class SettingViewSet(ModelViewSet):
     queryset = Setting.objects.all()
     serializer_class = SettingSerializer
 
-    # def list(self, request, *args, **kwargs):
-    #     id = request.GET.get("id")
-    #     try:
-    #         qs = Setting.objects.filter(filter_id=id)
-    #     except Setting.DoesNotExist:
-    #         return JsonResponse({"err_msg": "DoesNotExist filter"})
-    #     serializer = SettingSerializer(qs, many=True)
-    #     return Response(serializer.data)
+    def list(self, request, *args, **kwargs):
+        try:
+            qs = Setting.objects.filter(filter_id=self.kwargs["filter_pk"])
+        except Setting.DoesNotExist:
+            return JsonResponse({"err_msg": "DoesNotExist filter"})
+        serializer = SettingSerializer(qs, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         filter = get_object_or_404(Filter, pk=self.kwargs["filter_pk"])
