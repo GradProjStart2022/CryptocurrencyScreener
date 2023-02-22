@@ -5,7 +5,7 @@ from filter import views
 
 router = DefaultRouter()
 router.register("filter", views.FilterViewSet)
-router.register("setting", views.SettingViewSet)
+router.register(r"filter/(?P<filter_pk>\d+)/settings", views.SettingViewSet)
 # router.register("user", views.UserViewSet)
 
 

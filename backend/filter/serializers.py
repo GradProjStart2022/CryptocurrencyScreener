@@ -9,6 +9,8 @@ class FilterSerializer(serializers.ModelSerializer):
 
 
 class SettingSerializer(serializers.ModelSerializer):
+    filter = FilterSerializer(read_only=True)
+
     class Meta:
         model = Setting
-        fields = ["name", "sign", "value1", "value2"]
+        fields = ["id", "filter", "name", "sign", "value1", "value2"]
