@@ -13,13 +13,17 @@ import {
   Typography,
   Tabs,
   Tab,
+  Checkbox,
+  Select,
+  MenuItem,
+  Slider,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -30,22 +34,48 @@ const TabPanel = (props) => {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ height: "100%" }}
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        // <Box sx={{ p: 3 }}>
+        //   <Typography>{children}</Typography>
+        // </Box>
+        <>{children}</>
       )}
     </div>
   );
 };
 
 const FilterSelectTabs = (props) => {
-  const [value, setValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0);
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const [condition, setCondition] = useState("미만");
+  const handleConditionChange = (event) => {
+    setCondition(event.target.value);
+  };
+
+  const minDistance = 10;
+  const [sliderVal, setSliderVal] = useState([0, Number.MAX_SAFE_INTEGER]);
+  const handleSliderChange = (event, newValue, activeThumb) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (activeThumb === 0) {
+      setSliderVal([
+        Math.min(newValue[0], sliderVal[1] - minDistance),
+        sliderVal[1],
+      ]);
+    } else {
+      setSliderVal([
+        sliderVal[0],
+        Math.max(newValue[1], sliderVal[0] + minDistance),
+      ]);
+    }
   };
 
   return (
@@ -82,27 +112,137 @@ const FilterSelectTabs = (props) => {
           </span>
         </Typography>
         <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
+          value={tabValue}
+          onChange={handleTabChange}
+          aria-label="basic filter custom tabs"
         >
           <Tab label="전체" />
           <Tab label="서술적" />
           <Tab label="파이낸셜" />
           <Tab label="기술적" />
+          <Tab label="나의 필터" />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        전체
+      <TabPanel value={tabValue} index={0}>
+        <Box sx={{ height: "100%", overflow: "auto", maxHeight: "100%" }}>
+          <Grid
+            container
+            spacing={0}
+            sx={{ height: "100%", alignContent: "start" }}
+          >
+            <Grid item xs={6} sx={{ height: "48px" }}>
+              <Box
+                sx={{
+                  height: "48px",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body2" component="span">
+                  체크표시모듈
+                </Typography>
+                <Checkbox />
+              </Box>
+            </Grid>
+            <Grid item xs={6} sx={{ height: "48px" }}>
+              <Box
+                sx={{
+                  height: "48px",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body2" component="span">
+                  셀렉트+텍스트입력
+                </Typography>
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  <FormControl size="small">
+                    <Select
+                      value={condition}
+                      onChange={handleConditionChange}
+                      displayEmpty
+                    >
+                      <MenuItem value="미만">미만</MenuItem>
+                      <MenuItem value="작거나 같음">작거나 같음</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <TextField variant="outlined" size="small" />
+                </span>
+              </Box>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              sx={{ backgroundColor: "#e1bee2", height: "48px" }}
+            >
+              <Box
+                sx={{
+                  height: "48px",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body2" component="span">
+                  체크표시모듈(미완)
+                </Typography>
+                <Checkbox />
+              </Box>
+            </Grid>
+            <Grid item xs={6} sx={{ height: "48px" }}>
+              <Box
+                sx={{
+                  height: "48px",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body2" component="span">
+                  슬라이더
+                </Typography>
+                <span
+                  style={{
+                    maxWidth: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <TextField
+                    size="small"
+                    value={sliderVal[0]}
+                    inputProps={{ readOnly: true }}
+                  />
+                  <Slider
+                    value={sliderVal}
+                    onChange={handleSliderChange}
+                    valueLabelDisplay="off"
+                    disableSwap
+                  />
+                  <TextField
+                    size="small"
+                    value={sliderVal[1]}
+                    inputProps={{ readOnly: true }}
+                  />
+                </span>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={tabValue} index={1}>
         서술적
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={tabValue} index={2}>
         파이낸셜
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel value={tabValue} index={3}>
         기술적
+      </TabPanel>
+      <TabPanel value={tabValue} index={4}>
+        나의 필터
       </TabPanel>
     </Box>
   );
@@ -113,9 +253,9 @@ const FilterSettingsPage = (props) => {
   const handleBFliterOpen = () => setOpenBFilter(true);
   const handleBFliterClose = () => setOpenBFilter(false);
 
-  let testarr = [];
+  let filterlist_testarr = [];
   for (let index = 0; index < 24; index++) {
-    testarr.push(
+    filterlist_testarr.push(
       <FormControlLabel
         key={index}
         value={`test${index}`}
@@ -137,6 +277,7 @@ const FilterSettingsPage = (props) => {
           <div style={{ marginLeft: "12px", marginTop: "24px" }}>
             <h1>필터 설정</h1>
           </div>
+          {/* 사용자 필터 목록 영역 */}
           <Grid
             container
             spacing={2}
@@ -172,11 +313,12 @@ const FilterSettingsPage = (props) => {
                   }}
                 >
                   <FormControl>
-                    <RadioGroup>{testarr}</RadioGroup>
+                    <RadioGroup>{filterlist_testarr}</RadioGroup>
                   </FormControl>
                 </Paper>
               </Card>
             </Grid>
+            {/* 필터 세부 정보 영역 */}
             <Grid item xs={10}>
               <Card
                 sx={{
@@ -268,7 +410,8 @@ const FilterSettingsPage = (props) => {
                       <Typography variant="h6" component="div">
                         필터제목의 필터 목록
                       </Typography>
-                      {/* <Button variant="contained" size="small">
+                      {/* 필터 조회시에 나타나는 편집 버튼
+                      <Button variant="contained" size="small">
                         편집
                       </Button> */}
                       <Button
