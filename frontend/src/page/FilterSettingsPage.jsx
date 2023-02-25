@@ -17,14 +17,23 @@ import {
   Select,
   MenuItem,
   Slider,
+  ListItemText,
+  IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import { useState } from "react";
 
+/**
+ * 기본필터 설정용 탭패널 컴포넌트 함수
+ * @param {any} props react props
+ * @returns 탭패널 요소 컴포넌트
+ */
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
@@ -47,17 +56,25 @@ const TabPanel = (props) => {
   );
 };
 
+/**
+ * 기본필터 설정 탭 컴포넌트 함수
+ * @param {any} props react props
+ * @returns 기본필터 설정 전체 탭 컴포넌트
+ */
 const FilterSelectTabs = (props) => {
+  // 어느 탭인지 확인하는 변수
   const [tabValue, setTabValue] = useState(0);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
+  // 값쪽 셀렉트 임시로 체크하는 변수
   const [condition, setCondition] = useState("미만");
   const handleConditionChange = (event) => {
     setCondition(event.target.value);
   };
 
+  // 슬라이더 구간 임시로 정하는 변수
   const minDistance = 10;
   const [sliderVal, setSliderVal] = useState([0, Number.MAX_SAFE_INTEGER]);
   const handleSliderChange = (event, newValue, activeThumb) => {
@@ -78,9 +95,34 @@ const FilterSelectTabs = (props) => {
     }
   };
 
+  // 체크표시모듈용 임시 변수
+  const sampleNames = [
+    "Oliver Hansen",
+    "Van Henry",
+    "April Tucker",
+    "Ralph Hubbard",
+    "Omar Alexander",
+    "Carlos Abbott",
+    "Miriam Wagner",
+    "Bradley Wilkerson",
+    "Virginia Andrews",
+    "Kelly Snyder",
+  ];
+  const [filterNames, setFilterNames] = useState([]);
+  const handleFilterNames = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFilterNames(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        {/* 탭쪽 필터 설정 버튼 */}
         <Typography
           variant="body1"
           component="div"
@@ -111,6 +153,7 @@ const FilterSelectTabs = (props) => {
             </Button>
           </span>
         </Typography>
+        {/* 탭 버튼 */}
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
@@ -123,6 +166,7 @@ const FilterSelectTabs = (props) => {
           <Tab label="나의 필터" />
         </Tabs>
       </Box>
+      {/* 전체 필터 영역 */}
       <TabPanel value={tabValue} index={0}>
         <Box sx={{ height: "100%", overflow: "auto", maxHeight: "100%" }}>
           <Grid
@@ -172,11 +216,7 @@ const FilterSelectTabs = (props) => {
                 </span>
               </Box>
             </Grid>
-            <Grid
-              item
-              xs={6}
-              sx={{ backgroundColor: "#e1bee2", height: "48px" }}
-            >
+            <Grid item xs={6} sx={{ height: "48px" }}>
               <Box
                 sx={{
                   height: "48px",
@@ -188,7 +228,31 @@ const FilterSelectTabs = (props) => {
                 <Typography variant="body2" component="span">
                   체크표시모듈(미완)
                 </Typography>
-                <Checkbox />
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "40%",
+                  }}
+                >
+                  <FormControl size="small" sx={{ width: "100%" }}>
+                    <Select
+                      value={filterNames}
+                      onChange={handleFilterNames}
+                      renderValue={(selected) => selected.join(", ")}
+                      multiple
+                      displayEmpty
+                      sx={{ width: "100%" }}
+                    >
+                      {sampleNames.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={filterNames.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </span>
               </Box>
             </Grid>
             <Grid item xs={6} sx={{ height: "48px" }}>
@@ -262,6 +326,105 @@ const FilterSettingsPage = (props) => {
         control={<Radio />}
         label={`test${index}`}
       />
+    );
+  }
+
+  let basic_testarr = [];
+  for (let index = 0; index < 16; index++) {
+    basic_testarr.push(
+      <Grid
+        container
+        spacing={0.5}
+        sx={{
+          height: "48px",
+          backgroundColor: "#D9D9D9",
+        }}
+      >
+        <Grid
+          item
+          xs={1}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#ff0000",
+          }}
+        >
+          <Typography variant="body2" component="span">
+            A
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={4}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#0000ff",
+          }}
+        >
+          <Typography variant="body2" component="span">
+            기본필터이름
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#00ff00",
+          }}
+        >
+          <Typography variant="body2" component="span">
+            연산자
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={3}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#999999",
+          }}
+        >
+          <Typography variant="body2" component="span">
+            설정값
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#222222",
+          }}
+        >
+          <IconButton size="small">
+            <ClearIcon />
+          </IconButton>
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#444444",
+          }}
+        >
+          <IconButton size="small">
+            <SwapVertIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
     );
   }
 
@@ -438,7 +601,16 @@ const FilterSettingsPage = (props) => {
                         </Box>
                       </Modal>
                     </div>
-                    <div style={{ height: "80%" }}></div>
+                    {/* 필터에 있는 기본필터들 컴포넌트 */}
+                    <Box
+                      sx={{
+                        height: "80%",
+                        padding: "0px 4vw 0px 4vw",
+                        overflow: "auto",
+                      }}
+                    >
+                      {basic_testarr}
+                    </Box>
                     <div
                       style={{
                         height: "12%",
