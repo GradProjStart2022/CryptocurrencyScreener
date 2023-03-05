@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_pydenticon",
     "corsheaders",
+    "django_extensions",
     # django-rest-framework
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.kakao",
+    "allauth.socialaccount.providers.google",
     # APPS
     "users",
     "filter",
@@ -190,3 +192,9 @@ KAKAO_REST_API_KEY = "929a5207f19097a18ebfa095a688914e"
 
 CORS_ORIGIN_WHITELIST = ("http://127.0.0.1:3000", "http://localhost:3000")
 CORS_ALLOW_CREDENTIALS = True
+
+GRAPH_MODELS = {
+    # 'app_labels': [],
+    "all_applications": True,
+    "group_models": True,
+}

@@ -2,7 +2,7 @@ import requests
 from django.shortcuts import redirect, render
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from json.decoder import JSONDecodeError
 from rest_framework import status
 from rest_framework.decorators import action, api_view
@@ -15,7 +15,7 @@ from allauth.socialaccount.models import SocialAccount
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
 from .models import User, Attention
-
+from allauth.socialaccount.providers.kakao.views import KakaoOAuth2Adapter
 
 from .serializers import AttentionSerializer, UserSerializer
 
@@ -36,6 +36,12 @@ def kakao_login(request):
     return redirect(
         f"https://kauth.kakao.com/oauth/authorize?client_id={rest_api_key}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
     )
+    # access_token = request.POST.get("access_token")
+    #
+    # # Authenticate the user using the Kakao Talk access token
+    # adapter = KakaoOAuth2Adapter()
+    # provider = adapter.get_provider()
+    # user = provider.sociallogin_from_token({"access_token": access_token})
 
 
 def kakao_callback(request):
@@ -73,7 +79,7 @@ def kakao_callback(request):
     print(kakao_account) 참고
     """
 
-    nickname = kakao_account.get("profile").get("nickname")
+    # nickname = kakao_account.get("profile").get("nickname")
     email = kakao_account.get("email")
     # thumbnail_image = kakao_account.get("profile").get("thumbnail_image_url")
 
@@ -106,7 +112,11 @@ def kakao_callback(request):
 
         accept_json = accept.json()
         accept_json.pop("user", None)
-        return JsonResponse(accept_json, status=status.HTTP_200_OK)
+        # return JsonResponse(accept_json, status=status.HTTP_200_OK)
+        # 변경부
+        return HttpResponseRedirect(
+            f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}"
+        )
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         data = {"access_token": access_token, "code": code}
@@ -118,7 +128,12 @@ def kakao_callback(request):
 
         accept_json = accept.json()
         accept_json.pop("user", None)
-        return JsonResponse(accept_json, status=status.HTTP_200_OK)
+        # return JsonResponse(accept_json, status=status.HTTP_200_OK)
+        # 변경부
+        # HttpResponseRedirect(f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}")
+        return HttpResponseRedirect(
+            f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}"
+        )
 
 
 class KakaoLogin(SocialLoginView):

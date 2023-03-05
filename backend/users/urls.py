@@ -1,7 +1,7 @@
 from django.urls import path, re_path, include
 from rest_framework.routers import DefaultRouter
-
 from users import views
+from users.googlevview import GoogleLogin
 
 router = DefaultRouter()
 router.register("attention", views.AttentionViewSet)
@@ -17,4 +17,12 @@ urlpatterns = [
     ),
     path("api/", include(router.urls)),
     path("api/list/", views.list),
+    path("accounts/google/", GoogleLogin.as_view(), name="google_login"),
 ]
+
+# path("accounts/", include("allauth.urls")),
+# path("accounts/kakao/login/", OAuth2LoginView.as_view(adapter=KakaoOAuth2Adapter)),
+# path(
+#     "accounts/kakao/callback/",
+#     OAuth2CallbackView.as_view(adapter=KakaoOAuth2Adapter),
+# ),
