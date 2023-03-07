@@ -109,9 +109,9 @@ def kakao_callback(request):
         accept_status = accept.status_code
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
-
         accept_json = accept.json()
         accept_json.pop("user", None)
+        accept_json["access_token"] = access_token
         # return JsonResponse(accept_json, status=status.HTTP_200_OK)
         # 변경부
         return HttpResponseRedirect(
@@ -128,6 +128,7 @@ def kakao_callback(request):
 
         accept_json = accept.json()
         accept_json.pop("user", None)
+        accept_json["access_token"] = access_token
         # return JsonResponse(accept_json, status=status.HTTP_200_OK)
         # 변경부
         # HttpResponseRedirect(f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}")
