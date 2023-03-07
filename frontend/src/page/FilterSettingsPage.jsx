@@ -46,12 +46,7 @@ const TabPanel = (props) => {
       style={{ height: "100%" }}
       {...other}
     >
-      {value === index && (
-        // <Box sx={{ p: 3 }}>
-        //   <Typography>{children}</Typography>
-        // </Box>
-        <>{children}</>
-      )}
+      {value === index && children}
     </div>
   );
 };
@@ -174,6 +169,7 @@ const FilterSelectTabs = (props) => {
             spacing={0}
             sx={{ height: "100%", alignContent: "start" }}
           >
+            {/* 체크표시모듈 (컴포넌트 모듈화 필요) */}
             <Grid item xs={6} sx={{ height: "48px" }}>
               <Box
                 sx={{
@@ -189,6 +185,7 @@ const FilterSelectTabs = (props) => {
                 <Checkbox />
               </Box>
             </Grid>
+            {/* 셀렉트+텍스트 입력 (컴포넌트 모듈화 필요) */}
             <Grid item xs={6} sx={{ height: "48px" }}>
               <Box
                 sx={{
@@ -216,6 +213,7 @@ const FilterSelectTabs = (props) => {
                 </span>
               </Box>
             </Grid>
+            {/* 체크표시선택 (컴포넌트 모듈화 필요) */}
             <Grid item xs={6} sx={{ height: "48px" }}>
               <Box
                 sx={{
@@ -255,6 +253,7 @@ const FilterSelectTabs = (props) => {
                 </span>
               </Box>
             </Grid>
+            {/* 슬라이더 (컴포넌트 모듈화 필요) */}
             <Grid item xs={6} sx={{ height: "48px" }}>
               <Box
                 sx={{
@@ -317,6 +316,7 @@ const FilterSettingsPage = (props) => {
   const handleBFliterOpen = () => setOpenBFilter(true);
   const handleBFliterClose = () => setOpenBFilter(false);
 
+  // 복합필터 선택 폼
   let filterlist_testarr = [];
   for (let index = 0; index < 24; index++) {
     filterlist_testarr.push(
@@ -329,6 +329,7 @@ const FilterSettingsPage = (props) => {
     );
   }
 
+  // 편집화면 기본필터 (모듈화 필요)
   let basic_testarr = [];
   for (let index = 0; index < 16; index++) {
     basic_testarr.push(

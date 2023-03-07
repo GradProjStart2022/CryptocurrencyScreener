@@ -104,12 +104,7 @@ const SigninPage = (arg) => {
           </Box>
           {/* 카카오 로그인 버튼 */}
           <a id="custom-login-btn" href="javascript:alert(`TEST`)">
-            <img
-              src={kakao_login_img}
-              // alt="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
-              alt="카카오 로그인 버튼"
-              // width="222"
-            />
+            <img src={kakao_login_img} alt="카카오 로그인 버튼" />
           </a>
           <Grid container>
             <Grid item xs>

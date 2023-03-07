@@ -7,7 +7,6 @@ import { MiniChart } from "react-ts-tradingview-widgets";
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import { width } from "@mui/system";
 
 const BookmarkPage = (props) => {
   const SYMBOL = "즐겨찾는 종목 목록";
@@ -19,21 +18,6 @@ const BookmarkPage = (props) => {
     let tmp_book = [...bookmark];
     tmp_book[idx] = tmp_book[idx] ? 0 : 1;
     setBookmark(tmp_book);
-
-    // switch (idx) {
-    //   case 0:
-    //     // setBookmark(1);
-    //     tmp_book[0] = 1;
-    //     break;
-    //   case 1:
-    //     setBookmark(0);
-    //     break;
-    //   case 2:
-    //     setBookmark([...bookmark])
-    //   default:
-    //     setBookmark(0);
-    //     break;
-    // }
     console.log("bookmark 변경 :>> ", bookmark);
   };
 
