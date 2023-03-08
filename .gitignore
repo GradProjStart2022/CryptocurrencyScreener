@@ -27,6 +27,9 @@ frontend/*.local
 frontend/.pnp
 frontend/.pnp.js
 
+# env vars (ex: API Key)
+frontend/.env
+
 # testing
 frontend/coverage
 

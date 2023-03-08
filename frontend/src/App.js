@@ -12,10 +12,31 @@ import AlarmSettingsPage from "./page/AlarmSettingsPage.jsx";
 import BookmarkPage from "./page/BookmarkPage.jsx";
 
 function App() {
+  const MainPage = (props) => {
+    return (
+      <div className="App">
+        <SideNavBar />
+        <div className="content-outer">
+          <div className="top-bar">
+            <SearchBar />
+            <LoginInfo />
+          </div>
+          <div className="content-view">
+            <p>영역구분 테스트용 텍스트</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Routes>
       <Route path="/" element={<MainPage />} />
-      <Route path="/login" element={<SigninPage />} />
+      <Route path="/login">
+        <Route index element={<SigninPage />} />
+        <Route path="kakao_complete" element={<KakaoLoginRedirect />} />
+        <Route path="google_complete" element={<GoogleLoginRedirect />} />
+      </Route>
       <Route path="/chart">
         {/* todo: 전체 종목에 대한 정보 표시 페이지 생성 */}
         <Route index element={<ChartListPage />} />
@@ -30,6 +51,7 @@ function App() {
       <Route path="/bookmark/:id" element={<BookmarkPage />} />
       <Route path="*" element={<Page404 />} />
     </Routes>
+      
   );
 }
 
