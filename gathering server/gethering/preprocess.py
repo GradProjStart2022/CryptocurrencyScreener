@@ -13,8 +13,8 @@ import utils.rds as rds
 
 logger = logging.getLogger('preprocess')
 
-db_data = 'mysql+pymysql://' + 'admin' + ':' + 'id' + '@' + 'address' + ':3306/' \
-          + 'password' + '?charset=utf8'
+db_data = 'mysql+pymysql://' + 'root' + ':' + 'upbit_kor' + '@' + '127.0.0.1' + ':3306/' \
+          + '2264' + '?charset=utf8'
 engine = create_engine(db_data)
 
 RDS = rds.Database()
@@ -202,14 +202,12 @@ class CoinPreProcess():
 
         for i in tq_range:
             name = table_name.iloc[i]['name']
-            print(name)
 
             tq_range.set_description(f"{interval} {name} 전처리")
 
             new_data = list()
 
             table_sql = f'''select id from upbit_kor.SYMBOLS where ticker = '{name[4:]}';'''
-
             id = RDS.executeOne(table_sql)
 
             # rds에 없는 종목
@@ -313,14 +311,14 @@ class CoinPreProcess():
                             # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
 
                             for idx2 in range(self.get_interval(curr_date, next_date) - 1):
-                                new_data.append({'date': datetime.datetime.strftime(curr_date
+                                new_data.concat([new_data,{'date': datetime.datetime.strftime(curr_date
                                                                                     + datetime.timedelta(
                                     minutes=(idx2 * self.interval) + self.interval), "%Y-%m-%dT%H:%M:%S"),
                                                  'open': local_db_df.loc[idx1, 'open'],
                                                  'high': local_db_df.loc[idx1, 'high'],
                                                  'low': local_db_df.loc[idx1, 'low'],
                                                  'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
+                                                 'volume': 0}])
 
                     elif self.check_interval == 'day':
                         if next_date - curr_date == datetime.timedelta(days=self.interval):
@@ -334,14 +332,14 @@ class CoinPreProcess():
                             # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
 
                             for idx2 in range(self.get_interval(curr_date, next_date) - 1):
-                                new_data.append({'date': datetime.datetime.strftime(curr_date
+                                new_data.concat([new_data,{'date': datetime.datetime.strftime(curr_date
                                                                                     + datetime.timedelta(days=idx2 + 1),
                                                                                     "%Y-%m-%dT%H:%M:%S"),
                                                  'open': local_db_df.loc[idx1, 'open'],
                                                  'high': local_db_df.loc[idx1, 'high'],
                                                  'low': local_db_df.loc[idx1, 'low'],
                                                  'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
+                                                 'volume': 0}])
 
                     elif self.check_interval == 'week':
                         if next_date - curr_date == datetime.timedelta(weeks=self.interval):
@@ -355,14 +353,14 @@ class CoinPreProcess():
                             # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
 
                             for idx2 in range(self.get_interval(curr_date, next_date) - 1):
-                                new_data.append({'date': datetime.datetime.strftime(curr_date
+                                new_data.concat([new_data,{'date': datetime.datetime.strftime(curr_date
                                                                                     + datetime.timedelta(
                                     weeks=idx2 + 1), "%Y-%m-%dT%H:%M:%S"),
                                                  'open': local_db_df.loc[idx1, 'open'],
                                                  'high': local_db_df.loc[idx1, 'high'],
                                                  'low': local_db_df.loc[idx1, 'low'],
                                                  'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
+                                                 'volume': 0}])
 
                     elif self.check_interval == 'month':
                         # interval로 확인
@@ -379,12 +377,14 @@ class CoinPreProcess():
                             result = 12 * delta.years + delta.months
                             for idx3 in range(result - 1):
                                 N_next_day = curr_date + relativedelta(months=idx3 + 1)
-                                new_data.append({'date': N_next_day.strftime("%Y-%m-%dT%H:%M:%S"),
+                                new_data.concat([new_data,{'date': N_next_day.strftime("%Y-%m-%dT%H:%M:%S"),
                                                  'open': local_db_df.loc[idx1, 'open'],
                                                  'high': local_db_df.loc[idx1, 'high'],
                                                  'low': local_db_df.loc[idx1, 'low'],
                                                  'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
+                                                 'volume': 0}])
+                            print(N_next_day)
+
 
                 except KeyError:
                     pass

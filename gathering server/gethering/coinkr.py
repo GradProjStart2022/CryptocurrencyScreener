@@ -229,7 +229,7 @@ class Upbit_Gathering():
                                 else:
                                     insert_sql = f"""
                                                 insert into KRW_{name}
-                                                values ('{row['date']}','{row['open']}','{row['high']}','{row['low']}','{row['close']}','{row['volume']}'
+                                                values ('{row['date']}','{row['open']}','{row['high']}','{row['low']}','{row['close']}','{row['volume']}','{row['rsi']}')
                                                 """
                                     self.cursor.execute(insert_sql)
                                     self.con.commit()
@@ -263,7 +263,7 @@ class Upbit_Gathering():
 
             except DatabaseError:
                 self.cursor.execute(
-                    f"CREATE TABLE KRW_{name}(date text, open float, high float, low float, close float, volume float)")
+                    f"CREATE TABLE KRW_{name}(date text, open float, high float, low float, close float, volume float, rsi float)")
 
                 result = newcoin_gathering(name, end_date)
 
@@ -272,5 +272,8 @@ class Upbit_Gathering():
 
             result['data'] = result['data'].iloc[::-1]
             result['data'].to_sql(f'KRW_{name}', self.con, if_exists='append', index=False)
-if __name__ == "__main__":
-    obj = Upbit_Gathering('KRW', 'month')
+
+
+if __name__ == '__main__':
+    test = Upbit_Gathering("KRW","240min")
+    test.get_ticker_list().to_excel("krcoin.xlsx")
