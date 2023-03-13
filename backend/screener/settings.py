@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     # APPS
     "users",
     "filter",
+    "widget",
 ]
 
 MIDDLEWARE = [
