@@ -11,7 +11,7 @@ import SideNavBar from "../component/SideNavbar.jsx";
 
 /**
  * 카카오 로그인 리다이렉트 페이지
- * @param {any} props react-router-dom의 history props
+ * @param {any} props react props
  * @returns 사용자 안내용 페이지 요소 반환
  */
 export const KakaoLoginRedirect = (props) => {
@@ -59,7 +59,6 @@ export const KakaoLoginRedirect = (props) => {
             "로그인 후처리 작업에 실패했습니다.\n다시 로그인해 주세요."
           );
           dispatch(setToken(""));
-          console.log("err :>> ", err);
           navigate("/login", { replace: true });
         });
     } else {

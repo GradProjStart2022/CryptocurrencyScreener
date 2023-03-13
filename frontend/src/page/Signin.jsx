@@ -118,7 +118,7 @@ const SigninPage = (arg) => {
           <a id="custom-login-btn" href={KAKAO_AUTH_URL}>
             <img src={kakao_login_img} alt="카카오 로그인 버튼" />
           </a>
-          {/* 구글 로그인 버튼: 링크를 이동해 백엔드 로직을 이용해 로그인 수행 */}
+          {/* 구글 로그인 버튼: 링크를 이동해 백엔드 로직을 이용해 로그인 수행 (현재 미작동) */}
           <GoogleButton
             onClick={() => {
               window.location.href =

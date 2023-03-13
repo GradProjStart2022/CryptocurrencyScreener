@@ -10,28 +10,14 @@ import ChartPage from "./page/ChartPage.jsx";
 import FilterSettingsPage from "./page/FilterSettingsPage.jsx";
 import AlarmSettingsPage from "./page/AlarmSettingsPage.jsx";
 import BookmarkPage from "./page/BookmarkPage.jsx";
+import { KakaoLoginRedirect } from "./page/KakaoLoginRedirect";
+import { GoogleLoginRedirect } from "./page/GoogleLoginRedirect";
 
 function App() {
-  const MainPage = (props) => {
-    return (
-      <div className="App">
-        <SideNavBar />
-        <div className="content-outer">
-          <div className="top-bar">
-            <SearchBar />
-            <LoginInfo />
-          </div>
-          <div className="content-view">
-            <p>영역구분 테스트용 텍스트</p>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <Routes>
       <Route path="/" element={<MainPage />} />
+      {/* 로그인 페이지 및 후처리 페이지 */}
       <Route path="/login">
         <Route index element={<SigninPage />} />
         <Route path="kakao_complete" element={<KakaoLoginRedirect />} />
@@ -47,11 +33,11 @@ function App() {
       <Route path="/filter/:id" element={<FilterSettingsPage />} />
       {/* todo: 필터에 따른 알람 설정 화면 생성 */}
       <Route path="/alarm/:id" element={<AlarmSettingsPage />} />
-      {/* todo: 사용자별 즐겨찾기 종목 페이지 생성 */}
+      {/* 사용자별 즐겨찾기 목록 페이지 */}
       <Route path="/bookmark/:id" element={<BookmarkPage />} />
+      {/* 없는 경로들 404 페이지 처리 */}
       <Route path="*" element={<Page404 />} />
     </Routes>
-      
   );
 }
 
