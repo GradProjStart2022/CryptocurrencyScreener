@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Box,
   Button,
@@ -27,7 +29,6 @@ import SwapVertIcon from "@mui/icons-material/SwapVert";
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import { useState } from "react";
 
 /**
  * 기본필터 설정용 탭패널 컴포넌트 함수

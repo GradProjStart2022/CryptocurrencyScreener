@@ -25,6 +25,10 @@ const buttonBox = css({
   cursor: "pointer",
 });
 
+const whiteColor = {
+  color: "#ffffff",
+};
+
 const SideNavBar = (props) => {
   const navigate = useNavigate();
 
@@ -36,7 +40,7 @@ const SideNavBar = (props) => {
           navigate("/");
         }}
       >
-        <HomeIcon />
+        <HomeIcon sx={whiteColor} />
       </div>
       <div
         css={buttonBox}
@@ -44,7 +48,7 @@ const SideNavBar = (props) => {
           navigate("/chart/");
         }}
       >
-        <BarChartIcon />
+        <BarChartIcon sx={whiteColor} />
       </div>
       <div
         css={buttonBox}
@@ -52,13 +56,7 @@ const SideNavBar = (props) => {
           navigate("/filter/id예정");
         }}
       >
-        <SvgIcon
-          component={FilterSettingsIcon}
-          inheritViewBox
-          color="secondary"
-        >
-          {/* todo: image_options_icon 가져오기 */}
-        </SvgIcon>
+        <FilterSettingsIcon css={whiteColor} />
       </div>
       <div
         css={buttonBox}
@@ -66,7 +64,7 @@ const SideNavBar = (props) => {
           navigate("/alarm/id예정");
         }}
       >
-        <NotificationsIcon />
+        <NotificationsIcon sx={whiteColor} />
       </div>
       <div
         css={buttonBox}
@@ -74,7 +72,7 @@ const SideNavBar = (props) => {
           navigate("/bookmark/id예정");
         }}
       >
-        <BookmarkIcon />
+        <BookmarkIcon sx={whiteColor} />
       </div>
     </div>
   );
