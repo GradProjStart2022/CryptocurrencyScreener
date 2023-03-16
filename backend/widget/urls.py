@@ -1,6 +1,8 @@
 from django.urls import path, re_path, include
-from widget.views import import_csv
+
+from widget import views
 
 urlpatterns = [
-    path("import-csv/", import_csv, name="import_csv"),
+    path("import-csv/", views.import_csv, name="import_csv"),
+    path("search/", views.list),
 ]
