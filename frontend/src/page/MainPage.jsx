@@ -69,7 +69,7 @@ const MainPage = (props) => {
               <MiniChart
                 symbol="BTCKRW"
                 width="100%"
-                largeChartUrl="localhost:3000/chart"
+                // largeChartUrl="localhost:3000/chart"
                 // height={testheight}
               />
             </Grid>

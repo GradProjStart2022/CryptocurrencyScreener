@@ -6,7 +6,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import { SvgIcon } from "@mui/material";
 
 import { ReactComponent as FilterSettingsIcon } from "../img/filter_options_icon.svg";
 

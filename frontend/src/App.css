@@ -43,28 +43,14 @@
   color: #9ca3af;
 }
 
-.form span {
+/* 이거 쓰는거 맞아? */
+/* .form span {
   position: absolute;
   right: 17px;
   top: 13px;
   padding: 2px;
   border-left: 1px solid #d1d5db;
-}
-
-.form-input {
-  height: 4vh;
-  max-height: 40px;
-  width: 100%;
-  text-indent: 33px;
-  border-radius: 24px;
-  border: 1px solid #e6e7e7;
-  background-color: #f0f3fa;
-}
-
-.form-input:focus {
-  box-shadow: none;
-  border: none;
-}
+} */
 
 /* search bar end */
 

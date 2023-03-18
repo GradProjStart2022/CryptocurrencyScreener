@@ -24,7 +24,8 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import SwapVertIcon from "@mui/icons-material/SwapVert";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
@@ -312,12 +313,18 @@ const FilterSelectTabs = (props) => {
   );
 };
 
+/**
+ * 필터상세설정페이지 UI요소를 그리는 함수
+ * @param {any} props react props
+ * @returns 필터상세설정페이지 UI요소 반환
+ */
 const FilterSettingsPage = (props) => {
+  // 기본필터 탭 열고 닫는 변수
   const [openBFilter, setOpenBFilter] = useState(false);
   const handleBFliterOpen = () => setOpenBFilter(true);
   const handleBFliterClose = () => setOpenBFilter(false);
 
-  // 복합필터 선택 폼
+  // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼 (모듈화 필요)
   let filterlist_testarr = [];
   for (let index = 0; index < 24; index++) {
     filterlist_testarr.push(
@@ -330,8 +337,14 @@ const FilterSettingsPage = (props) => {
     );
   }
 
-  // 편집화면 기본필터 (모듈화 필요)
+  // 편집화면 기본필터: 복합필터에 속해있는 기본필터들 표시 (모듈화 필요)
   let basic_testarr = [];
+  let item_batch_css = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ff0000",
+  };
   for (let index = 0; index < 16; index++) {
     basic_testarr.push(
       <Grid
@@ -342,88 +355,39 @@ const FilterSettingsPage = (props) => {
           backgroundColor: "#D9D9D9",
         }}
       >
-        <Grid
-          item
-          xs={1}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#ff0000",
-          }}
-        >
+        <Grid item xs={1} sx={item_batch_css}>
           <Typography variant="body2" component="span">
             A
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={4}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#0000ff",
-          }}
-        >
+        <Grid item xs={4} sx={item_batch_css}>
           <Typography variant="body2" component="span">
             기본필터이름
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={2}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#00ff00",
-          }}
-        >
+        <Grid item xs={2} sx={item_batch_css}>
           <Typography variant="body2" component="span">
             연산자
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={3}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#999999",
-          }}
-        >
+        <Grid item xs={2} sx={item_batch_css}>
           <Typography variant="body2" component="span">
             설정값
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={1}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#222222",
-          }}
-        >
+        <Grid item xs={1} sx={item_batch_css}>
           <IconButton size="small">
             <ClearIcon />
           </IconButton>
         </Grid>
-        <Grid
-          item
-          xs={1}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#444444",
-          }}
-        >
+        <Grid item xs={1} sx={item_batch_css}>
           <IconButton size="small">
-            <SwapVertIcon />
+            <ArrowUpwardIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={1} sx={item_batch_css}>
+          <IconButton size="small">
+            <ArrowDownwardIcon />
           </IconButton>
         </Grid>
       </Grid>
