@@ -1,56 +1,38 @@
-import LoginInfo from "../component/LoginInfo.jsx";
-import SearchBar from "../component/SearchBar.jsx";
-import SideNavBar from "../component/SideNavbar.jsx";
-
 import { useState } from "react";
 
 import {
-  Box,
   Button,
   Card,
   FormControl,
   FormControlLabel,
   Grid,
-  Modal,
   Paper,
   Radio,
   RadioGroup,
-  TextField,
   Typography,
-  Tabs,
-  Tab,
-  Checkbox,
   Select,
   MenuItem,
-  Slider,
-  ListItemText,
-  IconButton,
   InputLabel,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from "@mui/icons-material/Clear";
-import SwapVertIcon from "@mui/icons-material/SwapVert";
-import {
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
+
+import LoginInfo from "../component/LoginInfo.jsx";
+import SearchBar from "../component/SearchBar.jsx";
+import SideNavBar from "../component/SideNavbar.jsx";
 
 /**
  * 화면설계서 6슬라이드 종목 전체가 나오는 화면
- * @param {*} props
+ * @param {any} props react props
  * @returns
  */
 const ChartListPage = (props) => {
-  const [openBFilter, setOpenBFilter] = useState(false);
-  const handleBFliterOpen = () => setOpenBFilter(true);
-  const handleBFliterClose = () => setOpenBFilter(false);
-
   const rows = [
     {
       id: 1,
@@ -79,17 +61,13 @@ const ChartListPage = (props) => {
     // ... 더 많은 데이터
   ];
 
-  const useStyles = makeStyles((theme) => ({
-    table: {
-      minWidth: 650,
-    },
-    tableContainer: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3),
-    },
-  }));
-
-  const classes = useStyles();
+  const table_container_sx = {
+    minWidth: 650,
+  };
+  const table_sx = {
+    marginTop: 3,
+    marginBottom: 3,
+  };
 
   // 복합필터 선택 폼
   let filterlist_testarr = [];
@@ -176,7 +154,7 @@ const ChartListPage = (props) => {
                 </Paper>
               </Card>
             </Grid>
-            {/* 필터 세부 정보 영역 */}
+            {/* 종목 세부 정보 영역 */}
             <Grid item xs={10}>
               <Card
                 sx={{
@@ -187,14 +165,6 @@ const ChartListPage = (props) => {
                   height: "72vh",
                 }}
               >
-                {/* <Typography variant="body1" component="div">
-                  todo: noFilter 컴포넌트화 및 card flex 레이아웃 연동하기
-                   <p>
-                    필터를 선택해 속성을 보거나
-                    <br />+ 버튼을 눌러 새 필터를 생성하세요
-                  </p>
-                  
-                </Typography> */}
                 {/* 필터이름 영역 */}
                 <Typography
                   component="div"
@@ -229,11 +199,8 @@ const ChartListPage = (props) => {
                     </FormControl>
                   </div>
 
-                  <TableContainer
-                    component={Paper}
-                    className={classes.tableContainer}
-                  >
-                    <Table className={classes.table} aria-label="stock table">
+                  <TableContainer component={Paper} sx={table_container_sx}>
+                    <Table sx={table_sx} aria-label="stock table">
                       <TableHead>
                         <TableRow>
                           <TableCell>종목명</TableCell>
