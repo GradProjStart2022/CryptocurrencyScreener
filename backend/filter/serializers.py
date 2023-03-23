@@ -54,3 +54,9 @@ class SettingSerializer(serializers.ModelSerializer):
 #         "value2": null
 #     }
 # ]
+
+
+class RecommendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Setting
+        fields = ["indicator"]

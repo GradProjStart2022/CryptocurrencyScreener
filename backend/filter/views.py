@@ -4,9 +4,11 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from filter.models import Filter, Setting
-from filter.serializers import FilterSerializer, SettingSerializer
+from filter.serializers import FilterSerializer, SettingSerializer, RecommendSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
+from django.db.models import Count
 
 
 class FilterViewSet(ModelViewSet):
@@ -79,3 +81,30 @@ class SettingViewSet(ModelViewSet):
         # logger.error(serializer.validated_data)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+@api_view(["GET"])
+def top5(request):
+    # top_five = Setting.objects.annotate(num_indicator=Count("indicator")).order_by(
+    #     "-num_indicator"
+    # )[:5]
+    #
+    # for setting in top_five:
+    #     print(setting.indicator, setting.num_indicator)
+
+    top_five = (
+        Setting.objects.values("indicator")
+        .annotate(count=Count("indicator"))
+        .order_by("-count")[:5]
+    )
+
+    data = {"top_five": list(top_five)}
+
+    return JsonResponse(data)
+
+    # for setting in top_five:
+    #     print(setting["indicator"], setting["count"])
+    #
+    # serializer = RecommendSerializer(top_five, many=True)
+    #
+    # return JsonResponse(serializer.data, safe=False)
