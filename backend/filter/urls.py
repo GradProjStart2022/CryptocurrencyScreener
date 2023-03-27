@@ -12,4 +12,5 @@ router.register(r"filter/(?P<filter_pk>\d+)/settings", views.SettingViewSet)
 urlpatterns = [
     path("api/", include(router.urls)),
     path("top5/", views.top5, name="top5"),
+    path("recommend/", views.recommend, name="recommend"),
 ]

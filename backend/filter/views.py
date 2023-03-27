@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import action
@@ -108,3 +110,37 @@ def top5(request):
     # serializer = RecommendSerializer(top_five, many=True)
     #
     # return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(["GET"])
+def recommend(request):
+    # data = {"indicators": ["RSI", "BB"]}
+    # indicators = data["indicators"]
+    json_data = json.loads(request.body)
+    indicators = json_data["indicators"]
+
+    q = (
+        Filter.objects.prefetch_related("settings")
+        .all()
+        .filter(settings__indicator__in=indicators)
+        .distinct()
+    )
+
+    count = dict()
+
+    # for obj in q:
+    #     print("filter name : ", obj.name)
+    #     for setting in obj.settings.all():
+    #         print("indicator : ", setting.indicator)
+
+    for obj in q:
+        for setting in obj.settings.all():
+            if setting.indicator not in indicators:
+                count[setting.indicator] = count.get(setting.indicator, 0) + 1
+
+    if not count:
+        return JsonResponse(
+            {"message": "Error! No matching indicators found."}, status=404
+        )
+    else:
+        return JsonResponse(count)
