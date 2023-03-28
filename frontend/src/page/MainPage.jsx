@@ -1,13 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Grid } from "@mui/material";
-import LoginInfo from "../component/LoginInfo.jsx";
-import SearchBar from "../component/SearchBar.jsx";
-import SideNavBar from "../component/SideNavbar.jsx";
-import { CryptoCurrencyMarket, MiniChart } from "react-ts-tradingview-widgets";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+
+import { Grid } from "@mui/material";
+import { CryptoCurrencyMarket, MiniChart } from "react-ts-tradingview-widgets";
+
+import LoginInfo from "../component/LoginInfo.jsx";
+import SearchBar from "../component/SearchBar.jsx";
+import SideNavBar from "../component/SideNavbar.jsx";
 
 const reqLoginCss = css({
   background: "rgba(34,34,34,0.2)",
@@ -42,9 +44,9 @@ const NotLogin = (props) => {
 };
 
 /**
- * 화면설계서 2슬라이드 메인화면
- * @param {*} props
- * @returns
+ * 메인화면 UI 요소 뱉어내는 함수
+ * @param {any} props react props
+ * @returns 메인화면 UI
  */
 const MainPage = (props) => {
   let [isLogin, setIsLogin] = useState(false);
@@ -69,14 +71,14 @@ const MainPage = (props) => {
               <MiniChart
                 symbol="BTCKRW"
                 width="100%"
-                // largeChartUrl="localhost:3000/chart"
+                largeChartUrl="http://localhost:3000/chart"
                 // height={testheight}
               />
             </Grid>
             <Grid item xs={3} sx={{ marginTop: "12px" }}>
               <CryptoCurrencyMarket
                 width="100%"
-                largeChartUrl="localhost:3000/chart"
+                largeChartUrl="http://localhost:3000/chart"
                 // height="100%"
               />
             </Grid>

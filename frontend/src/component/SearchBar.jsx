@@ -1,90 +1,68 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Autocomplete, TextField } from "@mui/material";
-import { useState } from "react";
 
-const search_input_css = css({
-  height: "4vh",
-  maxHeight: "40px",
-  width: "100%",
-  textIndent: "33px",
-  borderRadius: "24px",
-  border: "1px solid #e6e7e7",
-  backgroundColor: "#f0f3fa",
-  "&:focus": {
-    boxShadow: "none",
-    border: "none",
-  },
-});
-
-const 테스트용css = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import getSearchComplete from "../logic/getAutocompleteArr.js";
+import { searchConstValue } from "../model/search_const.js";
+import searchEnterkeyHandle from "../logic/searchEnterkeyHandle.js";
 
 /**
  * 검색창 UI 뱉어내는 함수
  * @param {any} props react props
- * @returns 검색창 UI 요소
+ * @returns 검색창 UI
  */
 const SearchBar = (props) => {
-  const [inptDat, setInptDat] = useState("");
+  const [searchStateVal, setSearchStateVal] = useState([]);
+  const [userTypingDat, setUserTypingDat] = useState("");
+  const [userClickedDat, setUserClickedDat] = useState(null);
+  const navigate = useNavigate();
 
-  let 옵션테스트배열 = [];
-  for (let i = 1; i < 101; i++) {
-    옵션테스트배열.push(`${i}`);
-  }
-  옵션테스트배열.push("ㄹㅇㄹㅇㄹㅇㄹㅇㄹㅇㄹㅇㄹㅇㄹㅇ긴거하나넣기");
+  useEffect(() => {
+    /**
+     * getAutocompleteArr의 로직을 비동기로 실행해
+     * 검색창의 setSearchStateVal 자동완성 요소 채우기
+     * @param 없음
+     */
+    const asyncAutocomleteVar = async () => {
+      getSearchComplete();
+      setSearchStateVal(searchConstValue);
+    };
+    asyncAutocomleteVar();
+  }, []);
 
   return (
     <div className="search-bar">
-      {/* <datalist id="드롭다운테스트">
-        {옵션테스트배열.map((value) => {
-          return <option>{value}</option>;
-        })}
-      </datalist>
-      <input
-        type="text"
-        css={search_input_css}
-        placeholder="찾으려는 암호화폐를 입력해 보세요..."
-        list="드롭다운테스트"
-        onInput={(event) => {
-          const {
-            target: { value },
-          } = event;
-          setInptDat(value);
-        }}
-      >
-      </input> */}
       <Autocomplete
-        value={inptDat}
-        onInput={(event, value) => {
-          console.log("event.target.value :>> ", event.target.value);
-          // setInptDat(event.target.value);
-          setInptDat(value);
-          console.log("inptDat :>> ", inptDat);
+        freeSolo // 검색 최적화 UI로 만들기
+        // 자동선택값
+        value={userClickedDat}
+        onChange={(_, newClickVal) => {
+          setUserClickedDat(newClickVal);
         }}
-        onChange={(event, value) => {
-          console.log("event :>> ", event);
-          console.log("value :>> ", value);
-          // console.log("event.target.value :>> ", event.target.value);
-          // var 잠시변수 = 옵션테스트배열[event.target.value];
-          // console.log("잠시변수 :>> ", 잠시변수);
-
-          // var 잠시변수 = JSON.parse(JSON.stringify(value));
-          setInptDat(value);
-          console.log("inptDat :>> ", inptDat);
+        // 타이핑
+        inputValue={userTypingDat}
+        onInputChange={(_, newInputVal) => {
+          setUserTypingDat(newInputVal);
         }}
-        options={옵션테스트배열}
+        // 검색 지정 옵션 값들
+        options={searchStateVal}
+        // 사용자 타이핑 렌더링
         renderInput={(params) => (
-          <TextField {...params} label="Search" size="small" />
+          <TextField
+            {...params}
+            label="Search"
+            size="small"
+            type="search"
+            onKeyDown={(event) => {
+              searchEnterkeyHandle(
+                event,
+                userTypingDat,
+                userClickedDat,
+                navigate
+              );
+            }}
+          />
         )}
       />
     </div>

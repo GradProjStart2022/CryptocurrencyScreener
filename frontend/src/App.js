@@ -20,14 +20,17 @@ function App() {
         {/* todo: 전체 종목에 대한 정보 표시 페이지 생성 */}
         <Route index element={<ChartListPage />} />
         {/* todo: 종목코드를 URL param으로 가지는 종목별 페이지 생성 */}
-        <Route path="종목코드" element={<ChartPage />} />
+        <Route path=":code" element={<ChartPage />} />
+        {/* todo: 트레이딩뷰 위젯 리다이렉트 컨트롤 */}
+        {/* <Route path="tdview_widget" element={<ChartListPage />} /> */}
       </Route>
       {/* todo: 필터 설정 화면 생성 */}
       <Route path="/filter/:id" element={<FilterSettingsPage />} />
       {/* todo: 필터에 따른 알람 설정 화면 생성 */}
       <Route path="/alarm/:id" element={<AlarmSettingsPage />} />
-      {/* todo: 사용자별 즐겨찾기 종목 페이지 생성 */}
+      {/* 사용자별 즐겨찾기 종목 페이지 */}
       <Route path="/bookmark/:id" element={<BookmarkPage />} />
+      {/* todo: 404 페이지 꾸미기 */}
       <Route path="*" element={<Page404 />} />
     </Routes>
   );

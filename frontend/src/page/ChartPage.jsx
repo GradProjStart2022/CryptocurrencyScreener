@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+
 import { Grid, IconButton } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -14,13 +16,18 @@ import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 
 /**
- * 화면설계서 8슬라이드 종목별 화면
- * @param props
- * @returns JSX Element
+ * 종목별 화면 UI 요소 반환 함수
+ * @param props react props
+ * @returns 종목별 화면 UI
  */
 const ChartPage = (props) => {
-  const SYMBOL = "BTCUSD";
+  // todo: 북마크 연동시 나머지 UI 요소들 리렌더링 막기
+  // const { code } = useParams();
+  const location = useLocation();
+  // 검색 등에서 넣어둔 종목 객체 찾아오기
+  const coin_obj = location.state?.coin;
 
+  // todo: 사용자 북마크 연동
   let [isFavorite, setIsFavorite] = useState(0);
   const changeIdx = () => {
     console.log("Debug/isFavorite :>> ", isFavorite);
@@ -53,7 +60,9 @@ const ChartPage = (props) => {
           >
             <Grid item xs={12}>
               <span style={{ display: "flex", alignItems: "center" }}>
-                <h1 style={{ display: "inline-block" }}>{SYMBOL}</h1>
+                <h1
+                  style={{ display: "inline-block" }}
+                >{`${coin_obj?.name_kr}(${coin_obj?.name_en})`}</h1>
                 <IconButton
                   aria-label="star"
                   // todo: 색상 오버라이드
@@ -69,7 +78,7 @@ const ChartPage = (props) => {
           <Grid container spacing={0} sx={{ marginLeft: "12px" }}>
             <Grid item xs>
               <AdvancedRealTimeChart
-                symbol="UPBIT:BTCKRW"
+                symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
                 width="100%"
               ></AdvancedRealTimeChart>
@@ -78,21 +87,21 @@ const ChartPage = (props) => {
           <Grid container={true} spacing={2}>
             <Grid item xs={4}>
               <TechnicalAnalysis
-                symbol={SYMBOL}
+                symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
                 width={"100%"}
               ></TechnicalAnalysis>
             </Grid>
             <Grid item xs={4}>
               <CompanyProfile
-                symbol={SYMBOL}
+                symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
                 width={"100%"}
               ></CompanyProfile>
             </Grid>
             <Grid item xs={4}>
               <FundamentalData
-                symbol={SYMBOL}
+                symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
                 width={"100%"}
               ></FundamentalData>
