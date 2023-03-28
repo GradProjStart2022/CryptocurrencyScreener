@@ -29,6 +29,11 @@ const SearchBar = (props) => {
       setSearchStateVal(searchConstValue);
     };
     asyncAutocomleteVar();
+
+    // TDWidgetRedirectPage.jsx 리다이렉트 뷰 전용 로직(뷰 사이 렌더링 확인)
+    if (props?.setIsRender !== undefined) {
+      props.setIsRender(true);
+    }
   }, []);
 
   return (

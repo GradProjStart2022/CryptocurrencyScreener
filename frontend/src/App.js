@@ -10,6 +10,7 @@ import ChartPage from "./page/ChartPage.jsx";
 import FilterSettingsPage from "./page/FilterSettingsPage.jsx";
 import AlarmSettingsPage from "./page/AlarmSettingsPage.jsx";
 import BookmarkPage from "./page/BookmarkPage.jsx";
+import TDWidgetRedirectPage from "./page/TDWidgetRedirectPage.jsx";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         {/* todo: 종목코드를 URL param으로 가지는 종목별 페이지 생성 */}
         <Route path=":code" element={<ChartPage />} />
         {/* todo: 트레이딩뷰 위젯 리다이렉트 컨트롤 */}
-        {/* <Route path="tdview_widget" element={<ChartListPage />} /> */}
+        <Route path="tdview_widget" element={<TDWidgetRedirectPage />} />
       </Route>
       {/* todo: 필터 설정 화면 생성 */}
       <Route path="/filter/:id" element={<FilterSettingsPage />} />

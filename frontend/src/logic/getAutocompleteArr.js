@@ -13,39 +13,38 @@ const SERVER_ALL_JONGMOK_ARRAY_URL =
  * @param 없음
  */
 const getSearchComplete = async () => {
-  searchConstValue.length = 0;
+  if (searchObjValue.length === 0) {
+    axios
+      .get(SERVER_ALL_JONGMOK_ARRAY_URL)
+      .then((resp) => {
+        let jongmokJson = resp.data;
 
-  axios
-    .get(SERVER_ALL_JONGMOK_ARRAY_URL)
-    .then((resp) => {
-      console.log("resp.data.length :>> ", resp.data.length);
-      let jongmokJson = resp.data;
+        jongmokJson.forEach((elem, index) => {
+          // 과다 데이터 방지 로직
+          if (index >= 114) {
+            return false;
+          }
+          let addStr = elem.name_kr + "/" + elem.name_en;
 
-      jongmokJson.forEach((elem, index) => {
-        // 과다 데이터 방지 로직
-        if (index >= 114) {
-          return false;
-        }
-        let addStr = elem.name_kr + "/" + elem.name_en;
-
-        searchObjValue.push({
-          name: addStr,
-          id: index,
-          name_kr: elem.name_kr,
-          name_en: elem.name_en,
-          tradingview_market_code: elem.tradingview_market_code,
-          tradingview_upbit_code: elem.tradingview_upbit_code,
-          upbit_stock_code: elem.upbit_stock_code,
+          searchObjValue.push({
+            name: addStr,
+            id: index,
+            name_kr: elem.name_kr,
+            name_en: elem.name_en,
+            tradingview_market_code: elem.tradingview_market_code,
+            tradingview_upbit_code: elem.tradingview_upbit_code,
+            upbit_stock_code: elem.upbit_stock_code,
+          });
+          searchConstValue.push(addStr);
         });
-        searchConstValue.push(addStr);
-      });
-    })
-    .catch((err) => {
-      // todo 에러처리 및 새로고침
-      alert("내부에서 오류가 발생했습니다.\n사이트를 새로고침해주세요.");
+      })
+      .catch((err) => {
+        // todo 에러처리 및 새로고침
+        alert("내부에서 오류가 발생했습니다.\n사이트를 새로고침해주세요.");
 
-      console.log("err :>> ", err);
-    });
+        console.log("err :>> ", err);
+      });
+  }
 };
 
 export default getSearchComplete;

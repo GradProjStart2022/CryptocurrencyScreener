@@ -11,6 +11,8 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 
+const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
+
 const reqLoginCss = css({
   background: "rgba(34,34,34,0.2)",
   height: "30vh",
@@ -24,6 +26,11 @@ const reqLoginCss = css({
   borderRadius: "4px",
 });
 
+/**
+ * 비로그인시 즐겨찾기를 대체하는 컴포넌트
+ * @param {any} props react props
+ * @returns 비로그인시 즐겨찾기 대신 표시되는 UI 요소
+ */
 const NotLogin = (props) => {
   const navigate = props.navigate;
   return (
@@ -71,15 +78,13 @@ const MainPage = (props) => {
               <MiniChart
                 symbol="BTCKRW"
                 width="100%"
-                largeChartUrl="http://localhost:3000/chart"
-                // height={testheight}
+                largeChartUrl={CHART_REDIRECT_URL}
               />
             </Grid>
             <Grid item xs={3} sx={{ marginTop: "12px" }}>
               <CryptoCurrencyMarket
                 width="100%"
-                largeChartUrl="http://localhost:3000/chart"
-                // height="100%"
+                largeChartUrl={CHART_REDIRECT_URL}
               />
             </Grid>
           </Grid>
