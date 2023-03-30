@@ -72,7 +72,7 @@ const AlarmSettingsPage = (props) => {
             sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
           >
             <Grid item xs={2}>
-              <Card sx={{ height: "72vh", width: "194vh" }}>
+              <Card sx={{ height: "72vh", width: "90vw" }}>
                 <TableContainer>
                   <Table>
                     <TableHead>
