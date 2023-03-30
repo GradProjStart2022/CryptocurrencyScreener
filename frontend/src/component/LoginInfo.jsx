@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+import { Modal, Box } from "@mui/material";
 import { IconButton } from "@mui/material";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import LogoutIcon from "@mui/icons-material/Logout";
+
 import { clearUser } from "../redux/store";
 
 /**
@@ -36,7 +41,21 @@ const AccInfo = (props) => {
 
   return (
     <>
-      <div className="user-noti"></div>
+      <div className="user-noti" onClick={handleAlertOpen}>
+        <NotificationsNoneIcon />
+        <Modal open={isAlertOpen} onClose={handleAlertClose}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "8%",
+              left: "70%",
+              width: "20%",
+              height: "40%",
+              backgroundColor: "#ffffff",
+            }}
+          ></Box>
+        </Modal>
+      </div>
       <div className="account-info">
         <img
           src={props.userStore.accimg}
@@ -67,6 +86,9 @@ const AccInfo = (props) => {
 const LoginInfo = (props) => {
   const userStore = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [isAlertOpen, setAlertOpen] = useState(false);
+  const handleAlertOpen = () => setAlertOpen(true);
+  const handleAlertClose = () => setAlertOpen(false);
 
   return (
     <div className="account-area">

@@ -15,29 +15,16 @@
   background-color: #165ae7;
 }
 
-.testbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 5vw;
-  max-width: 42px;
-  height: 5vw;
-  max-height: 42px;
-  margin: 0 0 24px 0;
-  background-color: #0e4ac6;
-  border-radius: 32%;
-  border: none;
-  cursor: pointer;
-}
-
+/* main content layout styling */
 .content-view {
-  width: 92%;
+  width: 90%;
   height: 100%;
   float: left;
-  padding: 8px 8px 0 24px;
 }
 
+/* search/account area styling */
 .top-bar {
+  width: 90%;
   display: flex;
   justify-content: space-between;
 }
@@ -56,28 +43,14 @@
   color: #9ca3af;
 }
 
-.form span {
+/* 이거 쓰는거 맞아? */
+/* .form span {
   position: absolute;
   right: 17px;
   top: 13px;
   padding: 2px;
   border-left: 1px solid #d1d5db;
-}
-
-.form-input {
-  height: 4vh;
-  max-height: 40px;
-  width: 100%;
-  text-indent: 33px;
-  border-radius: 24px;
-  border: 1px solid #e6e7e7;
-  background-color: #f0f3fa;
-}
-
-.form-input:focus {
-  box-shadow: none;
-  border: none;
-}
+} */
 
 /* search bar end */
 
@@ -109,6 +82,10 @@
   border: none;
   border-radius: 100%;
   background-color: #ebecee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .account-info {

@@ -12,6 +12,7 @@ import AlarmSettingsPage from "./page/AlarmSettingsPage.jsx";
 import BookmarkPage from "./page/BookmarkPage.jsx";
 import { KakaoLoginRedirect } from "./page/KakaoLoginRedirect";
 import { GoogleLoginRedirect } from "./page/GoogleLoginRedirect";
+import TDWidgetRedirectPage from "./page/TDWidgetRedirectPage.jsx";
 
 function App() {
   return (
@@ -27,7 +28,9 @@ function App() {
         {/* todo: 전체 종목에 대한 정보 표시 페이지 생성 */}
         <Route index element={<ChartListPage />} />
         {/* todo: 종목코드를 URL param으로 가지는 종목별 페이지 생성 */}
-        <Route path="종목코드" element={<ChartPage />} />
+        <Route path=":code" element={<ChartPage />} />
+        {/* todo: 트레이딩뷰 위젯 리다이렉트 컨트롤 */}
+        <Route path="tdview_widget" element={<TDWidgetRedirectPage />} />
       </Route>
       {/* todo: 필터 설정 화면 생성 */}
       <Route path="/filter/:id" element={<FilterSettingsPage />} />
