@@ -1,14 +1,12 @@
 import { useState } from "react";
 
 import {
-  Button,
   Card,
   FormControl,
   FormControlLabel,
   Grid,
   Paper,
   Radio,
-  RadioGroup,
   Typography,
   Select,
   MenuItem,
@@ -20,17 +18,35 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import { ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
+import UserFilterList from "../component/UserFilterList.jsx";
 
 /**
- * 화면설계서 6슬라이드 종목 전체가 나오는 화면
+ * 필터링된 종목이 없을때 안내하는 UI 요소를 반환할 예정
  * @param {any} props react props
- * @returns
+ * @returns 필터 없을 때 안내하는 UI 요소
+ */
+const NoCrypto = (props) => {
+  // todo: 종목 정보 영역의 flex 레이아웃 연동하기(배열 0번)
+  return (
+    <Typography variant="body1" component="div">
+      <p>
+        필터를 선택해 속성을 보거나
+        <br />+ 버튼을 눌러 새 필터를 생성하세요
+      </p>
+    </Typography>
+  );
+};
+
+/**
+ * 필터 미선택시 전체 종목이 표시되고
+ * 필터 선택시 필터링된 종목이 표시되는 화면
+ * @param {any} props react props
+ * @returns 필터선택 및 종목 UI 화면
  */
 const ChartListPage = (props) => {
   const rows = [
@@ -71,7 +87,7 @@ const ChartListPage = (props) => {
 
   // 복합필터 선택 폼
   let filterlist_testarr = [];
-  for (let index = 0; index < 24; index++) {
+  for (let index = 0; index < 10; index++) {
     filterlist_testarr.push(
       <FormControlLabel
         key={index}
@@ -82,11 +98,10 @@ const ChartListPage = (props) => {
     );
   }
 
-  //select
-  const [value, setValue] = useState("");
-
+  // 종목 정렬 방법 변수 todo: 필터링된 종목과 연계
+  const [howSort, setHowSort] = useState("");
   const handleChange = (event) => {
-    setValue(event.target.value);
+    setHowSort(event.target.value);
   };
 
   const menuProps = {
@@ -113,52 +128,22 @@ const ChartListPage = (props) => {
           <div style={{ marginLeft: "12px", marginTop: "24px" }}>
             <h1>현재 적용중인 필터:</h1>
           </div>
-          {/* 사용자 필터 목록 영역 */}
+
           <Grid
             container
             spacing={2}
             sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
           >
-            <Grid item xs={2}>
-              <Card sx={{ height: "72vh" }}>
-                <Typography variant="h6" component="div" sx={{ height: "20%" }}>
-                  <span
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "space-around",
-                      alignItems: "center",
-                    }}
-                  >
-                    사용자
-                    <br />
-                    필터 목록
-                    <Button variant="contained" size="small">
-                      <AddIcon fontSize="small" />
-                    </Button>
-                  </span>
-                </Typography>
-                {/* 사용자 필터 라디오그룹 목록 영역 */}
-                <Paper
-                  elevation={0}
-                  sx={{
-                    maxHeight: "80%",
-                    overflow: "auto",
-                    padding: "4px 8px 4px 8px",
-                  }}
-                >
-                  <FormControl>
-                    <RadioGroup>{filterlist_testarr}</RadioGroup>
-                  </FormControl>
-                </Paper>
-              </Card>
-            </Grid>
-            {/* 종목 세부 정보 영역 */}
+            {/* 사용자 필터 목록 영역 */}
+            <UserFilterList
+              filterList={filterlist_testarr}
+              isSettings={false}
+            />
+            {/* 종목 정보 영역 */}
             <Grid item xs={10}>
               <Card
                 sx={{
-                  // todo: 필터 선택 안했을때 0번, 선택했을때 1번 되게하기
+                  // todo: 종목 없을때 0번, 종목 있을때 1번 되게하기
                   display: ["flex", "block"][1],
                   justifyContent: ["center", "flex-start"][1],
                   alignItems: ["center", "stretch"][1],
@@ -187,7 +172,7 @@ const ChartListPage = (props) => {
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={value}
+                        value={howSort}
                         onChange={handleChange}
                         MenuProps={menuProps}
                       >
@@ -254,16 +239,6 @@ const ChartListPage = (props) => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-                  {/* <Paper
-                    elevation={1}
-                    sx={{
-                      height: "100%",
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  ></Paper> */}
                 </Typography>
               </Card>
             </Grid>
