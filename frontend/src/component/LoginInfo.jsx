@@ -39,6 +39,10 @@ const AccInfo = (props) => {
   const dispatch = useDispatch();
   const navigate = props.navigate;
 
+  const [isAlertOpen, setAlertOpen] = useState(false);
+  const handleAlertOpen = () => setAlertOpen(true);
+  const handleAlertClose = () => setAlertOpen(false);
+
   return (
     <>
       <div className="user-noti" onClick={handleAlertOpen}>
@@ -86,9 +90,6 @@ const AccInfo = (props) => {
 const LoginInfo = (props) => {
   const userStore = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const [isAlertOpen, setAlertOpen] = useState(false);
-  const handleAlertOpen = () => setAlertOpen(true);
-  const handleAlertClose = () => setAlertOpen(false);
 
   return (
     <div className="account-area">
