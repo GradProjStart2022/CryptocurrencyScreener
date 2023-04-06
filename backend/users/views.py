@@ -1,3 +1,4 @@
+# f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}"
 from json import dumps
 
 import requests
@@ -54,13 +55,13 @@ def kakao_callback(request):
     Access Token Request
     """
     token_req = requests.get(
-        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}"
-        # f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=%7Brest_api_key%7D&redirect_uri=http://localhost:3000/users/kakao/callback&code=%7Bcode%7D"
+        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri=http://127.0.0.1:3000/users/kakao/callback/&code={code}"
     )
 
     token_req_json = token_req.json()
     error = token_req_json.get("error")
     if error is not None:
+        print(token_req_json)
         raise JSONDecodeError(error)
     access_token = token_req_json.get("access_token")
     """
@@ -114,6 +115,7 @@ def kakao_callback(request):
         accept_json = accept.json()
         accept_json.pop("user", None)
         accept_json["access_token"] = access_token
+        accept_json = dumps(accept_json)
         # return JsonResponse(accept_json, status=status.HTTP_200_OK)
         # 변경부
         return HttpResponseRedirect(

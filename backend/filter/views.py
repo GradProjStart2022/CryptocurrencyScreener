@@ -126,7 +126,15 @@ def recommend(request):
         .distinct()
     )
 
+    # q = Filter.objects.prefetch_related("settings").get(pk=1)
+
+    # return JsonResponse({})
+
     count = dict()
+
+    # print("filter name : ", q.expression)
+    # for setting in q.settings.all():
+    #     print("indicator : ", setting.indicator)
 
     # for obj in q:
     #     print("filter name : ", obj.name)
