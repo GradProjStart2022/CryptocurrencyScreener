@@ -19,7 +19,7 @@ class Upbit(models.Model):
     CLOSE = models.FloatField()
     HIGH = models.FloatField()
     LOW = models.FloatField()
-    VOLUME = models.FloatField()
+    VOLUME = models.CharField(max_length=255)
     CMR = models.FloatField()
     UB = models.FloatField()
     LB = models.FloatField()
