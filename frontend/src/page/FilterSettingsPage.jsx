@@ -49,7 +49,7 @@ const FilterSettingsPage = (props) => {
   const handleBFliterOpen = () => setOpenBFilter(true);
   const handleBFliterClose = () => setOpenBFilter(false);
 
-  // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼 (모듈화 필요)
+  // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼
   let filterlist_testarr = [];
   for (let index = 0; index < 10; index++) {
     filterlist_testarr.push(

@@ -130,7 +130,7 @@ const BookmarkPage = (props) => {
                   />
                 );
               })
-            ) : isStrEmpty(user_email) ? (
+            ) : !isStrEmpty(user_email) ? (
               // 종목의 길이가 없는 상황: 대체 요소 렌더링
               <div>
                 관심 종목이 없습니다

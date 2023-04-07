@@ -1,0 +1,86 @@
+﻿abbreviation,name_kr,name_en,type
+OPEN,시작가,Open,descriptive
+CLOSE,종가,Close,descriptive
+HIGH,고가,High,descriptive
+LOW,저가,Low,descriptive
+VOLUME,거래량,Volume,descriptive
+CMR,중심 이동 평균선,Centered Moving Average,technical
+UB,상한선,Upper band,technical
+LB,하한선,Lower Band,technical
+MD,평균변화율,Mean Deviation,technical
+WA,가중 평균,Weighted Average,technical
+EWA,지수 가중 평균,Exponential Weighted Average,technical
+TMA,삼각 이동 평균,Triangular Moving Average,technical
+EWMA,지수 가중 이동 평균선,Exponential Weighted Moving Average,technical
+HMA,헐 이동 평균,Hull Moving Average,technical
+MA,이동 평균선,Moving Average,technical
+EMA,지수 이동 평균,Exponential Moving Average,technical
+SMA,간단 이동 평균,Simple Moving Average,technical
+WMA,가중 이동 평균,Weighted Moving Average,technical
+VMA,가변 이동 평균,Variable Moving Average,technical
+EMAD,지수 이동 평균선 거리,Exponential Moving Average Distance,technical
+WMAD,가중 이동 평균선 거리,Weighted Moving Average Distance,technical
+MAA,이동 평균선 각도,Moving Average Angle,technical
+MAG,이동 평균선 갭,Moving Average Gap,technical
+MAR,이동 평균선 비율,Moving Average Ratio,technical
+MACD,이동 평균선 수렴/발산,Moving Average Convergence Divergence,technical
+ATR,평균 참 범위,Average True Range,technical
+BB,볼린저 밴드,Bollinger Bands,technical
+RSI,상대 강도 지수,Relative Strength Index,technical
+STIC,스토캐스틱,Stochastic,technical
+SRSI,스토캐스틱 RSI,Stochastic RSI,technical
+WILLPR,윌리엄스 %R,Williams %R,technical
+CCI,상품 채널 지수(CCI),Commodity Channel Index,technical
+AD,거래량 지표,Accumulation/Distribution,technical
+ADO,거래량 지표 오실레이터,Accumulation/Distribution Oscillator,technical
+CB,차트 밴드,Chart Bands,technical
+EP,청산 지점,Exit Points,technical
+DMI,디렉션 이동 지수,Directional Movement Index,technical
+AA,각도 평균,Angle Average,technical
+LR,선형 회귀,Linear Regression,technical
+MOTM,모멘텀,Momentum,technical
+EM,지수 모멘텀,Exponential Momentum,technical
+WM,가중 모멘텀,Weighted Momentum,technical
+MAM,이평선 모멘텀,Moving Average Momentum,technical
+ROC,변화율,Rate of Change,technical
+ROCR,변화율 지수,Rate of Change Ratio,technical
+ROCP,변화율 비율,Rate of Change Percentage,technical
+TEMA,트리플 지수 이동 평균선,Triple Exponential Moving Average,technical
+ROCA,변화율 평균,Rate of Change Average,technical
+PPSR,"피벗 포인트, 지원, 및 저항(PPSR)","Pivot Points, Support, and Resistance",technical
+FR,피보나치 리트레이스먼트,Fibonacci Retracements,technical
+FP,피보나치 이동,Fibonacci Projections,technical
+PDC,확률 분포 채널,Probability Distribution Channel,technical
+EMAC,지수 이동 평균선 변화,Exponential Moving Average Change,technical
+WMAC,가중 이동 평균선 변화,Weighted Moving Average Change,technical
+KAMA,카우프만 조정 이동 평균(KAMA),Kaufman Adaptive Moving Average,technical
+CMO,찬데 모멘텀 오실레이터(CMO),Chande Momentum Oscillator,technical
+KVO,클링거 볼륨 오실레이터(KVO),Klinger Volume Oscillator,technical
+EI,에르고딕 지표,Ergodic Indicator,technical
+QSI,Qstick 지표,QStick Indicator,technical
+STC,Schaff 추제 주기,Schaff Trend Cycle,technical
+UO,얼티밋 오실레이터,Ultimate Oscillator,technical
+DC,돈치안 채널,Donchian Channels,technical
+MCDHST,MACD 히스토그램,MACD Histogram,technical
+IHH,일목균형표,Ichimoku Kinko Hyo,technical
+OBV,총 체결량 지표,On Balance Volume,technical
+CMF,현금 흐름 지표,Chaikin Money Flow,technical
+AP,평균 가격 지수,Average Price,technical
+EA,지수 평균,Exponential Average,technical
+ES,지수 스무딩,Exponential Smoothing,technical
+EMAROC,지수 이동 변화,Exponential Moving Average Rate of Change,technical
+KSTO,KST 오실레이터,KST Oscillator,technical
+KER,카우프만 효율 비율,Kaufman Efficiency Ratio,technical
+LRI,션형회귀 절편,Linear Regression Intercept,technical
+LRS,선형회귀 기울기,Linear Regression Slope,technical
+SD,표준편차,Standard Deviation,technical
+SND,표준정규분포,Standard Normal Distribution,technical
+VAR,최대예상손실액,Value at Risk,technical
+BETA,베타,Beta,technical
+CCI,상관계수,Correlation Coefficient,technical
+COV,분산,Covariance,technical
+KURTS,첨도,Kurtosis,technical
+SKNS,비대칭도,Skewness,technical
+STEM,표준오차,Standard Error of the Mean,technical
+TTEST,t-검정,T-Test,technical
+VR,변동비,Variance Ratio,technical
