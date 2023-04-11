@@ -2,7 +2,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 /**
  * 사용자 정보 redux store
- * access_token(, 이메일, 사용자 사진) 보관
+ * access_token, 이름, 이메일, 사용자 사진 보관
  */
 let user = createSlice({
   name: "user",
@@ -35,9 +35,24 @@ let user = createSlice({
   },
 });
 
+/**
+ * 사용자 필터 정보 redux store
+ */
+let userFilter = createSlice({
+  name: "userFilter",
+  initialState: { filter_list: [] },
+  reducers: {
+    setUserFilterList: (state, action) => {
+      state.filter_list = action.payload;
+    },
+  },
+});
+
+export let { setUserFilterList } = userFilter.actions;
 export let { setToken, setAccname, setEmail, setImg, clearUser } = user.actions;
 export default configureStore({
   reducer: {
     user: user.reducer,
+    userFilter: userFilter.reducer,
   },
 });

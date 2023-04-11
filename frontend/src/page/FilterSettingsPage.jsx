@@ -1,14 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Box,
   Button,
   Card,
-  FormControlLabel,
   Grid,
   Modal,
   Paper,
-  Radio,
   TextField,
   Typography,
 } from "@mui/material";
@@ -27,7 +25,6 @@ import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
  * @returns 필터 없을 때 안내하는 UI 요소
  */
 const NoFilter = (props) => {
-  // todo: 필터 세부 정보 영역의 flex 레이아웃 연동하기(배열 0번)
   return (
     <Typography variant="body1" component="div">
       <p>
@@ -49,37 +46,38 @@ const FilterSettingsPage = (props) => {
   const handleBFliterOpen = () => setOpenBFilter(true);
   const handleBFliterClose = () => setOpenBFilter(false);
 
-  // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼
-  let filterlist_testarr = [];
-  for (let index = 0; index < 10; index++) {
-    filterlist_testarr.push(
-      <FormControlLabel
-        key={index}
-        value={`test${index}`}
-        control={<Radio />}
-        label={`test${index}`}
-      />
-    );
-  }
+  // UserFilterList 클릭 필터 확인용 넘겨주기 state
+  const [filterListClick, setFilterListClick] = useState(0);
 
-  // 편집화면 기본필터: 복합필터에 속해있는 기본필터들 표시
   let basic_testarr = [];
-  for (let index = 0; index < 9; index++) {
-    basic_testarr.push(
-      <BasicFilterComponent code="A" name="RSI" oper="=" value1="1000" />
-    );
-  }
-  for (let index = 0; index < 9; index++) {
-    basic_testarr.push(
-      <BasicFilterComponent
-        code="A"
-        name="RSI"
-        oper="="
-        value1="1000"
-        value2="2000"
-      />
-    );
-  }
+  useEffect(() => {
+    if (filterListClick !== 0) {
+      console.log("filterListCheck 값 바뀜");
+      basic_testarr.length = 0;
+      // 편집화면 복합필터에 속해있는 기본필터들 임시 표시 컴포넌트
+      for (let index = 0; index < 9; index++) {
+        basic_testarr.push(
+          <BasicFilterComponent
+            code="A"
+            name={filterListClick.toString()}
+            oper="="
+            value1="1000"
+          />
+        );
+      }
+      for (let index = 0; index < 9; index++) {
+        basic_testarr.push(
+          <BasicFilterComponent
+            code="A"
+            name={filterListClick.toString()}
+            oper="="
+            value1="1000"
+            value2="2000"
+          />
+        );
+      }
+    }
+  }, [filterListClick]);
 
   return (
     <div className="App">
@@ -100,157 +98,179 @@ const FilterSettingsPage = (props) => {
             sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
           >
             {/* 사용자 필터 목록 영역 */}
-            <UserFilterList filterList={filterlist_testarr} isSettings={true} />
+            <UserFilterList
+              isSettings={true}
+              filterListClick={filterListClick}
+              setFilterListClick={setFilterListClick}
+            />
             {/* 필터 세부 정보 영역 */}
             <Grid item xs={10}>
               <Card
                 sx={{
-                  // todo: 필터 선택 안했을때 0번, 선택했을때 1번 되게하기
-                  display: ["flex", "block"][1],
-                  justifyContent: ["center", "flex-start"][1],
-                  alignItems: ["center", "stretch"][1],
+                  // todo: 필터 선택 안했을때 0번, 선택했을때 1번 되는지 확인
+                  display: ["flex", "block"][filterListClick === 0 ? 0 : 1],
+                  justifyContent: ["center", "flex-start"][
+                    filterListClick === 0 ? 0 : 1
+                  ],
+                  alignItems: ["center", "stretch"][
+                    filterListClick === 0 ? 0 : 1
+                  ],
                   height: "72vh",
                 }}
               >
-                {/* <NoFilter/> */}
-                {/* 필터이름 영역 */}
-                <Typography
-                  component="div"
-                  sx={{ height: "10%", width: "100%" }}
-                >
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      height: "100%",
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography variant={"h6"} component="div">
-                      필터 이름
-                    </Typography>
-                    <TextField
-                      id="filter-name"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "80%", marginLeft: "12px" }}
-                    />
-                  </Paper>
-                </Typography>
-                {/* 조건식 영역 */}
-                <Typography
-                  component="div"
-                  sx={{ height: "10%", width: "100%" }}
-                >
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      height: "100%",
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "space-around",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography variant={"h6"} component="div">
-                      조건식
-                    </Typography>
-                    <TextField
-                      id="filter-name"
-                      variant="outlined"
-                      size="small"
-                      defaultValue="A or B"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      sx={{ width: "70%", marginLeft: "12px" }}
-                    />
-                    <Button variant="outlined" size="small">
-                      괄호 삭제
-                    </Button>
-                    <Button variant="contained" size="small">
-                      괄호 추가
-                    </Button>
-                  </Paper>
-                </Typography>
-                {/* 기본필터들 영역 */}
-                <Typography
-                  component="div"
-                  sx={{ height: "80%", width: "100%" }}
-                >
-                  <Paper elevation={1} sx={{ height: "100%", width: "100%" }}>
-                    <div
-                      style={{
-                        height: "8%",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "0px 1vw 0px 1vw",
-                      }}
+                {/* todo: 필터 선택에 따라 컴포넌트 로드 정상적인지 확인 */}
+                {filterListClick === 0 ? (
+                  <NoFilter />
+                ) : (
+                  <>
+                    {/* 필터이름 영역 */}
+                    <Typography
+                      component="div"
+                      sx={{ height: "10%", width: "100%" }}
                     >
-                      <Typography variant="h6" component="div">
-                        필터제목의 필터 목록
-                      </Typography>
-                      {/* 필터 조회시에 나타나는 편집 버튼
+                      <Paper
+                        elevation={1}
+                        sx={{
+                          height: "100%",
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant={"h6"} component="div">
+                          필터 이름
+                        </Typography>
+                        <TextField
+                          id="filter-name"
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: "80%", marginLeft: "12px" }}
+                        />
+                      </Paper>
+                    </Typography>
+                    {/* 조건식 영역 */}
+                    <Typography
+                      component="div"
+                      sx={{ height: "10%", width: "100%" }}
+                    >
+                      <Paper
+                        elevation={1}
+                        sx={{
+                          height: "100%",
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-around",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant={"h6"} component="div">
+                          조건식
+                        </Typography>
+                        {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 */}
+                        <TextField
+                          id="filter-name"
+                          variant="outlined"
+                          size="small"
+                          defaultValue="A or B"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          sx={{ width: "70%", marginLeft: "12px" }}
+                        />
+                        {/* todo: 긁은 텍스트에 대응해 핸들러 기능 추가 */}
+                        <Button variant="outlined" size="small">
+                          괄호 삭제
+                        </Button>
+                        <Button variant="contained" size="small">
+                          괄호 추가
+                        </Button>
+                      </Paper>
+                    </Typography>
+                    {/* 기본필터들 영역 */}
+                    <Typography
+                      component="div"
+                      sx={{ height: "80%", width: "100%" }}
+                    >
+                      <Paper
+                        elevation={1}
+                        sx={{ height: "100%", width: "100%" }}
+                      >
+                        <div
+                          style={{
+                            height: "8%",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            padding: "0px 1vw 0px 1vw",
+                          }}
+                        >
+                          <Typography variant="h6" component="div">
+                            필터제목의 필터 목록
+                          </Typography>
+                          {/* // 필터 조회시에 나타나는 편집 버튼? todo: 바로 편집모드로 들어가도 상관없을 듯?
                       <Button variant="contained" size="small">
                         편집
                       </Button> */}
-                      <Button
-                        onClick={handleBFliterOpen}
-                        variant="contained"
-                        size="small"
-                      >
-                        <AddIcon fontSize="small" />
-                      </Button>
-                      <Modal open={openBFilter} onClose={handleBFliterClose}>
+                          <Button
+                            onClick={handleBFliterOpen}
+                            variant="contained"
+                            size="small"
+                          >
+                            <AddIcon fontSize="small" />
+                          </Button>
+                          <Modal
+                            open={openBFilter}
+                            onClose={handleBFliterClose}
+                          >
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                top: "10%",
+                                left: "10%",
+                                width: "80%",
+                                height: "80%",
+                                bgcolor: "#ffffff",
+                              }}
+                            >
+                              <FilterSelectTabs
+                                handleBFliterClose={handleBFliterClose}
+                              />
+                            </Box>
+                          </Modal>
+                        </div>
+                        {/* 필터에 있는 기본필터들 컴포넌트 */}
                         <Box
                           sx={{
-                            position: "absolute",
-                            top: "10%",
-                            left: "10%",
-                            width: "80%",
                             height: "80%",
-                            bgcolor: "#ffffff",
+                            padding: "0px 4vw 0px 4vw",
+                            overflow: "auto",
                           }}
                         >
-                          <FilterSelectTabs
-                            handleBFliterClose={handleBFliterClose}
-                          />
+                          {basic_testarr}
                         </Box>
-                      </Modal>
-                    </div>
-                    {/* 필터에 있는 기본필터들 컴포넌트 */}
-                    <Box
-                      sx={{
-                        height: "80%",
-                        padding: "0px 4vw 0px 4vw",
-                        overflow: "auto",
-                      }}
-                    >
-                      {basic_testarr}
-                    </Box>
-                    <div
-                      style={{
-                        height: "12%",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button variant="text" size="small">
-                        초기화
-                      </Button>
-                      <Button variant="outlined" size="small">
-                        취소
-                      </Button>
-                      <Button variant="contained" size="small">
-                        저장
-                      </Button>
-                    </div>
-                  </Paper>
-                </Typography>
+                        <div
+                          style={{
+                            height: "12%",
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button variant="text" size="small">
+                            초기화
+                          </Button>
+                          <Button variant="outlined" size="small">
+                            취소
+                          </Button>
+                          <Button variant="contained" size="small">
+                            저장
+                          </Button>
+                        </div>
+                      </Paper>
+                    </Typography>
+                  </>
+                )}
               </Card>
             </Grid>
           </Grid>

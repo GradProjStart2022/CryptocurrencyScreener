@@ -177,6 +177,7 @@ const FilterSelectTabs = (props) => {
           <Tab label="서술적" />
           <Tab label="기술적" />
           <Tab label="나의 필터" />
+          <Tab label="추천 필터" />
         </Tabs>
       </Box>
       {/* 전체 필터 영역 */}
@@ -196,6 +197,7 @@ const FilterSelectTabs = (props) => {
           </Grid>
         </Box>
       </TabPanel>
+      {/* 서술적 필터 영역 */}
       <TabPanel value={tabValue} index={1}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -214,6 +216,7 @@ const FilterSelectTabs = (props) => {
           </Grid>
         </Box>
       </TabPanel>
+      {/* 기술적 필터 영역 */}
       <TabPanel value={tabValue} index={2}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -232,8 +235,39 @@ const FilterSelectTabs = (props) => {
           </Grid>
         </Box>
       </TabPanel>
+      {/* 나의 필터 영역 */}
       <TabPanel value={tabValue} index={3}>
-        나의 필터
+        <Box sx={{ height: "68vh", overflow: "scroll" }}>
+          <Grid
+            container
+            spacing={0}
+            sx={{
+              height: "100%",
+              maxHeight: "100%",
+              alignContent: "start",
+              overflow: "scroll",
+            }}
+          >
+            {/* todo: 필터링 로직 해서 컴포넌트 넣기 */}
+          </Grid>
+        </Box>
+      </TabPanel>
+      {/* 추천 필터 영역 */}
+      <TabPanel value={tabValue} index={4}>
+        <Box sx={{ height: "68vh", overflow: "scroll" }}>
+          <Grid
+            container
+            spacing={0}
+            sx={{
+              height: "100%",
+              maxHeight: "100%",
+              alignContent: "start",
+              overflow: "scroll",
+            }}
+          >
+            {/* todo: 필터링 로직 해서 컴포넌트 넣기 */}
+          </Grid>
+        </Box>
       </TabPanel>
     </Box>
   );

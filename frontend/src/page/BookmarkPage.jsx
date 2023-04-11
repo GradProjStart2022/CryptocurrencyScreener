@@ -49,6 +49,7 @@ const BookmarkPage = (props) => {
   let user_email = useSelector((state) => state.user).email;
   let [bookmarks, setBookmark] = useState([]);
 
+  // todo: useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
   useEffect(() => {
     /* 
       로그인이랑 연동해서

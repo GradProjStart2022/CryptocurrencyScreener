@@ -2,12 +2,15 @@ import {
   Button,
   Card,
   FormControl,
+  FormControlLabel,
   Grid,
   Paper,
   RadioGroup,
+  Radio,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useSelector } from "react-redux";
 
 /**
  * 사용자 필터 선택에 대한 UI 컴포넌트 반환 함수
@@ -15,8 +18,27 @@ import AddIcon from "@mui/icons-material/Add";
  * @returns 사용자 필터 선택 라디오버튼 UI 컴포넌트
  */
 const UserFilterList = (props) => {
-  const filterList = props.filterList;
+  const userFilters = useSelector((state) => state.userFilter).filter_list;
   const isSettings = props.isSettings;
+  const filterListClick = props.filterListClick;
+  const setFilterListClick = props.setFilterListClick;
+
+  const handleFilterCheck = (event) => {
+    setFilterListClick(event.target.value);
+  };
+
+  // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼
+  let filterList = [];
+  userFilters.forEach((value) => {
+    filterList.push(
+      <FormControlLabel
+        key={value.id}
+        value={value.id}
+        control={<Radio />}
+        label={value.name}
+      />
+    );
+  });
 
   return (
     <Grid item xs={2}>
@@ -53,7 +75,9 @@ const UserFilterList = (props) => {
           }}
         >
           <FormControl>
-            <RadioGroup>{filterList}</RadioGroup>
+            <RadioGroup value={filterListClick} onChange={handleFilterCheck}>
+              {filterList}
+            </RadioGroup>
           </FormControl>
         </Paper>
         {/* 사용자 필터 라디오그룹 목록 영역 끝 */}

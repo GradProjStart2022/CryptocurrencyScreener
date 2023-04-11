@@ -8,6 +8,7 @@ import { CircularProgress } from "@mui/material";
 
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
+import getUserFilter from "../logic/getUserFilterFromServer.js";
 
 /**
  * 카카오 로그인 리다이렉트 페이지
@@ -50,6 +51,9 @@ export const KakaoLoginRedirect = (props) => {
           dispatch(setEmail(temp_email));
           dispatch(setImg(temp_userimg));
 
+          // 사용자 필터 불러오기 작업 수행
+          getUserFilter(temp_email, dispatch);
+
           // 모든 작업 완료 후 홈으로 화면 전환시켜줌
           navigate("/", { replace: true });
         })
@@ -58,6 +62,7 @@ export const KakaoLoginRedirect = (props) => {
           window.alert(
             "로그인 후처리 작업에 실패했습니다.\n다시 로그인해 주세요."
           );
+          console.log("KakaoLoginRedirect err :>> ", err);
           dispatch(setToken(""));
           navigate("/login", { replace: true });
         });

@@ -74,6 +74,7 @@ const MainPage = (props) => {
             sx={{ marginLeft: "12px", marginTop: "24px" }}
           >
             <Grid item xs={9}>
+              {/* todo: 로그인 되었을때 연동 및 디자인 필요 */}
               {isLogin ? <div>로그인됨</div> : <NotLogin navigate={navigate} />}
               <MiniChart
                 symbol="BTCKRW"
