@@ -23,4 +23,5 @@ urlpatterns = [
     path("login/", include("dj_rest_auth.urls")),
     path("filter/", include("filter.urls")),
     path("widget/", include("widget.urls")),
+    path("price/", include("price.urls")),
 ]

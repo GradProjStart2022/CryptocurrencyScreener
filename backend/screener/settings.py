@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "users",
     "filter",
     "widget",
+    "price",
 ]
 
 MIDDLEWARE = [
