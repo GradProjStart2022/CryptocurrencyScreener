@@ -7,6 +7,9 @@ import { IconButton } from "@mui/material";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
 import { clearUser } from "../redux/store";
 
@@ -43,21 +46,88 @@ const AccInfo = (props) => {
   const handleAlertOpen = () => setAlertOpen(true);
   const handleAlertClose = () => setAlertOpen(false);
 
+  const notifications = [
+    {
+      id: 1,
+      filterName: "첫번째 필터",
+      items: ["종목1", "종목2", "종목3"],
+    },
+    {
+      id: 2,
+      filterName: "두번째 필터",
+      items: ["종목4", "종목5", "종목6"],
+    },
+    {
+      id: 3,
+      filterName: "세번째 필터",
+      items: ["종목7", "종목8", "종목9"],
+    },
+  ];
+
+  // 스크롤 바 css
+  const styles = {
+    // 스크롤바 전체 너비
+    "::-webkit-scrollbar": {
+      width: "12px",
+    },
+
+    // 스크롤바 트랙
+    "::-webkit-scrollbar-track": {
+      background: "#f1f1f1",
+      borderRadius: "10px",
+    },
+
+    // 스크롤바 핸들
+    "::-webkit-scrollbar-thumb": {
+      background: "#888",
+      borderRadius: "10px",
+    },
+
+    // 스크롤바 핸들 호버
+    "::-webkit-scrollbar-thumb:hover": {
+      background: "#555",
+    },
+  };
+
   return (
     <>
       <div className="user-noti" onClick={handleAlertOpen}>
         <NotificationsNoneIcon />
         <Modal open={isAlertOpen} onClose={handleAlertClose}>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "8%",
-              left: "70%",
-              width: "20%",
-              height: "40%",
-              backgroundColor: "#ffffff",
-            }}
-          ></Box>
+          <ClickAwayListener onClickAway={handleAlertClose}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "8%",
+                left: "70%",
+                width: "20%",
+                height: "40%",
+                backgroundColor: "#ffffff",
+                overflow: "auto",
+                borderRadius: 3,
+                ...styles,
+              }}
+            >
+              {notifications.map((notification) => (
+                <Paper
+                  key={notification.id}
+                  sx={{
+                    my: 1,
+                    mx: 1,
+                    p: 3,
+                  }}
+                  elevation={3}
+                >
+                  <Typography variant="h6">
+                    {notification.filterName}
+                  </Typography>
+                  <Typography variant="body1">
+                    {notification.items.join(", ")}
+                  </Typography>
+                </Paper>
+              ))}
+            </Box>
+          </ClickAwayListener>
         </Modal>
       </div>
       <div className="account-info">
