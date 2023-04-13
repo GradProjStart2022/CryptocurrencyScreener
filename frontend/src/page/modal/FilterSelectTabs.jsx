@@ -22,7 +22,7 @@ const SELECT_MENU_LIST = [
  * @param {JSX.element[]} component_arr 렌더링할 컴포넌트가 삽입되는 배열
  * @param {object[]} info_arr 기본 필터 정보 배열
  * @param {object[]} basic_value 핸들링 변수 object 배열 state
- * @param {React.Dispatch<React.SetStateAction<never[]>>} setBasicValue 핸들링 변수 setter
+ * @param {React.Dispatch<React.SetStateAction<any[]>>} setBasicValue 핸들링 변수 setter
  */
 const basicComponentInit = (
   component_arr,

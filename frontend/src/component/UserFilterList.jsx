@@ -22,6 +22,7 @@ const UserFilterList = (props) => {
   const isSettings = props.isSettings;
   const filterListClick = props.filterListClick;
   const setFilterListClick = props.setFilterListClick;
+  const setCreateMode = props.setCreateMode;
 
   const handleFilterCheck = (event) => {
     setFilterListClick(event.target.value);
@@ -58,7 +59,14 @@ const UserFilterList = (props) => {
             {isSettings ? <br /> : " "}
             필터 목록
             {isSettings && (
-              <Button variant="contained" size="small">
+              <Button
+                variant="contained"
+                size="small"
+                onClick={(event) => {
+                  setFilterListClick(0);
+                  setCreateMode(true);
+                }}
+              >
                 <AddIcon fontSize="small" />
               </Button>
             )}

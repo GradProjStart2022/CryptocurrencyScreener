@@ -41,14 +41,24 @@ const NoFilter = (props) => {
  * @returns 필터상세설정페이지 UI 요소
  */
 const FilterSettingsPage = (props) => {
-  // 기본필터 탭 열고 닫는 변수
+  // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
   const handleBFliterOpen = () => setOpenBFilter(true);
   const handleBFliterClose = () => setOpenBFilter(false);
 
+  // 필터 만들기 버튼 클릭 여부 확인 state
+  const [createMode, setCreateMode] = useState(false);
+
   // UserFilterList 클릭 필터 확인용 넘겨주기 state
   const [filterListClick, setFilterListClick] = useState(0);
 
+  // 사용자가 입력하는 복합필터 이름 state
+  const [inputFilterName, setInputFilterName] = useState("");
+
+  // 해당 복합필터의 편집용 조건식 state
+  const [filterExp, setFilterExp] = useState("");
+
+  // todo: 얘 실제 필터에 대한 배열로 바꾸기
   let basic_testarr = [];
   useEffect(() => {
     if (filterListClick !== 0) {
@@ -102,28 +112,31 @@ const FilterSettingsPage = (props) => {
               isSettings={true}
               filterListClick={filterListClick}
               setFilterListClick={setFilterListClick}
+              setCreateMode={setCreateMode}
             />
             {/* 필터 세부 정보 영역 */}
             <Grid item xs={10}>
               <Card
                 sx={{
-                  // todo: 필터 선택 안했을때 0번, 선택했을때 1번 되는지 확인
-                  display: ["flex", "block"][filterListClick === 0 ? 0 : 1],
+                  // 필터 선택 안했을때 0번, 선택했을때 1번 되어 레이아웃 조정됨
+                  display: ["flex", "block"][
+                    filterListClick === 0 && !createMode ? 0 : 1
+                  ],
                   justifyContent: ["center", "flex-start"][
-                    filterListClick === 0 ? 0 : 1
+                    filterListClick === 0 && !createMode ? 0 : 1
                   ],
                   alignItems: ["center", "stretch"][
-                    filterListClick === 0 ? 0 : 1
+                    filterListClick === 0 && !createMode ? 0 : 1
                   ],
                   height: "72vh",
                 }}
               >
-                {/* todo: 필터 선택에 따라 컴포넌트 로드 정상적인지 확인 */}
-                {filterListClick === 0 ? (
+                {/* 필터 선택 여부에 따라 안내 멘트 혹은 편집 컴포넌트를 출력 */}
+                {filterListClick === 0 && !createMode ? (
                   <NoFilter />
                 ) : (
                   <>
-                    {/* 필터이름 영역 */}
+                    {/* 필터이름 영역 시작 */}
                     <Typography
                       component="div"
                       sx={{ height: "10%", width: "100%" }}
@@ -145,11 +158,16 @@ const FilterSettingsPage = (props) => {
                           id="filter-name"
                           variant="outlined"
                           size="small"
+                          value={inputFilterName}
                           sx={{ width: "80%", marginLeft: "12px" }}
+                          onChange={(event) => {
+                            setInputFilterName(event.target.value);
+                          }}
                         />
                       </Paper>
                     </Typography>
-                    {/* 조건식 영역 */}
+                    {/* 필터이름 영역 끝 */}
+                    {/* 조건식 영역 시작 */}
                     <Typography
                       component="div"
                       sx={{ height: "10%", width: "100%" }}
@@ -167,18 +185,17 @@ const FilterSettingsPage = (props) => {
                         <Typography variant={"h6"} component="div">
                           조건식
                         </Typography>
-                        {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 */}
                         <TextField
                           id="filter-name"
                           variant="outlined"
                           size="small"
-                          defaultValue="A or B"
+                          value={filterExp}
                           InputProps={{
                             readOnly: true,
                           }}
                           sx={{ width: "70%", marginLeft: "12px" }}
                         />
-                        {/* todo: 긁은 텍스트에 대응해 핸들러 기능 추가 */}
+                        {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 및 긁은 텍스트에 대응한 핸들러 기능 추가*/}
                         <Button variant="outlined" size="small">
                           괄호 삭제
                         </Button>
@@ -187,7 +204,8 @@ const FilterSettingsPage = (props) => {
                         </Button>
                       </Paper>
                     </Typography>
-                    {/* 기본필터들 영역 */}
+                    {/* 조건식 영역 끝 */}
+                    {/* 기본필터들 영역 시작 */}
                     <Typography
                       component="div"
                       sx={{ height: "80%", width: "100%" }}
@@ -206,7 +224,7 @@ const FilterSettingsPage = (props) => {
                           }}
                         >
                           <Typography variant="h6" component="div">
-                            필터제목의 필터 목록
+                            {inputFilterName}의 필터 목록
                           </Typography>
                           {/* // 필터 조회시에 나타나는 편집 버튼? todo: 바로 편집모드로 들어가도 상관없을 듯?
                       <Button variant="contained" size="small">
@@ -239,7 +257,7 @@ const FilterSettingsPage = (props) => {
                             </Box>
                           </Modal>
                         </div>
-                        {/* 필터에 있는 기본필터들 컴포넌트 */}
+                        {/* 필터에 있는 기본필터들 컴포넌트 시작 */}
                         <Box
                           sx={{
                             height: "80%",
@@ -249,6 +267,7 @@ const FilterSettingsPage = (props) => {
                         >
                           {basic_testarr}
                         </Box>
+                        {/* 필터에 있는 기본필터들 컴포넌트 끝 */}
                         <div
                           style={{
                             height: "12%",
@@ -257,18 +276,41 @@ const FilterSettingsPage = (props) => {
                             alignItems: "center",
                           }}
                         >
-                          <Button variant="text" size="small">
+                          <Button
+                            variant="text"
+                            size="small"
+                            onClick={() => {
+                              console.log(
+                                "초기화 버튼 누름 todo: 편집한거 정리만 하는 코드 넣기"
+                              );
+                            }}
+                          >
                             초기화
                           </Button>
-                          <Button variant="outlined" size="small">
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => {
+                              // todo: 편집한거 정리하는 코드 넣기
+                              setCreateMode(false);
+                            }}
+                          >
                             취소
                           </Button>
-                          <Button variant="contained" size="small">
+                          <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => {
+                              // todo: 편집한거 저장하는 코드 넣기
+                              setCreateMode(false);
+                            }}
+                          >
                             저장
                           </Button>
                         </div>
                       </Paper>
                     </Typography>
+                    {/* 기본필터들 영역 끝 */}
                   </>
                 )}
               </Card>

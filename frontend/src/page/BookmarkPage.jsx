@@ -58,6 +58,7 @@ const BookmarkPage = (props) => {
      */
 
     // 처음 접속할때 북마크 목록 받아오기
+    // todo: lodash 설치 이후 변경
     if (!isStrEmpty(user_email)) {
       axios
         .get(`${ATTENTION_URL}?email=${user_email}`)

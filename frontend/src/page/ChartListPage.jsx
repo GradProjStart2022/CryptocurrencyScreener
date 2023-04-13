@@ -22,6 +22,7 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
+import isStrEmpty from "../util/stringEmptyCheck.js";
 
 /**
  * 필터링된 종목이 없을때 안내하는 UI 요소를 반환할 예정
@@ -89,6 +90,9 @@ const ChartListPage = (props) => {
     setHowSort(event.target.value);
   };
 
+  // 사용자가 입력하는 복합필터 이름 state todo: 선택한 필터와 연동
+  const [uFilterName, setUFilterName] = useState("");
+
   // UserFilterList 클릭 필터 확인용 넘겨주기 state
   const [filterListClick, setFilterListClick] = useState(0);
 
@@ -114,7 +118,12 @@ const ChartListPage = (props) => {
         </div>
         <div className="content-view">
           <div style={{ marginLeft: "12px", marginTop: "24px" }}>
-            <h1>현재 적용중인 필터:</h1>
+            {/* todo: lodash 설치 이후 변경 */}
+            {isStrEmpty(uFilterName) ? (
+              <h1>적용중인 필터가 없습니다</h1>
+            ) : (
+              <h1>현재 적용중인 필터: {uFilterName}</h1>
+            )}
           </div>
 
           <Grid

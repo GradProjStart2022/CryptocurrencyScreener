@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setUserFilterList } from "../redux/userFilter";
+import { setUserFilterList } from "../redux/store";
 
 const GET_FILTER_LIST_URL = "http://127.0.0.1:8000/filter/api/filter/";
 
