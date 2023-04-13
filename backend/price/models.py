@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 class Symbol(models.Model):
     symbol_id = models.IntegerField(primary_key=True, name="symbol_id")
-    ticker = models.CharField()
-    name_en = models.CharField()
-    name_kr = models.CharField()
+    ticker = models.CharField(max_length=255)
+    name_en = models.CharField(max_length=255)
+    name_kr = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -103,3 +103,28 @@ class Upbit(models.Model):
     class Meta:
         managed = False
         db_table = "Upbit"
+
+
+class SymbolTest(models.Model):
+    symbol_id = models.IntegerField(primary_key=True, name="symbol_id")
+    ticker = models.CharField(max_length=255)
+    name_en = models.CharField(max_length=255)
+    name_kr = models.CharField(max_length=255)
+
+
+class ScreeningTest(models.Model):
+    symbol = models.ForeignKey(
+        SymbolTest, on_delete=models.CASCADE, related_name="Tests"
+    )
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    OPEN = models.FloatField(null=True)
+    CLOSE = models.FloatField(null=True)
+    HIGH = models.FloatField(null=True)
+    LOW = models.FloatField(null=True)
+    VOLUME = models.CharField(max_length=255, null=True)
+    ma = models.FloatField(null=True)
+    rsi = models.FloatField(null=True)
+    macd = models.FloatField(null=True)
+    macdsignal = models.FloatField(null=True)
+    BB_upper = models.FloatField(null=True)
+    BB_lower = models.FloatField(null=True)

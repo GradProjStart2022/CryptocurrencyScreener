@@ -4,7 +4,7 @@ from price.models import Upbit
 
 
 def create_query(filter_pk):
-    q = Filter.objects.prefetch_related("settings").get(pk=1)
+    q = Filter.objects.prefetch_related("settings").get(pk=filter_pk)
     query_dict = dict()
     for setting in q.setting.all():
         query_dict[setting.name] = create_Q(setting)
