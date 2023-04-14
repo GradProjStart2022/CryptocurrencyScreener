@@ -1,38 +1,110 @@
 .App {
-  text-align: center;
+  position: relative;
+  width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.nav-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  width: 8%;
+  max-width: 66px;
+  min-height: 100vh;
+  float: left;
+  background-color: #165ae7;
 }
 
-.App-link {
-  color: #61dafb;
+/* main content layout styling */
+.content-view {
+  width: 90%;
+  height: 100%;
+  float: left;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* search/account area styling */
+.top-bar {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* search bar start */
+.search-bar {
+  position: relative;
+  width: 60%;
+  margin: 8px 0px 0px 32px;
+}
+
+.search-bar .fa-search {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #9ca3af;
+}
+
+/* 이거 쓰는거 맞아? */
+/* .form span {
+  position: absolute;
+  right: 17px;
+  top: 13px;
+  padding: 2px;
+  border-left: 1px solid #d1d5db;
+} */
+
+/* search bar end */
+
+.account-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0px 0px 32px;
+}
+
+.login-btn {
+  margin-right: 4vw;
+  width: 12vw;
+  max-width: 85px;
+  height: 4vh;
+  max-height: 40px;
+  border-radius: 26px;
+  border: none;
+  background-color: #165ae7;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.user-noti {
+  width: 4vh;
+  max-width: 40px;
+  height: 4vh;
+  max-height: 40px;
+  border: none;
+  border-radius: 100%;
+  background-color: #ebecee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  margin: 0px 2vw 0px 4vw;
+}
+
+.acc-profile {
+  width: 4vh;
+  max-width: 40px;
+  height: 4vh;
+  max-height: 40px;
+  margin: 0px 1vw 0px 0px;
+  border: none;
+  border-radius: 100%;
+  background-color: #ebecee;
+}
+
+.acc-name {
+  color: #69728d;
 }

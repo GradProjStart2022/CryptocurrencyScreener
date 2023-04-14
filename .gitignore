@@ -5,6 +5,7 @@ db.sqlite3
 venv
 .venv
 .idea
+.DS_Store
 
 #####################################
 # Frontend gitignore settings start
@@ -26,6 +27,9 @@ frontend/*.local
 frontend/.pnp
 frontend/.pnp.js
 
+# env vars (ex: API Key)
+frontend/.env
+
 # testing
 frontend/coverage
 
@@ -40,10 +44,12 @@ frontend/*.suo
 frontend/*.ntvs*
 frontend/*.njsproj
 frontend/*.sw?
+frontend/.env
 frontend/.env.local
 frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
+frontend/src/.DS_Store
 #####################################
 # Frontend gitignore settings end
 #####################################
