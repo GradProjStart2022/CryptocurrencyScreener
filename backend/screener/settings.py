@@ -162,6 +162,7 @@ SITE_ID = 1
 # ACCOUNT_LOGOUT_ON_GET = True
 
 # django-rest-framework 설정
+# TODO 보안 설정해야함
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": []
     # ("rest_framework.permissions.IsAuthenticated",)
