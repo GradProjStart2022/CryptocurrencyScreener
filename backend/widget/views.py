@@ -46,7 +46,7 @@ def list(request):
             print(search.isalpha())
             q = Widget.objects.filter(name_en=search)
         else:
-            q = Widget.objects.filter(name_kr="가스")
+            q = Widget.objects.filter(name_kr=search)
         serializer = WidgetSerializer(q, many=True)
         return Response(serializer.data)
     except Widget.DoesNotExist:
