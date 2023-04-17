@@ -1,7 +1,25 @@
 import csv
 
+from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+
+from price.QueryDict import create_query
 from price.models import ScreeningTest, Symbol, SymbolTest
+from price.serializers import PriceSerializer, SymbolSerializer
+from rest_framework.response import Response
+
+
+@api_view(["GET"])
+def screening(request):
+    # filter_pk = request.GET("id")
+    filter_pk = "3"
+    filtered_symbol = create_query(filter_pk, "30m")
+    # TODO 테이블 클래스 변경
+    symbols = SymbolTest.objects.filter(symbol_id__in=filtered_symbol)
+    serializer = SymbolSerializer(symbols, many=True)
+    # return JsonResponse({})
+    return Response(serializer.data)
 
 
 def import_symbol(request):
