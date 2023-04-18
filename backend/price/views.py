@@ -1,7 +1,7 @@
 import csv
 import json
 
-from django.db.models import Max, OuterRef, Subquery
+from django.db.models import Max, OuterRef, Subquery, F
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
@@ -14,8 +14,8 @@ from rest_framework.response import Response
 
 @api_view(["GET"])
 def screening(request):
-    filter_pk = request.GET("id")
-    # filter_pk = "3"
+    filter_pk = request.GET["id"]
+
     try:
         # TODO 테이블 클래스 변경
         filtered_symbol = create_query(filter_pk, "30m")
@@ -34,10 +34,16 @@ def prices(request):
     symbol_ids = json_data["ids"]
     # symbol_ids = ["4004", "5000"]
 
+    # q = (
+    #     ScreeningTest.objects.filter(symbol_id__in=symbol_ids)
+    #     .order_by("symbol_id", "-timestamp")
+    #     .distinct("symbol_id")
+    # )
+
     q = (
         ScreeningTest.objects.filter(symbol_id__in=symbol_ids)
-        .order_by("symbol_id", "-timestamp")
-        .distinct("symbol_id")
+        .annotate(max_timestamp=Max("timestamp"))
+        .filter(timestamp=F("max_timestamp"))
     )
 
     serializer = PriceSerializer30m(q, many=True)

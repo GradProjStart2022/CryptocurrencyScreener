@@ -5,7 +5,7 @@ from price.models import Upbit, Symbol, ScreeningTest, SymbolTest
 class PriceSerializer30m(serializers.ModelSerializer):
     class Meta:
         model = ScreeningTest
-        fields = ["symbol_id", "timestamp" "OPEN", "CLOSE", "HIGH", "LOW", "VOLUME"]
+        fields = ["symbol_id", "timestamp", "OPEN", "CLOSE", "HIGH", "LOW", "VOLUME"]
 
 
 class SymbolSerializer(serializers.ModelSerializer):
