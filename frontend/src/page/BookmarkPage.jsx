@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { isEmpty } from "lodash-es";
 
 import { MiniChart } from "react-ts-tradingview-widgets";
 import { Grid, IconButton } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
-import isStrEmpty from "../util/stringEmptyCheck.js";
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
@@ -30,16 +30,14 @@ const BookmarkCoin = (props) => {
         color="secondary"
         onClick={() => {
           removeBookmark(data.symbol);
-        }}
-      >
+        }}>
         <StarIcon />
       </IconButton>
       <MiniChart
         symbol={data.symbol}
         colorTheme="light"
         locale="kr"
-        width="100%"
-      ></MiniChart>
+        width="100%"></MiniChart>
     </Grid>
   );
 };
@@ -58,8 +56,7 @@ const BookmarkPage = (props) => {
      */
 
     // 처음 접속할때 북마크 목록 받아오기
-    // todo: lodash 설치 이후 변경
-    if (!isStrEmpty(user_email)) {
+    if (!isEmpty(user_email)) {
       axios
         .get(`${ATTENTION_URL}?email=${user_email}`)
         .then((response) => {
@@ -132,7 +129,7 @@ const BookmarkPage = (props) => {
                   />
                 );
               })
-            ) : !isStrEmpty(user_email) ? (
+            ) : !isEmpty(user_email) ? (
               // 종목의 길이가 없는 상황: 대체 요소 렌더링
               <div>
                 관심 종목이 없습니다

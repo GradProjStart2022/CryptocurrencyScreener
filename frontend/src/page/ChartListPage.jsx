@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isEmpty } from "lodash-es";
 
 import {
   Card,
@@ -22,7 +23,6 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
-import isStrEmpty from "../util/stringEmptyCheck.js";
 
 /**
  * 필터링된 종목이 없을때 안내하는 UI 요소를 반환할 예정
@@ -90,7 +90,7 @@ const ChartListPage = (props) => {
     setHowSort(event.target.value);
   };
 
-  // 사용자가 입력하는 복합필터 이름 state todo: 선택한 필터와 연동
+  // 사용자가 선택하는 복합필터 이름 state todo: 선택한 필터와 연동
   const [uFilterName, setUFilterName] = useState("");
 
   // UserFilterList 클릭 필터 확인용 넘겨주기 state
@@ -118,8 +118,7 @@ const ChartListPage = (props) => {
         </div>
         <div className="content-view">
           <div style={{ marginLeft: "12px", marginTop: "24px" }}>
-            {/* todo: lodash 설치 이후 변경 */}
-            {isStrEmpty(uFilterName) ? (
+            {isEmpty(uFilterName) ? (
               <h1>적용중인 필터가 없습니다</h1>
             ) : (
               <h1>현재 적용중인 필터: {uFilterName}</h1>
@@ -129,8 +128,7 @@ const ChartListPage = (props) => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
-          >
+            sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}>
             {/* 사용자 필터 목록 영역 */}
             <UserFilterList
               isSettings={false}
@@ -150,16 +148,14 @@ const ChartListPage = (props) => {
                     filterListClick === 0 ? 0 : 1
                   ],
                   height: "72vh",
-                }}
-              >
+                }}>
                 {filterListClick === 0 ? (
                   <NoCrypto />
                 ) : (
                   <>
                     <Typography
                       component="div"
-                      sx={{ height: "10%", width: "100%" }}
-                    >
+                      sx={{ height: "10%", width: "100%" }}>
                       <div
                         style={{
                           marginLeft: "25px",
@@ -167,8 +163,7 @@ const ChartListPage = (props) => {
                           verticalAlign: "middle",
                           display: "flex",
                           justifyContent: "space-between",
-                        }}
-                      >
+                        }}>
                         <h2>종목</h2>
                         <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                           <InputLabel id="demo-simple-select-label">
@@ -179,8 +174,7 @@ const ChartListPage = (props) => {
                             id="demo-simple-select"
                             value={howSort}
                             onChange={handleChange}
-                            MenuProps={menuProps}
-                          >
+                            MenuProps={menuProps}>
                             <MenuItem value={10}>이름순 오름</MenuItem>
                             <MenuItem value={20}>이름순 내림</MenuItem>
                             <MenuItem value={30}>가격순 오름</MenuItem>
@@ -214,8 +208,7 @@ const ChartListPage = (props) => {
                                   align="right"
                                   style={{
                                     color: row.change >= 0 ? "red" : "blue",
-                                  }}
-                                >
+                                  }}>
                                   {row.change.toLocaleString()}
                                   {row.change >= 0 ? (
                                     <ArrowDropUp fontSize="small" />
@@ -227,8 +220,7 @@ const ChartListPage = (props) => {
                                   align="right"
                                   style={{
                                     color: row.percent >= 0 ? "red" : "blue",
-                                  }}
-                                >
+                                  }}>
                                   {row.percent.toLocaleString(undefined, {
                                     maximumFractionDigits: 2,
                                   })}

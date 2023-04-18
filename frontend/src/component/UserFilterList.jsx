@@ -19,13 +19,17 @@ import { useSelector } from "react-redux";
  */
 const UserFilterList = (props) => {
   const userFilters = useSelector((state) => state.userFilter).filter_list;
+  /** @type boolean */
   const isSettings = props.isSettings;
-  const filterListClick = props.filterListClick;
-  const setFilterListClick = props.setFilterListClick;
+  /** @type number */
+  const filterListClickID = props.filterListClickID;
+  /** @type React.Dispatch<React.SetStateAction<number>> */
+  const setFilterListClickID = props.setFilterListClickID;
+  /** @type React.Dispatch<React.SetStateAction<boolean>> */
   const setCreateMode = props.setCreateMode;
 
   const handleFilterCheck = (event) => {
-    setFilterListClick(event.target.value);
+    setFilterListClickID(event.target.value);
   };
 
   // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼
@@ -53,8 +57,7 @@ const UserFilterList = (props) => {
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
-            }}
-          >
+            }}>
             사용자
             {isSettings ? <br /> : " "}
             필터 목록
@@ -63,10 +66,9 @@ const UserFilterList = (props) => {
                 variant="contained"
                 size="small"
                 onClick={(event) => {
-                  setFilterListClick(0);
+                  setFilterListClickID(0);
                   setCreateMode(true);
-                }}
-              >
+                }}>
                 <AddIcon fontSize="small" />
               </Button>
             )}
@@ -80,10 +82,9 @@ const UserFilterList = (props) => {
             maxHeight: "80%",
             overflow: "auto",
             padding: "4px 8px 4px 8px",
-          }}
-        >
+          }}>
           <FormControl>
-            <RadioGroup value={filterListClick} onChange={handleFilterCheck}>
+            <RadioGroup value={filterListClickID} onChange={handleFilterCheck}>
               {filterList}
             </RadioGroup>
           </FormControl>

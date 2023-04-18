@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
+import { cloneDeep, isEmpty } from "lodash-es";
 
 import { Box, Button, Grid, Typography, Tabs, Tab } from "@mui/material";
 
-import SelectWithText from "../../component/basic_filter/SelectWithText.jsx";
-import localCSVFetch from "../../logic/localCSVFetch.js";
+import SELECT_MENU_LIST from "../../model/const/SELECT_MENU_LIST.js";
+import SELECT_MENU_OPER from "../../model/const/SELECT_MENU_OPER.js";
 import { basicFilterArr } from "../../model/basic_filter_const.js";
+import localCSVFetch from "../../logic/localCSVFetch.js";
+import basicValueInit from "../../logic/basicValueInit.js";
+import addAlphabet from "../../logic/addFilterExpressionAlphabet.js";
 
-const SELECT_MENU_LIST = [
-  "작음",
-  "작거나 같음",
-  "큼",
-  "크거나 같음",
-  "사이",
-  "외부 값",
-  "같음",
-  "같지 않음",
-];
+import SelectWithText from "../../component/basic_filter/SelectWithText.jsx";
+import { TabPanel } from "../../component/TabPanel.jsx";
 
 /**
  * 기본 필터 컴포넌트를 생성하고 배열에 삽입하는 함수
@@ -37,7 +33,7 @@ const basicComponentInit = (
         idx={index}
         customKey={`basic_filter_select_${index}`}
         filterName={element?.name_kr}
-        selectMenu={SELECT_MENU_LIST}
+        // selectMenu={SELECT_MENU_LIST}
         filterType={element?.type}
         valueObj={basic_value}
         valueSetter={setBasicValue}
@@ -47,70 +43,55 @@ const basicComponentInit = (
 };
 
 /**
- * 컴포넌트에 필요한 핸들링 변수를 초기화하는 함수
- * @param {number} length 필요한 컴포넌트 수
- * @returns {object[]} 초기화가 완료된 handling 요소 object 배열
- */
-const basicValueInit = (length) => {
-  let temp_init_state = [];
-  for (let index = 0; index < length; index++) {
-    temp_init_state.push({
-      idx: index,
-      is_used: false,
-      oper_kor: SELECT_MENU_LIST[0],
-      value1: 0,
-      value2: 0,
-    });
-  }
-
-  return temp_init_state;
-};
-
-/**
- * 기본필터 설정용 탭패널 컴포넌트 함수
- * @param {any} props react props
- * @returns 탭패널 요소 UI 컴포넌트
- */
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      style={{ overflow: "scroll" }}
-      {...other}
-    >
-      {value === index && children}
-    </div>
-  );
-};
-
-/**
  * 기본필터 설정 탭 컴포넌트 함수
  * @param {any} props react props
  * @returns 기본필터 설정 전체 탭 컴포넌트
  */
 const FilterSelectTabs = (props) => {
+  /** 생성상태 확인 state(기존필터 편집시 false)
+   * @type boolean */
+  const isCreate = props.isCreate;
+
+  /** 클릭 필터 ID 확인용 변수
+   * @type number */
+  const filterListClickID = props.filterListClickID;
+
+  /** 상위 컴포넌트 필터 설정 페이지에서 가져온 기본 필터 객체 배열 state
+   * @type object[] */
+  const completeFilter = props.completeBasicFilter;
+  /** @type React.Dispatch<React.SetStateAction<object[]>> */
+  const setCompleteFilter = props.setCompleteBasicFilter;
+
   // 어느 탭인지 확인하는 변수
   const [tabValue, setTabValue] = useState(0);
+
   // 기본 필터 컴포넌트 렌더링용 저장 변수
   const [basicComponentList, setBasicComponentList] = useState([]);
+
   // 기본 필터 컴포넌트 입력 요소 핸들링용 변수
   const [basicValueHandle, setBasicValueHandle] = useState([]);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  let new_comp_list = [];
+  let new_basic_comp_list = [];
   /** CSV파일 해독 후 기본 필터들의 핸들링 변수 생성 */
   useEffect(() => {
     const awaitCSV = async () => {
       await localCSVFetch("basic_filter_name.csv", basicFilterArr);
       let basic_obj_arr = basicValueInit(basicFilterArr.length);
-      setBasicValueHandle(basic_obj_arr);
+      if (filterListClickID === 0 && isEmpty(completeFilter)) {
+        setBasicValueHandle(basic_obj_arr);
+      } else {
+        // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
+        // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+        completeFilter.forEach((value, _) => {
+          if (value.is_used === true) {
+            basic_obj_arr[value.idx] = cloneDeep(value);
+          }
+        });
+        setBasicValueHandle(basic_obj_arr);
+      }
     };
     awaitCSV();
   }, []);
@@ -118,18 +99,18 @@ const FilterSelectTabs = (props) => {
   /** 핸들링 변수를 포함해 기본 필터들 컴포넌트 생성 */
   useEffect(() => {
     basicComponentInit(
-      new_comp_list,
+      new_basic_comp_list,
       basicFilterArr,
       basicValueHandle,
       setBasicValueHandle
     );
-    setBasicComponentList(new_comp_list);
+    setBasicComponentList(new_basic_comp_list);
   }, [basicValueHandle]);
 
   return (
     <Box sx={{ overflow: "scroll" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        {/* 탭쪽 필터 설정 버튼 */}
+        {/* 탭쪽 필터 설정 버튼 시작 */}
         <Typography
           variant="body1"
           component="div"
@@ -137,50 +118,90 @@ const FilterSelectTabs = (props) => {
             display: "flex",
             justifyContent: "space-between",
             padding: "8px 8px 8px 8px",
-          }}
-        >
+          }}>
           <span>필터 선택</span>
           <span>
             <Button
               variant="text"
               onClick={() => {
-                basicValueInit(setBasicValueHandle, basicFilterArr.length);
-              }}
-            >
+                let basic_obj_arr = [];
+                if (isCreate) {
+                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                } else {
+                  // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
+                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                  completeFilter.forEach((value, _) => {
+                    if (value.is_used === true) {
+                      basic_obj_arr[value.idx] = cloneDeep(value);
+                    }
+                  });
+                }
+                setBasicValueHandle(basic_obj_arr);
+              }}>
               선택 초기화
             </Button>
             <Button
               variant="outlined"
               onClick={() => {
+                let basic_obj_arr = [];
+                if (isCreate) {
+                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                } else {
+                  // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
+                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                  completeFilter.forEach((value, _) => {
+                    if (value.is_used === true) {
+                      basic_obj_arr[value.idx] = cloneDeep(value);
+                    }
+                  });
+                }
+                setBasicValueHandle(basic_obj_arr);
                 props.handleBFliterClose();
-              }}
-            >
+              }}>
               취소
             </Button>
             <Button
               variant="contained"
               onClick={() => {
+                // basicValueHandle 건드려서 사용된 거 체크하고 object 만든 후 completeFilter props 갱신
+                let temp_basic_complete = [];
+                let last_alpha = null;
+                if (!isCreate) {
+                  // todo: 필터 수정에 대해 알파벳 어떻게 부여할지 결정
+                  // last_alpha = "Z"
+                }
+                basicValueHandle.forEach((value, index) => {
+                  if (value.is_used) {
+                    let will_codename_value = cloneDeep(value);
+                    will_codename_value.name = addAlphabet(index, last_alpha);
+                    temp_basic_complete.push(will_codename_value);
+                  }
+                });
+
+                setCompleteFilter(temp_basic_complete);
                 props.handleBFliterClose();
-              }}
-            >
+              }}>
               확인
             </Button>
           </span>
         </Typography>
-        {/* 탭 버튼 */}
+        {/* 탭쪽 필터 설정 버튼 끝 */}
+        {/* 탭 버튼 시작 */}
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
-          aria-label="basic filter custom tabs"
-        >
+          aria-label="basic filter custom tabs">
           <Tab label="전체" />
           <Tab label="서술적" />
           <Tab label="기술적" />
           <Tab label="나의 필터" />
           <Tab label="추천 필터" />
         </Tabs>
+        {/* 탭 버튼 끝 */}
       </Box>
-      {/* 전체 필터 영역 */}
+      {/* 전체 필터 영역 시작 */}
       <TabPanel value={tabValue} index={0}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -191,13 +212,13 @@ const FilterSelectTabs = (props) => {
               maxHeight: "100%",
               alignContent: "start",
               overflow: "scroll",
-            }}
-          >
+            }}>
             {basicComponentList}
           </Grid>
         </Box>
       </TabPanel>
-      {/* 서술적 필터 영역 */}
+      {/* 전체 필터 영역 끝 */}
+      {/* 서술적 필터 영역 시작 */}
       <TabPanel value={tabValue} index={1}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -208,15 +229,15 @@ const FilterSelectTabs = (props) => {
               maxHeight: "100%",
               alignContent: "start",
               overflow: "scroll",
-            }}
-          >
+            }}>
             {basicComponentList.filter((elem) => {
               return elem?.props.filterType === "descriptive";
             })}
           </Grid>
         </Box>
       </TabPanel>
-      {/* 기술적 필터 영역 */}
+      {/* 서술적 필터 영역 끝 */}
+      {/* 기술적 필터 영역 시작 */}
       <TabPanel value={tabValue} index={2}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -227,15 +248,15 @@ const FilterSelectTabs = (props) => {
               maxHeight: "100%",
               alignContent: "start",
               overflow: "scroll",
-            }}
-          >
+            }}>
             {basicComponentList.filter((elem) => {
               return elem?.props.filterType === "technical";
             })}
           </Grid>
         </Box>
       </TabPanel>
-      {/* 나의 필터 영역 */}
+      {/* 기술적 필터 영역 끝 */}
+      {/* 나의 필터 영역 시작 */}
       <TabPanel value={tabValue} index={3}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -246,13 +267,16 @@ const FilterSelectTabs = (props) => {
               maxHeight: "100%",
               alignContent: "start",
               overflow: "scroll",
-            }}
-          >
-            {/* todo: 필터링 로직 해서 컴포넌트 넣기 */}
+            }}>
+            {/* todo: 필터링 로직 맞는지 점검 */}
+            {basicComponentList.filter((elem) => {
+              return elem?.props.valueObj?.is_used === true;
+            })}
           </Grid>
         </Box>
       </TabPanel>
-      {/* 추천 필터 영역 */}
+      {/* 나의 필터 영역 끝 */}
+      {/* 추천 필터 영역 시작 */}
       <TabPanel value={tabValue} index={4}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid
@@ -263,12 +287,12 @@ const FilterSelectTabs = (props) => {
               maxHeight: "100%",
               alignContent: "start",
               overflow: "scroll",
-            }}
-          >
-            {/* todo: 필터링 로직 해서 컴포넌트 넣기 */}
+            }}>
+            {/* todo: recommend 가져오기 + 필터링 로직 해서 컴포넌트 넣기 */}
           </Grid>
         </Box>
       </TabPanel>
+      {/* 추천 필터 영역 끝 */}
     </Box>
   );
 };
@@ -307,3 +331,30 @@ export default FilterSelectTabs;
 //   valEnd={1000}
 //   minDist={10}
 // />
+
+/**
+ * 문제발생시 44줄에 복원
+ * 컴포넌트에 필요한 핸들링 변수를 초기화하는 함수
+ * @param {number} length 필요한 컴포넌트 수
+ * @returns {object[]} 초기화가 완료된 handling 요소 object 배열
+ */
+// const basicValueInit = (length) => {
+//   let temp_init_state = [];
+//   for (let index = 0; index < length; index++) {
+//     // 연산자 기호 데이터 추가
+//     temp_init_state.push({
+//       idx: index,
+//       is_used: false,
+//       indicatior: basicFilterArr[index].abbreviation,
+//       oper_kor: SELECT_MENU_LIST[0],
+//       oper: SELECT_MENU_OPER[0],
+//       value1: 0,
+//       value2: 0,
+//       is_dual_value: false,
+//       name: "",
+//       name_kr: basicFilterArr[index].name_kr,
+//     });
+//   }
+
+//   return temp_init_state;
+// };
