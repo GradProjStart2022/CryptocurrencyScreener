@@ -1,24 +1,46 @@
 import csv
+import json
 
+from django.db.models import Max, OuterRef, Subquery
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 
 from price.QueryDict import create_query
 from price.models import ScreeningTest, Symbol, SymbolTest
-from price.serializers import PriceSerializer, SymbolSerializer
+from price.serializers import PriceSerializer, SymbolSerializer, PriceSerializer30m
 from rest_framework.response import Response
 
 
 @api_view(["GET"])
 def screening(request):
-    # filter_pk = request.GET("id")
-    filter_pk = "3"
-    filtered_symbol = create_query(filter_pk, "30m")
-    # TODO 테이블 클래스 변경
-    symbols = SymbolTest.objects.filter(symbol_id__in=filtered_symbol)
-    serializer = SymbolSerializer(symbols, many=True)
+    filter_pk = request.GET("id")
+    # filter_pk = "3"
+    try:
+        # TODO 테이블 클래스 변경
+        filtered_symbol = create_query(filter_pk, "30m")
+        symbols = SymbolTest.objects.filter(symbol_id__in=filtered_symbol)
+        serializer = SymbolSerializer(symbols, many=True)
+    except:
+        return JsonResponse({"error": "Doesnt"})
+
     # return JsonResponse({})
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def prices(request):
+    json_data = json.loads(request.body)
+    symbol_ids = json_data["ids"]
+    # symbol_ids = ["4004", "5000"]
+
+    q = (
+        ScreeningTest.objects.filter(symbol_id__in=symbol_ids)
+        .order_by("symbol_id", "-timestamp")
+        .distinct("symbol_id")
+    )
+
+    serializer = PriceSerializer30m(q, many=True)
     return Response(serializer.data)
 
 
