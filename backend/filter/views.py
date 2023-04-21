@@ -12,6 +12,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.db.models import Count
 
+from users.models import User
+
 
 class FilterViewSet(ModelViewSet):
     queryset = Filter.objects.all()
@@ -28,9 +30,10 @@ class FilterViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
-        user = self.request.user
-        name = self.request.POST.get("name")
-        serializer.save(user=user, name=name)
+        user_id = self.request.POST.get("user_id")
+        serializer.save(user_id=user_id)
+        # name = self.request.POST.get("name")
+        # serializer.save(user=User.objects.get(user_id=user_id), name=name)
         return super().perform_create(serializer)
 
 
