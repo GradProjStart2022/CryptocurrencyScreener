@@ -1,4 +1,5 @@
 import axios from "axios";
+import getUserFilter from "./getUserFilterFromServer.js";
 
 const FILTER_INIT_URL = "http://127.0.0.1:8000/filter/api/filter/";
 
@@ -20,7 +21,13 @@ const filterDataCustom = (completeBasicFilter) => {
   return modified_filter_data;
 };
 
-const filterMake = async (completeBasicFilter, filterExp, inputFilterName) => {
+const filterMake = async (
+  completeBasicFilter,
+  filterExp,
+  inputFilterName,
+  user_email,
+  dispatch
+) => {
   /** @type Promise<any> */
   let resp = null;
 
@@ -34,13 +41,15 @@ const filterMake = async (completeBasicFilter, filterExp, inputFilterName) => {
       expression: filterExp,
     });
 
-    let filter_id = resp.data.id; // 이거 데이터 맞음?
+    let filter_id = resp.data.id;
     // todo: 가져오는 데이터 가지고 필터id 사용해 필터 설정 만들기
 
     resp = await axios.post(
       `${FILTER_INIT_URL}/${filter_id}/settings`,
       settings_table_data
     );
+
+    getUserFilter(user_email, dispatch);
   } catch (error) {
     console.log("error :>> ", error);
     alert("사이트에 문제가 발생했습니다.");

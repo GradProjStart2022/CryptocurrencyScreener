@@ -9,6 +9,7 @@ import { CircularProgress } from "@mui/material";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import getUserFilter from "../logic/getUserFilterFromServer.js";
+import getServerUID from "../logic/getServerUID.js";
 
 /**
  * 카카오 로그인 리다이렉트 페이지
@@ -54,6 +55,9 @@ export const KakaoLoginRedirect = (props) => {
           // 사용자 필터 불러오기 작업 수행
           getUserFilter(temp_email, dispatch);
 
+          // 이메일 통해 DB UID 불러오기
+          getServerUID(temp_email, dispatch);
+
           // 모든 작업 완료 후 홈으로 화면 전환시켜줌
           navigate("/", { replace: true });
         })
@@ -86,8 +90,7 @@ export const KakaoLoginRedirect = (props) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <p>로그인중입니다...</p>
           <CircularProgress />
         </div>

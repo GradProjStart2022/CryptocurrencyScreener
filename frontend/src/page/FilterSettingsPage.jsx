@@ -20,6 +20,7 @@ import BasicFilterComponent from "../component/BasicFilterList.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
 import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
 import filterMake from "../logic/filterMaketoServer.js";
+import { useDispatch, useSelector } from "react-redux";
 
 /**
  * 필터 편집내역 취소 함수
@@ -68,6 +69,9 @@ const NoFilter = (props) => {
  * @returns 필터상세설정페이지 UI 요소
  */
 const FilterSettingsPage = (props) => {
+  const dispatch = useDispatch();
+  const user_email = useSelector((state) => state.user.email);
+
   // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
   const handleBFliterOpen = () => setOpenBFilter(true);
@@ -360,7 +364,9 @@ const FilterSettingsPage = (props) => {
                               await filterMake(
                                 completeBasicFilter,
                                 filterExp,
-                                inputFilterName
+                                inputFilterName,
+                                user_email,
+                                dispatch
                               );
                               setFilterListClickID(0);
                               setIsCreate(false);
