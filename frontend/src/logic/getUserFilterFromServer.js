@@ -12,7 +12,8 @@ const getUserFilter = (email, dispatch) => {
   axios
     .get(`${GET_FILTER_LIST_URL}?email=${email}`)
     .then((resp) => {
-      let filter_list = JSON.parse(resp.data);
+      console.log("resp :>> ", resp);
+      let filter_list = resp.data;
       dispatch(setUserFilterList(filter_list));
     })
     .catch((error) => {

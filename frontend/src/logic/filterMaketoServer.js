@@ -21,23 +21,29 @@ const filterDataCustom = (completeBasicFilter) => {
 };
 
 const filterMake = async (completeBasicFilter, filterExp, inputFilterName) => {
+  /** @type Promise<any> */
+  let resp = null;
+
   let settings_table_data = JSON.stringify(
     filterDataCustom(completeBasicFilter)
   );
 
   try {
-    let resp = await axios.post(FILTER_INIT_URL, {
+    resp = await axios.post(FILTER_INIT_URL, {
       name: inputFilterName,
       expression: filterExp,
     });
+
+    let filter_id = resp.data.id; // 이거 데이터 맞음?
     // todo: 가져오는 데이터 가지고 필터id 사용해 필터 설정 만들기
 
-    await axios.post(
-      `${FILTER_INIT_URL}/<filter_id>/settings`,
+    resp = await axios.post(
+      `${FILTER_INIT_URL}/${filter_id}/settings`,
       settings_table_data
     );
   } catch (error) {
     console.log("error :>> ", error);
+    alert("사이트에 문제가 발생했습니다.");
   }
 };
 
