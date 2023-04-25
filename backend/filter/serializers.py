@@ -1,11 +1,21 @@
 from filter.models import Filter, Setting
 from rest_framework import serializers
 
+from users.models import User
+
 
 class FilterSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = Filter
-        fields = ["id", "name", "expression", "alarm", "time"]
+        fields = ["id", "user_id", "name", "expression", "alarm", "time"]
+
+    def create(self, validated_data):
+        user_id = validated_data.pop("user_id")
+        user = User.objects.get(id=user_id)
+        filter_obj = Filter.objects.create(user=user, **validated_data)
+        return filter_obj
 
 
 class SettingListSerializer(serializers.ListSerializer):

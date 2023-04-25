@@ -27,5 +27,6 @@ class Setting(models.Model):
     sign = models.CharField(max_length=100)  # 부등호
     # TODO default 삭제
     indicator = models.CharField(max_length=100)  # RSI지표 ...
+    # TODO null 버그 고쳐야함
     value1 = models.BigIntegerField(null=True)
     value2 = models.BigIntegerField(null=True)
