@@ -1,6 +1,7 @@
 import sqlite3
 import pandas as pd
 import pymysql
+import ta
 
 # SQLite3 데이터베이스 연결
 conn = sqlite3.connect('test(240min).db')
@@ -56,19 +57,16 @@ for id, ticker, table in zip(df['id'], df['ticker'], df['table_name']):
 
     # 결과 출력
     rows = cursor.fetchall()
-    for row in rows:
-        data= pd.DataFrame([row], columns=columns)
-        data_ticker=pd.DataFrame([row], columns=columns)
-        data_ticker.insert(0, 'ticker', ticker)
-        data_ticker.insert(0, 'id', id)
-        # MySQL에 데이터 추가
-        mysql_cursor = mysql_conn.cursor()
-        query = "INSERT INTO UPBIT_SPOT_KRW_240M (TIMESTAMP, OPEN, HIGH, LOW, CLOSE, VOLUME, ID) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        values = (str(data['date'][0]), float(data['open'][0]), float(data['high'][0]), float(data['low'][0]),
-                  float(data['close'][0]), str(data['volume'][0]), int(data_ticker['id'][0]))
-        mysql_cursor.execute(query, values)
-        mysql_conn.commit()
-        print('ok')
+    rows = pd.DataFrame(rows, columns=columns)
+    rows['TICKER']=ticker
+    rows['ID']=id
+    ta.calculate_ta(rows)
+    rows.columns = [col.upper() if "_" not in col else col for col in rows.columns]
+
+    file_path = 'C:/Users/user/Desktop/csv/'
+    rows.to_csv(file_path+ticker + '.csv', index=False)
+    print(rows)
+
 # MySQL 연결 종료
 mysql_conn.close()
 
