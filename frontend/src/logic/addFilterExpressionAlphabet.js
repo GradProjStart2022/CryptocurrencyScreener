@@ -7,16 +7,16 @@ import { isNull } from "lodash-es";
  * @returns {string} A~ZZ까지의 알파벳
  */
 const addAlphabet = (index, last_alpha) => {
-  if (!isNull(last_alpha)) {
+  if (isNull(last_alpha)) {
     if (index < 26) {
       // A ~ Z
-      return new String.fromCharCode(65 + index);
+      return String.fromCharCode(65 + index);
     } else {
       // AA ~ ZZ
       let alpha_code = new Array(2);
       alpha_code[0] = index / 26;
       alpha_code[1] = index % 26;
-      return new String.fromCharCode(65 + alpha_code[0], 65 + alpha_code[1]);
+      return String.fromCharCode(65 + alpha_code[0], 65 + alpha_code[1]);
     }
   } else {
     // todo: 중간에 빠진거 채울지 새거부터 할지

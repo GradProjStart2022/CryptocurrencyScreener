@@ -14,7 +14,7 @@ const basicValueInit = (length) => {
     temp_init_state.push({
       idx: index,
       is_used: false,
-      indicatior: basicFilterArr[index].abbreviation,
+      indicator: basicFilterArr[index].abbreviation,
       oper_kor: SELECT_MENU_LIST[0],
       oper: SELECT_MENU_OPER[0],
       value1: 0,

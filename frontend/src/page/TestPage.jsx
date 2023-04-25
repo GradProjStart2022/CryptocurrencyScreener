@@ -7,8 +7,8 @@ function innerUseEffect(uid) {
   const DATA = JSON.stringify({
     user_id: uid,
     name: "test_name1",
-    expression: "A & B",
-    alarm: false,
+    expression: "A&B",
+    alarm: true,
     time: 60,
   });
   console.log("DATA :>> ", DATA);

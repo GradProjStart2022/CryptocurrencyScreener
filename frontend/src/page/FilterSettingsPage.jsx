@@ -21,6 +21,7 @@ import UserFilterList from "../component/UserFilterList.jsx";
 import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
 import filterMake from "../logic/filterMaketoServer.js";
 import { useDispatch, useSelector } from "react-redux";
+import getUserFilter from "../logic/getUserFilterFromServer.js";
 
 /**
  * 필터 편집내역 취소 함수
@@ -28,20 +29,21 @@ import { useDispatch, useSelector } from "react-redux";
  * @param {*} setInputFilterName 필터이름 state setter
  * @param {*} setFilterExp 복합필터 표현식 state setter
  * @param {*} setCompleteBasicFilter 기본필터 정보 배열 state setter
- * @param {*} basicFilterCompArr 기본필터 렌더링 배열
+ * @param {*} basicFilterCompArr 기본필터 렌더링 배열 state setter
  */
 const filterCleanup = (
   isCreate,
   setInputFilterName,
   setFilterExp,
   setCompleteBasicFilter,
-  basicFilterCompArr
+  setBasicFilterCompArr
 ) => {
   if (isCreate) {
     setInputFilterName("");
     setFilterExp("");
     setCompleteBasicFilter([]);
-    basicFilterCompArr.length = 0;
+    // basicFilterCompArr.length = 0;
+    setBasicFilterCompArr([]);
   } else {
     // todo: 기존 필터 저장 내역과 연동
   }
@@ -70,7 +72,10 @@ const NoFilter = (props) => {
  */
 const FilterSettingsPage = (props) => {
   const dispatch = useDispatch();
+  /** @type {string} */
   const user_email = useSelector((state) => state.user.email);
+  /** @type {number} */
+  const uid = useSelector((state) => state.user.uid);
 
   // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
@@ -93,13 +98,13 @@ const FilterSettingsPage = (props) => {
   const [completeBasicFilter, setCompleteBasicFilter] = useState([]);
 
   // 복합 필터에 대한 기본필터 렌더링 요소
-  /** @type JSX.element[] */
-  let basicFilterCompArr = [];
+  // let basicFilterCompArr = [];
+  const [basicFilterCompArr, setBasicFilterCompArr] = useState([]);
 
   useEffect(() => {
     if (filterListClickID !== 0) {
       console.log("filterListCheck 값 바뀜");
-      // todo: 실제 필터에 대한 데이터 받아오기
+      // todo: 실제 필터에 대한 데이터 받아오기 - completeBasicFilter
       //   basicFilterCompArr.length = 0;
 
       //   for (let index = 0; index < 9; index++) {
@@ -129,12 +134,24 @@ const FilterSettingsPage = (props) => {
   useEffect(() => {
     // todo: 기본 필터 state 변경될 때마다 basic_testarr 렌더링 요소 알맞게 변경되는지 확인
     let temp_exp = [];
-    basicFilterCompArr.length = 0;
+    setBasicFilterCompArr([]);
+    let temp_comparr = [];
+    // basicFilterCompArr.length = 0;
 
     completeBasicFilter.forEach((elem, index) => {
-      temp_exp.push(elem.oper);
+      temp_exp.push(elem.name);
 
-      basicFilterCompArr.push(
+      // basicFilterCompArr.push(
+      //   <BasicFilterComponent
+      //     code={elem.name}
+      //     name={elem.name_kr}
+      //     oper={elem.oper}
+      //     value1={elem.value1}
+      //     value2={elem.value2}
+      //   />
+      // );
+
+      temp_comparr.push(
         <BasicFilterComponent
           code={elem.name}
           name={elem.name_kr}
@@ -145,7 +162,8 @@ const FilterSettingsPage = (props) => {
       );
     });
 
-    setFilterExp(temp_exp.join(" & "));
+    setFilterExp(temp_exp.join("&"));
+    setBasicFilterCompArr(temp_comparr);
   }, [completeBasicFilter]);
 
   return (
@@ -328,13 +346,13 @@ const FilterSettingsPage = (props) => {
                             variant="text"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리만 하는 코드 넣기
+                              // todo: 편집한거 정리만 하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
                                 setFilterExp,
                                 setCompleteBasicFilter,
-                                basicFilterCompArr
+                                setBasicFilterCompArr
                               );
                             }}>
                             초기화
@@ -343,13 +361,13 @@ const FilterSettingsPage = (props) => {
                             variant="outlined"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리하는 코드 넣기
+                              // todo: 편집한거 정리하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
                                 setFilterExp,
                                 setCompleteBasicFilter,
-                                basicFilterCompArr
+                                setBasicFilterCompArr
                               );
                               setFilterListClickID(0);
                               setIsCreate(false);
@@ -360,16 +378,38 @@ const FilterSettingsPage = (props) => {
                             variant="contained"
                             size="small"
                             onClick={async () => {
-                              // todo: 편집한거 저장하는 코드 넣기
-                              await filterMake(
-                                completeBasicFilter,
-                                filterExp,
-                                inputFilterName,
-                                user_email,
-                                dispatch
-                              );
-                              setFilterListClickID(0);
-                              setIsCreate(false);
+                              // todo: 편집한거 저장하는 코드 정상작동 확인
+                              let is_success = null;
+                              if (isCreate) {
+                                is_success = await filterMake(
+                                  completeBasicFilter,
+                                  filterExp,
+                                  inputFilterName,
+                                  user_email,
+                                  uid,
+                                  dispatch
+                                );
+                              } else {
+                                // todo: 편집하는 함수 제작
+                              }
+                              switch (is_success) {
+                                case true:
+                                  alert("생성되었습니다.");
+                                  filterCleanup(
+                                    isCreate,
+                                    setInputFilterName,
+                                    setFilterExp,
+                                    setCompleteBasicFilter,
+                                    setBasicFilterCompArr
+                                  );
+                                  setFilterListClickID(0);
+                                  setIsCreate(false);
+                                  break;
+                                case false:
+                                default:
+                                  alert("생성중 문제가 발생했습니다.");
+                                  break;
+                              }
                             }}>
                             저장
                           </Button>

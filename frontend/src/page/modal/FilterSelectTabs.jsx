@@ -168,15 +168,24 @@ const FilterSelectTabs = (props) => {
                 // basicValueHandle 건드려서 사용된 거 체크하고 object 만든 후 completeFilter props 갱신
                 let temp_basic_complete = [];
                 let last_alpha = null;
+                let gen_idx = 0;
                 if (!isCreate) {
                   // todo: 필터 수정에 대해 알파벳 어떻게 부여할지 결정
                   // last_alpha = "Z"
                 }
-                basicValueHandle.forEach((value, index) => {
+                basicValueHandle.forEach((value) => {
                   if (value.is_used) {
                     let will_codename_value = cloneDeep(value);
-                    will_codename_value.name = addAlphabet(index, last_alpha);
+                    will_codename_value.name = addAlphabet(gen_idx, last_alpha);
                     temp_basic_complete.push(will_codename_value);
+                    gen_idx++;
+
+                    if (
+                      value.oper !== SELECT_MENU_OPER[4] &&
+                      value.oper !== SELECT_MENU_OPER[5]
+                    ) {
+                      will_codename_value.value2 = null;
+                    }
                   }
                 });
 

@@ -1,3 +1,4 @@
+import { isNil } from "lodash-es";
 import { Grid, Typography, IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -60,7 +61,7 @@ const BasicFilterComponent = (props) => {
       {/* 지정값: 값1만 있으면 값1만 표시, 값2가 있으면 값1 ~ 값2 로 표시 */}
       <Grid item xs={2} sx={item_batch_css}>
         <Typography variant="body2" component="span">
-          {value2 === undefined ? value1 : `${value1} ~ ${value2}`}
+          {isNil(value2) ? value1 : `${value1} ~ ${value2}`}
         </Typography>
       </Grid>
       {/* 삭제버튼 */}
