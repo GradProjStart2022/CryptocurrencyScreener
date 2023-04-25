@@ -1,3 +1,4 @@
+import { isNil } from "lodash-es";
 import { Grid, Typography, IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -13,6 +14,7 @@ const item_batch_css = {
 /**
  * 복합필터를 편집할 때 나타나는
  * 해당 복합필터에 있는 기본필터들 표시용 UI 컴포넌트
+ * todo: 삭제 및 순서변경 로직 추가해야 함 -> ABC표현식, 정보객체배열 등 같이 수정될 것 많음
  * @param {string} props react props
  * @returns 복합필터에 사용한 기본필터 UI 요소
  */
@@ -37,8 +39,7 @@ const BasicFilterComponent = (props) => {
         backgroundColor: "#D9D9D9",
         margin: "1px 0px 1px -0px",
         border: "2px solid #444444",
-      }}
-    >
+      }}>
       {/* 기호 이름: A or B... 에서의 A, B */}
       <Grid item xs={1} sx={item_batch_css}>
         <Typography variant="body2" component="span">
@@ -60,7 +61,7 @@ const BasicFilterComponent = (props) => {
       {/* 지정값: 값1만 있으면 값1만 표시, 값2가 있으면 값1 ~ 값2 로 표시 */}
       <Grid item xs={2} sx={item_batch_css}>
         <Typography variant="body2" component="span">
-          {value2 === undefined ? value1 : `${value1} ~ ${value2}`}
+          {isNil(value2) ? value1 : `${value1} ~ ${value2}`}
         </Typography>
       </Grid>
       {/* 삭제버튼 */}

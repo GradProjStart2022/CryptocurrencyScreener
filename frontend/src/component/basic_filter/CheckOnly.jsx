@@ -13,6 +13,7 @@ const CheckOnly = (props) => {
           alignItems: "center",
         }}
       >
+        <Checkbox />
         <Typography variant="body2" component="span">
           {filterName}
         </Typography>
