@@ -41,10 +41,11 @@ const NotLogin = (props) => {
         type="button"
         className="login-btn"
         onClick={() => {
-          navigate("/login");
-        }}
-      >
-        로그인
+          // navigate("/login");
+          navigate("/testpage");
+        }}>
+        {/* 로그인 */}
+        테스트페이지
       </button>
     </div>
   );
@@ -71,9 +72,9 @@ const MainPage = (props) => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px" }}
-          >
+            sx={{ marginLeft: "12px", marginTop: "24px" }}>
             <Grid item xs={9}>
+              {/* todo: 로그인 되었을때 연동 및 디자인 필요 */}
               {isLogin ? <div>로그인됨</div> : <NotLogin navigate={navigate} />}
               <MiniChart
                 symbol="BTCKRW"

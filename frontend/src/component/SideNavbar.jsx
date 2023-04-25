@@ -37,40 +37,35 @@ const SideNavBar = (props) => {
         css={buttonBox}
         onClick={() => {
           navigate("/");
-        }}
-      >
+        }}>
         <HomeIcon sx={whiteColor} />
       </div>
       <div
         css={buttonBox}
         onClick={() => {
           navigate("/chart/");
-        }}
-      >
+        }}>
         <BarChartIcon sx={whiteColor} />
       </div>
       <div
         css={buttonBox}
         onClick={() => {
-          navigate("/filter/id예정");
-        }}
-      >
+          navigate("/filter/");
+        }}>
         <FilterSettingsIcon css={whiteColor} />
       </div>
       <div
         css={buttonBox}
         onClick={() => {
-          navigate("/alarm/id예정");
-        }}
-      >
+          navigate("/alarm/");
+        }}>
         <NotificationsIcon sx={whiteColor} />
       </div>
       <div
         css={buttonBox}
         onClick={() => {
-          navigate("/bookmark/id예정");
-        }}
-      >
+          navigate("/bookmark/");
+        }}>
         <BookmarkIcon sx={whiteColor} />
       </div>
     </div>

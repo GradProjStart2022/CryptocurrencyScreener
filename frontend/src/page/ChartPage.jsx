@@ -56,19 +56,18 @@ const ChartPage = (props) => {
           <Grid
             container={true}
             spacing={1}
-            sx={{ marginLeft: "12px", marginTop: "24px" }}
-          >
+            sx={{ marginLeft: "12px", marginTop: "24px" }}>
             <Grid item xs={12}>
               <span style={{ display: "flex", alignItems: "center" }}>
                 <h1
-                  style={{ display: "inline-block" }}
-                >{`${coin_obj?.name_kr}(${coin_obj?.name_en})`}</h1>
+                  style={{
+                    display: "inline-block",
+                  }}>{`${coin_obj?.name_kr}(${coin_obj?.name_en})`}</h1>
                 <IconButton
                   aria-label="star"
-                  // todo: 색상 오버라이드
+                  // todo: 색상 변경
                   color="secondary"
-                  onClick={changeIdx}
-                >
+                  onClick={changeIdx}>
                   {[<StarBorderIcon />, <StarIcon />][isFavorite]}
                 </IconButton>
               </span>
@@ -80,8 +79,7 @@ const ChartPage = (props) => {
               <AdvancedRealTimeChart
                 symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
-                width="100%"
-              ></AdvancedRealTimeChart>
+                width="100%"></AdvancedRealTimeChart>
             </Grid>
           </Grid>
           <Grid container={true} spacing={2}>
@@ -89,22 +87,19 @@ const ChartPage = (props) => {
               <TechnicalAnalysis
                 symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
-                width={"100%"}
-              ></TechnicalAnalysis>
+                width={"100%"}></TechnicalAnalysis>
             </Grid>
             <Grid item xs={4}>
               <CompanyProfile
                 symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
-                width={"100%"}
-              ></CompanyProfile>
+                width={"100%"}></CompanyProfile>
             </Grid>
             <Grid item xs={4}>
               <FundamentalData
                 symbol={coin_obj?.tradingview_upbit_code}
                 locale="kr"
-                width={"100%"}
-              ></FundamentalData>
+                width={"100%"}></FundamentalData>
             </Grid>
           </Grid>
         </div>
