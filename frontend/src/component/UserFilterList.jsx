@@ -2,12 +2,15 @@ import {
   Button,
   Card,
   FormControl,
+  FormControlLabel,
   Grid,
   Paper,
   RadioGroup,
+  Radio,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useSelector } from "react-redux";
 
 /**
  * 사용자 필터 선택에 대한 UI 컴포넌트 반환 함수
@@ -15,8 +18,32 @@ import AddIcon from "@mui/icons-material/Add";
  * @returns 사용자 필터 선택 라디오버튼 UI 컴포넌트
  */
 const UserFilterList = (props) => {
-  const filterList = props.filterList;
+  const userFilters = useSelector((state) => state.userFilter).filter_list;
+  /** @type boolean */
   const isSettings = props.isSettings;
+  /** @type number */
+  const filterListClickID = props.filterListClickID;
+  /** @type React.Dispatch<React.SetStateAction<number>> */
+  const setFilterListClickID = props.setFilterListClickID;
+  /** @type React.Dispatch<React.SetStateAction<boolean>> */
+  const setCreateMode = props.setCreateMode;
+
+  const handleFilterCheck = (event) => {
+    setFilterListClickID(event.target.value);
+  };
+
+  // 복합필터 선택 폼: 사용자 복합필터의 라디오버튼
+  let filterList = [];
+  userFilters.forEach((value) => {
+    filterList.push(
+      <FormControlLabel
+        key={value.id}
+        value={value.id}
+        control={<Radio />}
+        label={value.name}
+      />
+    );
+  });
 
   return (
     <Grid item xs={2}>
@@ -30,13 +57,18 @@ const UserFilterList = (props) => {
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
-            }}
-          >
+            }}>
             사용자
             {isSettings ? <br /> : " "}
             필터 목록
             {isSettings && (
-              <Button variant="contained" size="small">
+              <Button
+                variant="contained"
+                size="small"
+                onClick={(event) => {
+                  setFilterListClickID(0);
+                  setCreateMode(true);
+                }}>
                 <AddIcon fontSize="small" />
               </Button>
             )}
@@ -50,10 +82,11 @@ const UserFilterList = (props) => {
             maxHeight: "80%",
             overflow: "auto",
             padding: "4px 8px 4px 8px",
-          }}
-        >
+          }}>
           <FormControl>
-            <RadioGroup>{filterList}</RadioGroup>
+            <RadioGroup value={filterListClickID} onChange={handleFilterCheck}>
+              {filterList}
+            </RadioGroup>
           </FormControl>
         </Paper>
         {/* 사용자 필터 라디오그룹 목록 영역 끝 */}

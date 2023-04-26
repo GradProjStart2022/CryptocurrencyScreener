@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-import { Box, Grid, TextField, Typography, Slider } from "@mui/material";
+import {
+  Box,
+  Grid,
+  TextField,
+  Typography,
+  Slider,
+  Checkbox,
+} from "@mui/material";
 
 const SlideValue = (props) => {
   const filterName = props.filterName;
@@ -38,6 +45,7 @@ const SlideValue = (props) => {
           alignItems: "center",
         }}
       >
+        <Checkbox />
         <Typography variant="body2" component="span">
           {filterName}
         </Typography>

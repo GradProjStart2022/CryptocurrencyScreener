@@ -14,6 +14,8 @@ import { KakaoLoginRedirect } from "./page/KakaoLoginRedirect";
 import { GoogleLoginRedirect } from "./page/GoogleLoginRedirect";
 import TDWidgetRedirectPage from "./page/TDWidgetRedirectPage.jsx";
 
+import TestPage from "./page/TestPage.jsx";
+
 function App() {
   return (
     <Routes>
@@ -25,20 +27,21 @@ function App() {
         <Route path="google_complete" element={<GoogleLoginRedirect />} />
       </Route>
       <Route path="/chart">
-        {/* todo: 전체 종목에 대한 정보 표시 페이지 생성 */}
+        {/* 전체 종목에 대한 정보 표시 페이지 */}
         <Route index element={<ChartListPage />} />
-        {/* todo: 종목코드를 URL param으로 가지는 종목별 페이지 생성 */}
+        {/* 종목코드를 URL param으로 가지는 종목별 페이지 */}
         <Route path=":code" element={<ChartPage />} />
-        {/* todo: 트레이딩뷰 위젯 리다이렉트 컨트롤 */}
+        {/* 트레이딩뷰 위젯 리다이렉트 컨트롤 */}
         <Route path="tdview_widget" element={<TDWidgetRedirectPage />} />
       </Route>
-      {/* todo: 필터 설정 화면 생성 */}
-      <Route path="/filter/:id" element={<FilterSettingsPage />} />
-      {/* todo: 필터에 따른 알람 설정 화면 생성 */}
-      <Route path="/alarm/:id" element={<AlarmSettingsPage />} />
+      {/* 필터 설정 페이지 */}
+      <Route path="/filter/" element={<FilterSettingsPage />} />
+      {/* 필터에 따른 알람 설정 페이지 */}
+      <Route path="/alarm/" element={<AlarmSettingsPage />} />
       {/* 사용자별 즐겨찾기 목록 페이지 */}
-      <Route path="/bookmark/:id" element={<BookmarkPage />} />
+      <Route path="/bookmark/" element={<BookmarkPage />} />
       {/* 없는 경로들 404 페이지 처리 */}
+      <Route path="/testpage" element={<TestPage />} />
       <Route path="*" element={<Page404 />} />
     </Routes>
   );
