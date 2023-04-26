@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash-es";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
@@ -12,6 +13,9 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+
+import filterMake from "../logic/filterMaketoServer.js";
+import getUserFilterSettings from "../logic/getUserFilterSettings.js";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
@@ -76,6 +80,16 @@ const FilterSettingsPage = (props) => {
   const user_email = useSelector((state) => state.user.email);
   /** @type {number} */
   const uid = useSelector((state) => state.user.uid);
+  /** @type {object[]} */
+  const redux_filter_list = useSelector(
+    (state) => state.userFilter.filter_list
+  );
+  /** @type {object[]} */
+  const redux_filter_data = useSelector(
+    (state) => state.userFilter.filter_data
+  );
+
+  const redux_userFilterSelector = useSelector((state) => state.userFilter);
 
   // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
@@ -98,58 +112,45 @@ const FilterSettingsPage = (props) => {
   const [completeBasicFilter, setCompleteBasicFilter] = useState([]);
 
   // 복합 필터에 대한 기본필터 렌더링 요소
-  // let basicFilterCompArr = [];
   const [basicFilterCompArr, setBasicFilterCompArr] = useState([]);
 
+  // 체크한 복합 필터가 바뀔 때마다 정보 불러와서 기본필터정보 렌더링 요소 변경
   useEffect(() => {
     if (filterListClickID !== 0) {
-      console.log("filterListCheck 값 바뀜");
-      // todo: 실제 필터에 대한 데이터 받아오기 - completeBasicFilter
-      //   basicFilterCompArr.length = 0;
+      let filter_data = redux_filter_list.find((value) => {
+        return value.id === Number(filterListClickID);
+      });
 
-      //   for (let index = 0; index < 9; index++) {
-      //     basicFilterCompArr.push(
-      //       <BasicFilterComponent
-      //         code="A"
-      //         name={filterListClickID.toString()}
-      //         oper="="
-      //         value1="1000"
-      //       />
-      //     );
-      //   }
-      //   for (let index = 0; index < 9; index++) {
-      //     basicFilterCompArr.push(
-      //       <BasicFilterComponent
-      //         code="A"
-      //         name={filterListClickID.toString()}
-      //         oper="="
-      //         value1="1000"
-      //         value2="2000"
-      //       />
-      //     );
-      //   }
+      let filter_settings_data = redux_filter_data.find((value) => {
+        return value.filter_id === Number(filterListClickID);
+      });
+
+      let temp_comparr = [];
+      filter_settings_data.settings.forEach((elem) => {
+        temp_comparr.push(
+          <BasicFilterComponent
+            code={elem.name}
+            name={elem.name_kr}
+            oper={elem.oper}
+            value1={elem.value1}
+            value2={elem.value2}
+          />
+        );
+      });
+      setFilterExp(filter_data?.expression);
+      setInputFilterName(filter_data?.name);
+      setBasicFilterCompArr(temp_comparr);
     }
   }, [filterListClickID]);
 
+  // 생성에 대한 기본필터 state 변경될 때마다 기본필터 렌더링 요소 변경
   useEffect(() => {
-    // todo: 기본 필터 state 변경될 때마다 basic_testarr 렌더링 요소 알맞게 변경되는지 확인
     let temp_exp = [];
     setBasicFilterCompArr([]);
     let temp_comparr = [];
-    // basicFilterCompArr.length = 0;
 
-    completeBasicFilter.forEach((elem, index) => {
+    completeBasicFilter.forEach((elem) => {
       temp_exp.push(elem.name);
-
-      // basicFilterCompArr.push(
-      //   <BasicFilterComponent
-      //     code={elem.name}
-      //     name={elem.name_kr}
-      //     oper={elem.oper}
-      //     value1={elem.value1}
-      //     value2={elem.value2}
-      //   />
-      // );
 
       temp_comparr.push(
         <BasicFilterComponent
@@ -268,10 +269,10 @@ const FilterSettingsPage = (props) => {
                         />
                         {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 및 긁은 텍스트에 대응한 핸들러 기능 추가 */}
                         <Button variant="outlined" size="small">
-                          괄호 삭제
+                          {"& <-> |"}
                         </Button>
                         <Button variant="contained" size="small">
-                          괄호 추가
+                          괄호 추가/삭제
                         </Button>
                       </Paper>
                     </Typography>
@@ -379,36 +380,49 @@ const FilterSettingsPage = (props) => {
                             size="small"
                             onClick={async () => {
                               // todo: 편집한거 저장하는 코드 정상작동 확인
-                              let is_success = null;
-                              if (isCreate) {
-                                is_success = await filterMake(
-                                  completeBasicFilter,
-                                  filterExp,
-                                  inputFilterName,
-                                  user_email,
-                                  uid,
-                                  dispatch
-                                );
-                              } else {
-                                // todo: 편집하는 함수 제작
-                              }
-                              switch (is_success) {
-                                case true:
-                                  alert("생성되었습니다.");
-                                  filterCleanup(
-                                    isCreate,
-                                    setInputFilterName,
-                                    setFilterExp,
-                                    setCompleteBasicFilter,
-                                    setBasicFilterCompArr
+                              let is_success = false;
+                              let filter_id = [];
+                              try {
+                                if (isCreate) {
+                                  is_success = await filterMake(
+                                    completeBasicFilter,
+                                    filterExp,
+                                    inputFilterName,
+                                    user_email,
+                                    uid,
+                                    filter_id,
+                                    dispatch
                                   );
-                                  setFilterListClickID(0);
-                                  setIsCreate(false);
-                                  break;
-                                case false:
-                                default:
-                                  alert("생성중 문제가 발생했습니다.");
-                                  break;
+                                  if (is_success) {
+                                    console.log("filter_id :>> ", filter_id);
+                                    is_success = await getUserFilterSettings(
+                                      filter_id[0],
+                                      dispatch
+                                    );
+                                  }
+                                } else {
+                                  // todo: 편집하는 함수 제작
+                                }
+                                switch (is_success) {
+                                  case true:
+                                    alert("생성되었습니다.");
+                                    filterCleanup(
+                                      isCreate,
+                                      setInputFilterName,
+                                      setFilterExp,
+                                      setCompleteBasicFilter,
+                                      setBasicFilterCompArr
+                                    );
+                                    setFilterListClickID(0);
+                                    setIsCreate(false);
+                                    break;
+                                  case false:
+                                  default:
+                                    alert("생성중 문제가 발생했습니다.");
+                                    break;
+                                }
+                              } catch (error) {
+                                console.log("error :>> ", error);
                               }
                             }}>
                             저장
