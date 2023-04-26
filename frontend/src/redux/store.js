@@ -51,15 +51,30 @@ let user = createSlice({
  */
 let userFilter = createSlice({
   name: "userFilter",
-  initialState: { filter_list: [] },
+  initialState: { filter_list: [], filter_data: [] },
   reducers: {
     setUserFilterList: (state, action) => {
       state.filter_list = action.payload;
     },
+    setUserFilterData: (state, action) => {
+      state.filter_data = action.payload;
+    },
+    addUserFilterData: (state, action) => {
+      state.filter_data.push(action.payload);
+    },
+    clearUserFilter: (state) => {
+      state.filter_list = [];
+      state.filter_data = [];
+    },
   },
 });
 
-export let { setUserFilterList } = userFilter.actions;
+export let {
+  setUserFilterList,
+  setUserFilterData,
+  addUserFilterData,
+  clearUserFilter,
+} = userFilter.actions;
 export let { setToken, setAccname, setEmail, setImg, setUID, clearUser } =
   user.actions;
 export default configureStore({

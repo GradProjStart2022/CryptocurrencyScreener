@@ -8,7 +8,8 @@ const FILTER_INIT_URL = "http://127.0.0.1:8000/filter/api/filter/";
  * 프론트에 최적화된 필터 정보 object 배열에서 필요한 요소만 가져와서
  * formData로 만들어 서버에 필터 정보 전송해 제작하는 함수
  * @param {object[]} completeBasicFilter 프론트에서 사용하는 기본필터 정보 배열
- * @returns {boolean} 성공여부
+ * @param {number} filter_id 복합필터 ID 값
+ * @returns {Promise<boolean>} 성공여부
  */
 const filterDataCustom = async (completeBasicFilter, filter_id) => {
   let modified_filter_form = null;
@@ -31,20 +32,12 @@ const filterDataCustom = async (completeBasicFilter, filter_id) => {
         `${FILTER_INIT_URL}${filter_id}/settings/`,
         modified_filter_form
       );
-      console.log("modified_filter_form :>> ", modified_filter_form);
-      // modified_filter_data.push({
-      //   indicator: value.indicator,
-      //   name: value.name,
-      //   sign: value.oper,
-      //   value1: value.value1,
-      //   value2: value.value2,
-      // });
     });
   } catch (error) {
     return_success = false;
     await axios.delete(`${FILTER_INIT_URL}${filter_id}/`);
   } finally {
-    return return_success;
+    return Promise.resolve(return_success);
   }
 };
 
@@ -55,8 +48,9 @@ const filterDataCustom = async (completeBasicFilter, filter_id) => {
  * @param {string} inputFilterName 필터 이름
  * @param {string} user_email 사용자 이메일
  * @param {number} uid DB 사용자 UID
+ * @param {number[]} filled_id 반환할 생성된 필터ID 배열(for pass by ref)
  * @param {Dispatch<AnyAction>} dispatch RTK Dispatcher
- * @returns {boolean} 성공여부
+ * @returns {Promise<boolean>}} 성공여부
  */
 const filterMake = async (
   completeBasicFilter,
@@ -64,15 +58,13 @@ const filterMake = async (
   inputFilterName,
   user_email,
   uid,
+  filled_id,
   dispatch
 ) => {
   /** @type Promise<any> */
   let resp = null;
   let return_success = true;
 
-  // let settings_table_data = JSON.stringify(
-  //   filterDataCustom(completeBasicFilter)
-  // );
   try {
     let filter_init_form = new FormData();
     filter_init_form.append("user_id", uid);
@@ -82,20 +74,17 @@ const filterMake = async (
     filter_init_form.append("time", 60);
 
     resp = await axios.post(FILTER_INIT_URL, filter_init_form);
-    console.log("resp.data :>> ", resp.data);
-    // resp = await axios.post(
-    //   `${FILTER_INIT_URL}${filter_id}/settings/`,
-    //   settings_table_data
-    // );
-    return_success = await filterDataCustom(completeBasicFilter, resp.data.id);
+    filled_id[0] = resp.data.id;
+    console.log("filled_id :>> ", filled_id);
+    return_success = await filterDataCustom(completeBasicFilter, filled_id[0]);
 
-    getUserFilter(user_email, dispatch);
+    return_success = await getUserFilter(user_email, dispatch);
   } catch (error) {
     console.log("error :>> ", error);
     // alert("사이트에 문제가 발생했습니다.");
     return_success = false;
   } finally {
-    return return_success;
+    return Promise.resolve(return_success);
   }
 };
 

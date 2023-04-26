@@ -41,11 +41,11 @@ const NotLogin = (props) => {
         type="button"
         className="login-btn"
         onClick={() => {
-          // navigate("/login");
-          navigate("/testpage");
+          navigate("/login");
+          // navigate("/testpage");
         }}>
-        {/* 로그인 */}
-        테스트페이지
+        로그인
+        {/* 테스트페이지 */}
       </button>
     </div>
   );
