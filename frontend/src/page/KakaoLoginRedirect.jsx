@@ -20,8 +20,6 @@ import {
 
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import getUserFilter from "../logic/getUserFilterFromServer.js";
-import getServerUID from "../logic/getServerUID.js";
 
 const fail_login = (navigate) => {
   // 로그인 실패하면 로그인화면으로 돌려보냄
