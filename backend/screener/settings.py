@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "filter",
     "widget",
     "price",
+    "alarm",
 ]
 
 MIDDLEWARE = [
