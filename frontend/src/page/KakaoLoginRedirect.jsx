@@ -20,8 +20,6 @@ import {
 
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import getUserFilter from "../logic/getUserFilterFromServer.js";
-import getServerUID from "../logic/getServerUID.js";
 
 const fail_login = (navigate) => {
   // 로그인 실패하면 로그인화면으로 돌려보냄
@@ -81,6 +79,7 @@ export const KakaoLoginRedirect = (props) => {
       let is_success = false;
 
       try {
+        // 카카오에 계정 기본 정보 요청
         let resp = await axios.get("https://kapi.kakao.com/v2/user/me", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -121,7 +120,6 @@ export const KakaoLoginRedirect = (props) => {
     if (listSuccess) {
       let is_success = false;
       redux_filter_list.forEach(async (value) => {
-        console.log("value :>> ", value);
         is_success = await getUserFilterSettings(value.id, dispatch);
       });
 

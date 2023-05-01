@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
 import { Grid } from "@mui/material";
 import { CryptoCurrencyMarket, MiniChart } from "react-ts-tradingview-widgets";
+
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
@@ -29,7 +28,7 @@ const reqLoginCss = css({
 /**
  * 비로그인시 즐겨찾기를 대체하는 컴포넌트
  * @param {any} props react props
- * @returns 비로그인시 즐겨찾기 대신 표시되는 UI 요소
+ * @returns 로그인 안내 UI 컴포넌트
  */
 const NotLogin = (props) => {
   const navigate = props.navigate;
@@ -52,12 +51,26 @@ const NotLogin = (props) => {
 };
 
 /**
+ * 로그인시 즐겨찾기 표시하는 컴포넌트
+ * @param {any} props react props
+ * @returns 즐겨찾기 요소 UI 컴포넌트
+ */
+const LoginBookmark = (props) => {
+  return (
+    <Grid container={true} spacing={4}>
+      <div>로그인됨</div>
+    </Grid>
+  );
+};
+
+/**
  * 메인화면 UI 요소 뱉어내는 함수
  * @param {any} props react props
  * @returns 메인화면 UI
  */
 const MainPage = (props) => {
-  let [isLogin, setIsLogin] = useState(false);
+  // let [isLogin, setIsLogin] = useState(false);
+  let uid = useSelector((state) => state.user.uid);
   const navigate = useNavigate();
 
   return (
@@ -74,8 +87,12 @@ const MainPage = (props) => {
             spacing={2}
             sx={{ marginLeft: "12px", marginTop: "24px" }}>
             <Grid item xs={9}>
-              {/* todo: 로그인 되었을때 연동 및 디자인 필요 */}
-              {isLogin ? <div>로그인됨</div> : <NotLogin navigate={navigate} />}
+              {/* todo: 로그인 되었을때 연동 확인 및 디자인 필요 */}
+              {uid !== -1 ? (
+                <LoginBookmark />
+              ) : (
+                <NotLogin navigate={navigate} />
+              )}
               <MiniChart
                 symbol="BTCKRW"
                 width="100%"

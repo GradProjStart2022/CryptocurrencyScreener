@@ -23,9 +23,6 @@ import SideNavBar from "../component/SideNavbar.jsx";
 import BasicFilterComponent from "../component/BasicFilterList.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
 import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
-import filterMake from "../logic/filterMaketoServer.js";
-import { useDispatch, useSelector } from "react-redux";
-import getUserFilter from "../logic/getUserFilterFromServer.js";
 
 /**
  * 필터 편집내역 취소 함수
