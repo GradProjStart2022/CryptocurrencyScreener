@@ -9,22 +9,25 @@ from rest_framework.decorators import api_view
 from tqdm import tqdm
 
 from price.QueryDict import create_query
-from price.models import ScreeningTest, Symbol, SymbolTest
+from price.models import Symbol, Price240m, Price60m
 from price.serializers import PriceSerializer, SymbolSerializer, PriceSerializer30m
 from rest_framework.response import Response
 
 
 @api_view(["GET"])
 def screening(request):
-    filter_pk = request.GET["id"]
+    data = json.loads(request.body)
+    filter_pk = data["id"]
+    table = data["table"]  # 30m, 60m, 240m, 1d
+    date_range = data["date_range"]  # 일 수 기준
 
     try:
         # TODO 테이블 클래스 변경
-        filtered_symbol = create_query(filter_pk, "30m")
-        symbols = SymbolTest.objects.filter(symbol_id__in=filtered_symbol)
+        filtered_symbol = create_query(filter_pk, table, date_range)
+        symbols = Symbol.objects.filter(symbol_id__in=filtered_symbol)
         serializer = SymbolSerializer(symbols, many=True)
     except:
-        return JsonResponse({"error": "Doesnt"})
+        return JsonResponse({"error": "screening Error"})
 
     # return JsonResponse({})
     return Response(serializer.data)
@@ -43,7 +46,7 @@ def prices(request):
     # )
 
     q = (
-        ScreeningTest.objects.filter(symbol_id__in=symbol_ids)
+        Price60m.objects.filter(symbol_id__in=symbol_ids)
         .annotate(max_timestamp=Max("timestamp"))
         .filter(timestamp=F("max_timestamp"))
     )
@@ -59,7 +62,7 @@ def import_symbol(request):
         reader = csv.DictReader(decoded_file)
         # print(reader[0])
         for row in reader:
-            symbol = SymbolTest(
+            symbol = Symbol(
                 symbol_id=row["id"],
                 name_en=row["name_en"],
                 name_kr=row["name_kr"],
@@ -78,7 +81,7 @@ def import_data(request):
         decoded_file = csv_file.read().decode("utf-8").splitlines()
         reader = csv.DictReader(decoded_file)
         for row in tqdm(reader):
-            data = ScreeningTest(
+            data = Price240m(
                 symbol_id=row["ID"],
                 timestamp=datetime.fromisoformat(row["DATE"]),
                 OPEN=float(row["OPEN"] or 0),

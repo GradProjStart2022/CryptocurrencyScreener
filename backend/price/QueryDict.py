@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta
+
 from django.db.models import Q
 from filter.models import Filter
-from price.models import Upbit, ScreeningTest
+from price.models import Price30m, Price60m, Price240m, Price1d
 
 
-def create_query(filter_pk, time):
+def create_query(filter_pk, table, range):
     q = Filter.objects.prefetch_related("settings").get(pk=filter_pk)
     query_dict = dict()
     for setting in q.settings.all():
@@ -11,24 +13,55 @@ def create_query(filter_pk, time):
 
     logic = create_logic(q.expression)
     q_obj = parse_expression(logic, query_dict)
-    filtered_data = (
-        ScreeningTest.objects.filter(q_obj)
-        .values_list("symbol__symbol_id", flat=True)
-        .distinct()
+    date_range = (
+        datetime.now() - timedelta(days=range)
+        if range
+        else datetime.now() - timedelta(days=90)
     )
-    filtered_data = list(filtered_data)
+    # filtered_data = (
+    #     ScreeningTest.objects.filter(q_obj)
+    #     .values_list("symbol__symbol_id", flat=True)
+    #     .distinct()
+    # )
 
     # TODO 시간 설정
-    # if time == "30m":
-    #     filtered_data = Upbit.objects.filter(filter_expression).distinct("symbol_id")
-    # elif time == "60m":
-    #     filtered_data = Upbit.objects.filter(filter_expression).distinct("symbol_id")
-    # elif time == "240m":
-    #     filtered_data = Upbit.objects.filter(filter_expression).distinct("symbol_id")
-    # elif time == "1d":
-    #     filtered_data = Upbit.objects.filter(filter_expression).distinct("symbol_id")
-    # else:
-    #     filtered_data = Upbit.objects.filter(filter_expression).distinct("symbol_id")
+    if table == "30m":
+        filtered_data = (
+            Price30m.objects.filter(timestamp__gte=date_range)
+            .filter(q_obj)
+            .values_list("symbol__symbol_id", flat=True)
+            .distinct()
+        )
+    elif table == "60m":
+        filtered_data = (
+            Price60m.objects.filter(timestamp__gte=date_range)
+            .filter(q_obj)
+            .values_list("symbol__symbol_id", flat=True)
+            .distinct()
+        )
+    elif table == "240m":
+        filtered_data = (
+            Price240m.objects.filter(timestamp__gte=date_range)
+            .filter(q_obj)
+            .values_list("symbol__symbol_id", flat=True)
+            .distinct()
+        )
+    elif table == "1d":
+        filtered_data = (
+            Price1d.objects.filter(timestamp__gte=date_range)
+            .filter(q_obj)
+            .values_list("symbol__symbol_id", flat=True)
+            .distinct()
+        )
+    else:
+        filtered_data = (
+            Price240m.objects.filter(timestamp__gte=date_range)
+            .filter(q_obj)
+            .values_list("symbol__symbol_id", flat=True)
+            .distinct()
+        )
+
+    filtered_data = list(filtered_data)
 
     return filtered_data
 
@@ -47,6 +80,11 @@ def create_Q(setting) -> Q:
     str = setting.indicator + switcher[setting.sign]
     if setting.sign == "between":
         return Q(**{f"{str}": (setting.value1, setting.value2)})
+    elif setting.sign == "outside":
+        q_obj = Q(**{f"{setting.indicator}__lt": setting.value1}) | Q(
+            **{f"{setting.indicator}__gt": setting.value2}
+        )
+        return q_obj
     else:
         return Q(**{str: setting.value1})
 
