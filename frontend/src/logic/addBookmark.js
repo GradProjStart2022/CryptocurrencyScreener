@@ -1,4 +1,5 @@
 import axios from "axios";
+import userBookmark from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
@@ -16,7 +17,7 @@ const addBookmark = async (user_email, crypname_kr, symbol, dispatch) => {
 
     if (resp.status === 200 || resp.status === 201 || resp.status === 201) {
       let data = resp.data;
-      dispatch(addBookmark(data));
+      dispatch(userBookmark.actions.addBookmark(data));
       return_success = true;
     }
   } catch (error) {
