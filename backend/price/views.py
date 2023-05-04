@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 from price.QueryDict import create_query
 from price.models import Symbol, Price240m, Price60m
-from price.serializers import PriceSerializer, SymbolSerializer, PriceSerializer30m
+from price.serializers import SymbolSerializer, PriceSerializer30m
 from rest_framework.response import Response
 
 

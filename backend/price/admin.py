@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from price.models import ScreeningTest, SymbolTest
+from price.models import Price60m, Symbol
 
-admin.site.register(ScreeningTest)
-admin.site.register(SymbolTest)
+admin.site.register(Symbol)
+admin.site.register(Price60m)

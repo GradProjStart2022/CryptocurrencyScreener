@@ -12,7 +12,9 @@ class Symbol(models.Model):
 
 
 class Price30m(models.Model):
-    symbol = models.ForeignKey(Symbol, on_delete=models.CASCADE, related_name="Tests")
+    symbol = models.ForeignKey(
+        Symbol, on_delete=models.CASCADE, related_name="price30m_symbol"
+    )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
@@ -107,7 +109,9 @@ class Price30m(models.Model):
 
 
 class Price60m(models.Model):
-    symbol = models.ForeignKey(Symbol, on_delete=models.CASCADE, related_name="Tests")
+    symbol = models.ForeignKey(
+        Symbol, on_delete=models.CASCADE, related_name="price60m_symbol"
+    )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
@@ -202,7 +206,9 @@ class Price60m(models.Model):
 
 
 class Price240m(models.Model):
-    symbol = models.ForeignKey(Symbol, on_delete=models.CASCADE, related_name="Tests")
+    symbol = models.ForeignKey(
+        Symbol, on_delete=models.CASCADE, related_name="price240m_symbol"
+    )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
@@ -297,7 +303,9 @@ class Price240m(models.Model):
 
 
 class Price1d(models.Model):
-    symbol = models.ForeignKey(Symbol, on_delete=models.CASCADE, related_name="Tests")
+    symbol = models.ForeignKey(
+        Symbol, on_delete=models.CASCADE, related_name="price1d_symbol"
+    )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
