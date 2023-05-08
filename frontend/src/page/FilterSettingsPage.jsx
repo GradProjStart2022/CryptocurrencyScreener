@@ -164,6 +164,23 @@ const FilterSettingsPage = (props) => {
     setBasicFilterCompArr(temp_comparr);
   }, [completeBasicFilter]);
 
+  function replaceSelectedText() {
+    const input = document.querySelector("#filter-name input");
+    const selectionStart = input.selectionStart;
+    const selectionEnd = input.selectionEnd;
+    let selectedText = filterExp.slice(selectionStart, selectionEnd);
+    selectedText = selectedText.split("&").join("|").split("|").join("&");
+    const newValue =
+      filterExp.slice(0, selectionStart) +
+      selectedText +
+      filterExp.slice(selectionEnd);
+    setFilterExp(newValue);
+  }
+
+  function handleButtonClick() {
+    replaceSelectedText();
+  }
+
   return (
     <div className="App">
       <SideNavBar />
@@ -180,7 +197,8 @@ const FilterSettingsPage = (props) => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}>
+            sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
+          >
             {/* 사용자 필터 목록 영역 */}
             <UserFilterList
               isSettings={true}
@@ -203,7 +221,8 @@ const FilterSettingsPage = (props) => {
                     filterListClickID === 0 && !isCreate ? 0 : 1
                   ],
                   height: "72vh",
-                }}>
+                }}
+              >
                 {/* 필터 선택 여부에 따라 안내 멘트 혹은 편집 컴포넌트를 출력 */}
                 {filterListClickID === 0 && !isCreate ? (
                   <NoFilter />
@@ -212,7 +231,8 @@ const FilterSettingsPage = (props) => {
                     {/* 필터이름 영역 시작 */}
                     <Typography
                       component="div"
-                      sx={{ height: "10%", width: "100%" }}>
+                      sx={{ height: "10%", width: "100%" }}
+                    >
                       <Paper
                         elevation={1}
                         sx={{
@@ -221,7 +241,8 @@ const FilterSettingsPage = (props) => {
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
-                        }}>
+                        }}
+                      >
                         <Typography variant={"h6"} component="div">
                           필터 이름
                         </Typography>
@@ -241,7 +262,8 @@ const FilterSettingsPage = (props) => {
                     {/* 조건식 영역 시작 */}
                     <Typography
                       component="div"
-                      sx={{ height: "10%", width: "100%" }}>
+                      sx={{ height: "10%", width: "100%" }}
+                    >
                       <Paper
                         elevation={1}
                         sx={{
@@ -250,7 +272,8 @@ const FilterSettingsPage = (props) => {
                           display: "flex",
                           justifyContent: "space-around",
                           alignItems: "center",
-                        }}>
+                        }}
+                      >
                         <Typography variant={"h6"} component="div">
                           조건식
                         </Typography>
@@ -265,7 +288,11 @@ const FilterSettingsPage = (props) => {
                           sx={{ width: "70%", marginLeft: "12px" }}
                         />
                         {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 및 긁은 텍스트에 대응한 핸들러 기능 추가 */}
-                        <Button variant="outlined" size="small">
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={handleButtonClick}
+                        >
                           {"& <-> |"}
                         </Button>
                         <Button variant="contained" size="small">
@@ -277,10 +304,12 @@ const FilterSettingsPage = (props) => {
                     {/* 기본필터들 영역 시작 */}
                     <Typography
                       component="div"
-                      sx={{ height: "80%", width: "100%" }}>
+                      sx={{ height: "80%", width: "100%" }}
+                    >
                       <Paper
                         elevation={1}
-                        sx={{ height: "100%", width: "100%" }}>
+                        sx={{ height: "100%", width: "100%" }}
+                      >
                         <div
                           style={{
                             height: "8%",
@@ -288,7 +317,8 @@ const FilterSettingsPage = (props) => {
                             justifyContent: "space-between",
                             alignItems: "center",
                             padding: "0px 1vw 0px 1vw",
-                          }}>
+                          }}
+                        >
                           <Typography variant="h6" component="div">
                             {isEmpty(inputFilterName)
                               ? "이름없는 필터"
@@ -298,12 +328,14 @@ const FilterSettingsPage = (props) => {
                           <Button
                             onClick={handleBFliterOpen}
                             variant="contained"
-                            size="small">
+                            size="small"
+                          >
                             <AddIcon fontSize="small" />
                           </Button>
                           <Modal
                             open={openBFilter}
-                            onClose={handleBFliterClose}>
+                            onClose={handleBFliterClose}
+                          >
                             <Box
                               sx={{
                                 position: "absolute",
@@ -312,7 +344,8 @@ const FilterSettingsPage = (props) => {
                                 width: "80%",
                                 height: "80%",
                                 bgcolor: "#ffffff",
-                              }}>
+                              }}
+                            >
                               <FilterSelectTabs
                                 handleBFliterClose={handleBFliterClose}
                                 isCreate={isCreate}
@@ -329,7 +362,8 @@ const FilterSettingsPage = (props) => {
                             height: "80%",
                             padding: "0px 4vw 0px 4vw",
                             overflow: "auto",
-                          }}>
+                          }}
+                        >
                           {basicFilterCompArr}
                         </Box>
                         {/* 필터에 있는 기본필터들 컴포넌트 끝 */}
@@ -339,7 +373,8 @@ const FilterSettingsPage = (props) => {
                             display: "flex",
                             justifyContent: "flex-end",
                             alignItems: "center",
-                          }}>
+                          }}
+                        >
                           <Button
                             variant="text"
                             size="small"
@@ -352,7 +387,8 @@ const FilterSettingsPage = (props) => {
                                 setCompleteBasicFilter,
                                 setBasicFilterCompArr
                               );
-                            }}>
+                            }}
+                          >
                             초기화
                           </Button>
                           <Button
@@ -369,7 +405,8 @@ const FilterSettingsPage = (props) => {
                               );
                               setFilterListClickID(0);
                               setIsCreate(false);
-                            }}>
+                            }}
+                          >
                             취소
                           </Button>
                           <Button
@@ -421,7 +458,8 @@ const FilterSettingsPage = (props) => {
                               } catch (error) {
                                 console.log("error :>> ", error);
                               }
-                            }}>
+                            }}
+                          >
                             저장
                           </Button>
                         </div>
