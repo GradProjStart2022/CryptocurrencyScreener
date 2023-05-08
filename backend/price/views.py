@@ -19,7 +19,6 @@ def screening(request):
     filter_pk = request.GET.get("id")
     table = request.GET.get("table")  # 30m, 60m, 240m, 1d
     date_range = request.GET.get("date_range")  # 일 수 기준
-
     try:
         filtered_symbol = create_query(filter_pk, table, date_range)
         symbols = Symbol.objects.filter(symbol_id__in=filtered_symbol)
