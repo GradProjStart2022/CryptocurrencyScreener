@@ -24,4 +24,5 @@ urlpatterns = [
     path("filter/", include("filter.urls")),
     path("widget/", include("widget.urls")),
     path("price/", include("price.urls")),
+    path("alarm/", include("alarm.urls")),
 ]
