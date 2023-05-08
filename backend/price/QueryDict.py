@@ -14,12 +14,10 @@ def create_query(filter_pk, table, range):
     logic = create_logic(q.expression)
     q_obj = parse_expression(logic, query_dict)
     date_range = (
-        datetime.now() - timedelta(days=int(range))
+        datetime.now() - timedelta(days=range)
         if range
         else datetime.now() - timedelta(days=90)
     )
-
-    print(range)
 
     # filtered_data = (
     #     ScreeningTest.objects.filter(q_obj)
@@ -63,8 +61,6 @@ def create_query(filter_pk, table, range):
             .values_list("symbol__symbol_id", flat=True)
             .distinct()
         )
-
-    print(1)
 
     filtered_data = list(filtered_data)
 
