@@ -15,8 +15,8 @@ import {
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-//import addBookmark from "../logic/addBookmark.js";
-import addBookmark from "../redux/store.js";
+import addBookmarkServer from "../logic/addBookmarkServer.js";
+// import addBookmark from "../redux/store.js";
 /**
  * 종목별 화면 UI 요소 반환 함수
  * @param props react props
@@ -31,6 +31,7 @@ const ChartPage = (props) => {
 
   const dispatch = useDispatch();
   const user_email = useSelector((state) => state.user.email);
+  const uid = useSelector((state) => state.user.uid);
 
   // todo: 사용자 북마크 연동
   let [isFavorite, setIsFavorite] = useState(0);
@@ -49,26 +50,28 @@ const ChartPage = (props) => {
     }
   };
 
-  console.log((coin_obj.symbol = "GLMKRW"));
-
   const handleBookmarkClick = async () => {
-    if (!user_email || !coin_obj.name_kr || !coin_obj.symbol) {
+    if (!user_email || !coin_obj.name_kr || !coin_obj.tradingview_upbit_code) {
       // Handle the error case
-      console.log("aaaa");
-    }
-
-    // Call the addBookmark function with the necessary arguments
-    const success = await addBookmark(
-      user_email,
-      coin_obj.name_kr,
-      coin_obj.symbol,
-      dispatch
-    );
-    if (success) {
-      // Update the UI to reflect that the bookmark was added successfully
-      changeIdx();
+      console.log(
+        `user_email: ${user_email} / coin_obj: ${coin_obj.name_kr}, ${coin_obj.tradingview_upbit_code}`
+      );
     } else {
-      // Handle the error case
+      // Call the addBookmark function with the necessary arguments
+      const success = await addBookmarkServer(
+        // user_email,
+        uid,
+        coin_obj.name_kr,
+        coin_obj.tradingview_upbit_code,
+        dispatch
+      );
+      console.log(`success: ${success}`);
+      if (success) {
+        // Update the UI to reflect that the bookmark was added successfully
+        changeIdx();
+      } else {
+        // Handle the error case
+      }
     }
   };
 
