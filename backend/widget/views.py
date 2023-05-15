@@ -11,7 +11,8 @@ import csv
 from widget.serializers import WidgetSerializer
 
 
-# Create your views here.
+# Create your views here
+# TODO 위젯코드 자동화.
 def import_csv(request):
     if request.method == "POST":
         csv_file = request.FILES["csv_file"]

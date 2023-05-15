@@ -1,9 +1,8 @@
 from django.db import models
-
-# Create your models here.
 from users.models import User
 
 
+# TODO alarm이 True로 생성되거나, 변경될때 Previous 저장해야함
 class Filter(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="filters")
     name = models.CharField(max_length=100)
