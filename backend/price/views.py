@@ -5,9 +5,11 @@ from datetime import datetime
 from django.db.models import Max, OuterRef, Subquery, F
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.utils import timezone
 from rest_framework.decorators import api_view
 from tqdm import tqdm
 
+from alarm.models import Previous
 from price.QueryDict import create_query
 from price.models import Symbol, Price240m, Price60m
 from price.serializers import SymbolSerializer, PriceSerializer30m
@@ -16,11 +18,16 @@ from rest_framework.response import Response
 
 @api_view(["GET"])
 def screening(request):
+
     filter_pk = request.GET.get("id")
     table = request.GET.get("table")  # 30m, 60m, 240m, 1d
     date_range = int(request.GET.get("date_range"))  # 일 수 기준
+
+    # TODO DB변경하면서 가격까지 같이 출력하기
+
     try:
         filtered_symbol = create_query(filter_pk, table, date_range)
+        Previous(filter_id=filter_pk, old_data=str(filtered_symbol)).save()
         symbols = Symbol.objects.filter(symbol_id__in=filtered_symbol)
         serializer = SymbolSerializer(symbols, many=True)
     except:

@@ -2,7 +2,6 @@ from rest_framework import serializers
 from price.models import Symbol, Price60m, Price30m, Price240m, Price1d
 
 
-# TODO model명 변경
 class PriceSerializer30m(serializers.ModelSerializer):
     class Meta:
         model = Price30m

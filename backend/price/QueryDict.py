@@ -1,11 +1,14 @@
 from datetime import datetime, timedelta
+from typing import List
 
 from django.db.models import Q
+
+from alarm.models import Previous
 from filter.models import Filter
 from price.models import Price30m, Price60m, Price240m, Price1d
 
 
-def create_query(filter_pk, table, range):
+def create_query(filter_pk: int, table: str, range: int) -> List[str]:
     q = Filter.objects.prefetch_related("settings").get(pk=filter_pk)
     query_dict = dict()
     for setting in q.settings.all():
@@ -77,8 +80,7 @@ def create_Q(setting) -> Q:
         "between": "__range",
         "not_equal": "__ne",
     }
-    # TODO upper 붙여야함
-    str = setting.indicator + switcher[setting.sign]
+    str = setting.indicator.upper() + switcher[setting.sign]
     if setting.sign == "between":
         return Q(**{f"{str}": (setting.value1, setting.value2)})
     elif setting.sign == "outside":
@@ -90,7 +92,7 @@ def create_Q(setting) -> Q:
         return Q(**{str: setting.value1})
 
 
-def create_logic(expression):
+def create_logic(expression: str):
     stack = []
     current = []
     for char in expression:
@@ -112,7 +114,7 @@ def create_logic(expression):
     return current
 
 
-def parse_expression(expression, query_dict):
+def parse_expression(expression: str, query_dict):
     if isinstance(expression, str):
         return query_dict[expression]
     if isinstance(expression, list):

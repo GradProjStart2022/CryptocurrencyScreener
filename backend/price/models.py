@@ -11,6 +11,7 @@ class Symbol(models.Model):
         db_table = "Symbol"
 
 
+# TODO 기본키 없애고 외래키만 남겨야함
 class Price30m(models.Model):
     symbol = models.ForeignKey(
         Symbol, on_delete=models.CASCADE, related_name="price30m_symbol"
