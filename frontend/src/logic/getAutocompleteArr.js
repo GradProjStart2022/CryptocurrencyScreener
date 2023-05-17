@@ -20,10 +20,6 @@ const getSearchComplete = async () => {
         let jongmokJson = resp.data;
 
         jongmokJson.forEach((elem, index) => {
-          // 과다 데이터 방지 로직
-          if (index >= 114) {
-            return false;
-          }
           let addStr = elem.name_kr + "/" + elem.name_en;
 
           searchObjValue.push({
