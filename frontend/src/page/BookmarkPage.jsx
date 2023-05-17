@@ -1,51 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { isEmpty } from "lodash-es";
 
-import { MiniChart } from "react-ts-tradingview-widgets";
-import { Grid, IconButton } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+import { Grid } from "@mui/material";
+
+import { setBookmark } from "../redux/store.js";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
+import BookmarkCoin from "../component/BookmarkCoin.jsx";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
-/**
- * 즐겨찾는 종목 컴포넌트
- * @param {*} props react props
- * @returns 즐겨찾는 종목 UI 요소
- */
-const BookmarkCoin = (props) => {
-  const removeBookmark = props.removeBookmark;
-  const data = props.data;
-
-  return (
-    <Grid item xs={4}>
-      <IconButton
-        aria-label="star"
-        color="secondary"
-        onClick={() => {
-          removeBookmark(data.symbol);
-        }}>
-        <StarIcon />
-      </IconButton>
-      <MiniChart
-        symbol={data.symbol}
-        colorTheme="light"
-        locale="kr"
-        width="100%"></MiniChart>
-    </Grid>
-  );
-};
-
 const BookmarkPage = (props) => {
   const navigate = useNavigate();
-  let user_email = useSelector((state) => state.user).email;
-  let [bookmarks, setBookmark] = useState([]);
+  const dispatch = useDispatch();
+  let user_email = useSelector((state) => state.user.email);
+  /** @type {object[]} */
+  let bookmarks = useSelector((state) => state.userBookmark.bookmarks);
+  // let [bookmark, setBookmark] = useState([]);
 
   // todo: useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
   useEffect(() => {
@@ -59,46 +35,17 @@ const BookmarkPage = (props) => {
     if (!isEmpty(user_email)) {
       axios
         .get(`${ATTENTION_URL}?email=${user_email}`)
-        .then((response) => {
-          console.log(response);
-          setBookmark(response.data);
+        .then((resp) => {
+          dispatch(setBookmark(resp.data));
+          // setBookmark(response.data);
         })
         .catch((err) => {
-          // console.log("err>>>", err);
+          console.log("BookmarkPage UseEffect err>>>", err);
+          alert("즐겨찾기 조회에 문제가 있습니다.\n다시 접속해주세요.");
           navigate("/", { replace: true });
         });
     }
   }, []);
-
-  /**
-   * 트레이딩뷰 심볼 이름을 받아
-   * 북마크 배열 요소 삭제 및 서버 delete 로직을 수행
-   * @param {string} symbol 트레이딩뷰 위젯 로드용 심볼 이름
-   */
-  const removeBookmark = async (symbol) => {
-    let resp = undefined;
-
-    let remove_coin = bookmarks.find((element) => {
-      return element?.symbol === symbol;
-    });
-    let delete_id = remove_coin?.id;
-    if (delete_id) {
-      resp = await axios.delete(`${ATTENTION_URL}${delete_id}/`);
-    } else {
-      // console.log("err>>> delete_id: ", delete_id);
-      navigate(0); // 오류나면 새로고침
-    }
-
-    if (resp?.status === 200 || resp?.status === 204) {
-      let new_bookmarks = bookmarks.filter((element) => {
-        return element?.symbol !== symbol;
-      });
-      setBookmark(new_bookmarks);
-    } else {
-      // console.log("err>>> resp.status: ", resp.status);
-      navigate(0); // 오류나면 새로고침
-    }
-  };
 
   return (
     <div className="App">
@@ -125,7 +72,8 @@ const BookmarkPage = (props) => {
                   <BookmarkCoin
                     key={index}
                     data={data}
-                    removeBookmark={removeBookmark}
+                    bookmark_id={data.id}
+                    // removeBookmark={removeBookmark}
                   />
                 );
               })
