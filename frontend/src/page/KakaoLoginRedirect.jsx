@@ -29,6 +29,12 @@ const fail_login = (navigate) => {
   navigate("/login", { replace: true });
 };
 
+const fail_login = (navigate) => {
+  // 로그인 실패하면 로그인화면으로 돌려보냄
+  alert("로그인에 실패했습니다.");
+  navigate("/login", { replace: true });
+};
+
 /**
  * 카카오 로그인 리다이렉트 페이지
  * @param {any} props react props
