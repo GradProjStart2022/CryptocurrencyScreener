@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { isEmpty } from "lodash-es";
+import { useEffect, useRef, useState } from "react";
+import { cloneDeep, isEmpty } from "lodash-es";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -111,6 +111,8 @@ const FilterSettingsPage = (props) => {
   // 복합 필터에 대한 기본필터 렌더링 요소
   const [basicFilterCompArr, setBasicFilterCompArr] = useState([]);
 
+  const expInput = useRef();
+
   // 체크한 복합 필터가 바뀔 때마다 정보 불러와서 기본필터정보 렌더링 요소 변경
   useEffect(() => {
     if (filterListClickID !== 0) {
@@ -165,16 +167,36 @@ const FilterSettingsPage = (props) => {
   }, [completeBasicFilter]);
 
   function replaceSelectedText() {
-    const input = document.querySelector("#filter-name input");
-    const selectionStart = input.selectionStart;
-    const selectionEnd = input.selectionEnd;
+    // const input = document.querySelector("#filter-name input");
+    // console.log(input);
+    // console.log(expInput.current);
+    const selectionStart = expInput.current.selectionStart;
+    const selectionEnd = expInput.current.selectionEnd;
+
     let selectedText = filterExp.slice(selectionStart, selectionEnd);
-    selectedText = selectedText.split("&").join("|").split("|").join("&");
-    const newValue =
+    console.log(selectedText);
+    let changed_val = "";
+    if (selectedText === "&") {
+      changed_val = "|";
+    } else if (selectedText === "|") {
+      changed_val = "&";
+    } else {
+      alert("올바른 연산자를 선택하세요.");
+      return;
+    }
+    let new_filter_exp =
       filterExp.slice(0, selectionStart) +
-      selectedText +
+      changed_val +
       filterExp.slice(selectionEnd);
-    setFilterExp(newValue);
+    setFilterExp(new_filter_exp);
+
+    // console.log(selectedText);
+    // selectedText = selectedText.split("&").join("|").split("|").join("&");
+    // const newValue =
+    //   filterExp.slice(0, selectionStart) +
+    //   selectedText +
+    //   filterExp.slice(selectionEnd);
+    // setFilterExp(newValue);
   }
 
   function handleButtonClick() {
@@ -285,6 +307,7 @@ const FilterSettingsPage = (props) => {
                           InputProps={{
                             readOnly: true,
                           }}
+                          inputRef={expInput}
                           sx={{ width: "70%", marginLeft: "12px" }}
                         />
                         {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 및 긁은 텍스트에 대응한 핸들러 기능 추가 */}
