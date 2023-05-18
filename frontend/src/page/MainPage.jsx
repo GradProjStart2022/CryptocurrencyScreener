@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
+import BookmarkCoin from "../component/BookmarkCoin.jsx";
 
 const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
 
@@ -42,7 +43,8 @@ const NotLogin = (props) => {
         onClick={() => {
           navigate("/login");
           // navigate("/testpage");
-        }}>
+        }}
+      >
         로그인
         {/* 테스트페이지 */}
       </button>
@@ -56,10 +58,15 @@ const NotLogin = (props) => {
  * @returns 즐겨찾기 요소 UI 컴포넌트
  */
 const LoginBookmark = (props) => {
+  const bookmarks = useSelector((state) => state.userBookmark.bookmarks);
+
   return (
-    <Grid container={true} spacing={4}>
-      <div>로그인됨</div>
-    </Grid>
+    <div style={{ display: "flex" }}>
+      {bookmarks.map((data, index) => (
+        // <BookmarkCoin key={index} data={data} bookmark_id={data.id} />
+        <MiniChart key={index} symbol={data.symbol} width="95%" />
+      ))}
+    </div>
   );
 };
 
@@ -72,6 +79,7 @@ const MainPage = (props) => {
   // let [isLogin, setIsLogin] = useState(false);
   let uid = useSelector((state) => state.user.uid);
   const navigate = useNavigate();
+  const data = props.data;
 
   return (
     <div className="App">
@@ -85,7 +93,8 @@ const MainPage = (props) => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px" }}>
+            sx={{ marginLeft: "12px", marginTop: "24px" }}
+          >
             <Grid item xs={9}>
               {/* todo: 로그인 되었을때 연동 확인 및 디자인 필요 */}
               {uid !== -1 ? (
@@ -94,10 +103,10 @@ const MainPage = (props) => {
                 <NotLogin navigate={navigate} />
               )}
               <MiniChart
-                symbol="BTCKRW"
+                colorTheme="light"
+                locale="kr"
                 width="100%"
-                largeChartUrl={CHART_REDIRECT_URL}
-              />
+              ></MiniChart>
             </Grid>
             <Grid item xs={3} sx={{ marginTop: "12px" }}>
               <CryptoCurrencyMarket
