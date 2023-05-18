@@ -16,7 +16,6 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import addBookmarkServer from "../logic/addBookmarkServer.js";
-// import addBookmark from "../redux/store.js";
 /**
  * 종목별 화면 UI 요소 반환 함수
  * @param props react props
@@ -52,12 +51,10 @@ const ChartPage = (props) => {
 
   const handleBookmarkClick = async () => {
     if (!user_email || !coin_obj.name_kr || !coin_obj.tradingview_upbit_code) {
-      // Handle the error case
       console.log(
         `user_email: ${user_email} / coin_obj: ${coin_obj.name_kr}, ${coin_obj.tradingview_upbit_code}`
       );
     } else {
-      // Call the addBookmark function with the necessary arguments
       const success = await addBookmarkServer(
         // user_email,
         uid,
@@ -67,10 +64,8 @@ const ChartPage = (props) => {
       );
       console.log(`success: ${success}`);
       if (success) {
-        // Update the UI to reflect that the bookmark was added successfully
         changeIdx();
       } else {
-        // Handle the error case
       }
     }
   };
@@ -128,6 +123,7 @@ const ChartPage = (props) => {
             <Grid item xs={4}>
               <CompanyProfile
                 symbol={coin_obj?.tradingview_upbit_code}
+                // symbol={coin_obj?.tradingview_market_code}
                 locale="kr"
                 width={"100%"}
               ></CompanyProfile>
@@ -135,6 +131,7 @@ const ChartPage = (props) => {
             <Grid item xs={4}>
               <FundamentalData
                 symbol={coin_obj?.tradingview_upbit_code}
+                // symbol={coin_obj?.tradingview_market_code}
                 locale="kr"
                 width={"100%"}
               ></FundamentalData>

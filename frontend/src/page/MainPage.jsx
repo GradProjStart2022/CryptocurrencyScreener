@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import BookmarkCoin from "../component/BookmarkCoin.jsx";
 
 const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
 
@@ -63,7 +62,6 @@ const LoginBookmark = (props) => {
   return (
     <div style={{ display: "flex" }}>
       {bookmarks.map((data, index) => (
-        // <BookmarkCoin key={index} data={data} bookmark_id={data.id} />
         <MiniChart key={index} symbol={data.symbol} width="95%" />
       ))}
     </div>
