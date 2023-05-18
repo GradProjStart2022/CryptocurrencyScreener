@@ -27,7 +27,6 @@ def screening(request):
 
     try:
         filtered_symbol = create_query(filter_pk, table, date_range)
-        Previous(filter_id=filter_pk, old_data=str(filtered_symbol)).save()
         symbols = Symbol.objects.filter(symbol_id__in=filtered_symbol)
         serializer = SymbolSerializer(symbols, many=True)
     except:

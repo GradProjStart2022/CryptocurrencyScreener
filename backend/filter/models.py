@@ -1,8 +1,12 @@
 from django.db import models
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+
+from alarm.models import Previous
+from price.QueryDict import create_query
 from users.models import User
 
 
-# TODO alarm이 True로 생성되거나, 변경될때 Previous 저장해야함
 class Filter(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="filters")
     name = models.CharField(max_length=100)
@@ -16,6 +20,17 @@ class Filter(models.Model):
             return
         else:
             super(Filter, self).save(*args, **kwargs)
+
+
+@receiver(post_save, sender=Filter)
+def Filter_post_save(sender, instance, created, **kwargs):
+    if created:
+        if instance.alarm:
+            previous = Previous(
+                filter_id=instance.id,
+                old_data=str(create_query(instance.id, "30m", 30)),
+            )
+            previous.save()
 
 
 class Setting(models.Model):
