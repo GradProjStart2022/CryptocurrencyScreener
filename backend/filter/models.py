@@ -22,6 +22,7 @@ class Filter(models.Model):
             super(Filter, self).save(*args, **kwargs)
 
 
+# Filter save메소드 트리거
 @receiver(post_save, sender=Filter)
 def Filter_post_save(sender, instance, created, **kwargs):
     if created:

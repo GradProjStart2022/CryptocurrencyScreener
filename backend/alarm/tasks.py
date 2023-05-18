@@ -1,5 +1,7 @@
 from typing import Set
 
+from celery import Celery
+from celery.schedules import crontab
 from django.utils import timezone
 
 from alarm.models import Previous, Alarm
@@ -7,9 +9,12 @@ from filter.models import Filter
 from price.QueryDict import create_query
 from price.models import Symbol
 
+app = Celery("screener")
 
-def create_alarm():
-    filters = Filter.objects.filter(alarm=True)
+
+@app.task
+def create_alarm(time):
+    filters = Filter.objects.filter(alarm=True).filter(time=int(time))
     ids = list(filters.values_list("id", flat=True))
 
     for id in ids:
@@ -46,6 +51,7 @@ def is_different(id: int) -> str:
     if changed_num == 0:
         return ""
     else:
+        Previous(filter_id=id, old_data=current_lst).save()
         return create_message(changed_num, filter.name, new_symbols, missing_symbols)
 
 
@@ -58,3 +64,27 @@ def create_message(n: int, name: str, new: Set[int], old: Set[int]) -> str:
     )
 
     return f"{name} 필터에서 새로운 종목 {new_symbol[:5]} 등 추가되고 {old_symbol[:5]} 등 종목이 제거 되었습니다. 총 {n}개의 종목이 변경되었습니다."
+
+
+app.conf.beat_schedule = {
+    "my_task_30min": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(minute="*/30"),
+        "args": ("30",),
+    },
+    "my_task_1hour": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(hour="*/1"),
+        "args": ("60",),
+    },
+    "my_task_4hour": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(hour="*/4"),
+        "args": ("240",),
+    },
+    "my_task_1d": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(hour="0", minute="0"),
+        "args": ("1",),
+    },
+}
