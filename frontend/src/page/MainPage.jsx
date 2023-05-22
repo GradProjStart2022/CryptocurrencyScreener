@@ -8,12 +8,17 @@ import {
 } from "react-ts-tradingview-widgets";
 
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { isEmpty } from "lodash-es";
+import { useEffect, useState } from "react";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
+import { setBookmark } from "../redux/store.js";
 
+const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
 
 const reqLoginCss = css({
@@ -82,8 +87,26 @@ const LoginBookmark = (props) => {
 const MainPage = (props) => {
   // let [isLogin, setIsLogin] = useState(false);
   let uid = useSelector((state) => state.user.uid);
+  let email = useSelector((state) => state.user.email);
   const navigate = useNavigate();
-  const data = props.data;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (uid !== -1) {
+      // 로그인이 되었을 때 즐겨찾기 정보를 가져오는 코드
+      axios
+        .get(`${ATTENTION_URL}?email=${email}`) // 즐겨찾기 정보를 가져오는 API 호출
+        .then((response) => {
+          console.log(response.data);
+          dispatch(setBookmark(response.data)); // 가져온 즐겨찾기 정보를 redux store에 저장
+        })
+        .catch((err) => {
+          console.log("MainPage UseEffect err>>>", err);
+          alert("즐겨찾기 조회에 문제가 있습니다.\n다시 접속해주세요.");
+          navigate("/", { replace: true });
+        });
+    }
+  }, [uid, dispatch]);
 
   return (
     <div className="App">

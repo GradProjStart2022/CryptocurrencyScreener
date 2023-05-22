@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Grid, IconButton } from "@mui/material";
+import { yellow } from "@mui/material/colors";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -123,7 +124,6 @@ const ChartPage = (props) => {
             <Grid item xs={4}>
               <CompanyProfile
                 symbol={coin_obj?.tradingview_upbit_code}
-                // symbol={coin_obj?.tradingview_market_code}
                 locale="kr"
                 width={"100%"}
               ></CompanyProfile>
@@ -131,7 +131,6 @@ const ChartPage = (props) => {
             <Grid item xs={4}>
               <FundamentalData
                 symbol={coin_obj?.tradingview_upbit_code}
-                // symbol={coin_obj?.tradingview_market_code}
                 locale="kr"
                 width={"100%"}
               ></FundamentalData>
