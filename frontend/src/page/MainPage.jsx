@@ -1,7 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { Grid } from "@mui/material";
-import { CryptoCurrencyMarket, MiniChart } from "react-ts-tradingview-widgets";
+import {
+  CryptoCurrencyMarket,
+  MiniChart,
+  TickerTape,
+} from "react-ts-tradingview-widgets";
 
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -60,9 +64,11 @@ const LoginBookmark = (props) => {
   const bookmarks = useSelector((state) => state.userBookmark.bookmarks);
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       {bookmarks.map((data, index) => (
-        <MiniChart key={index} symbol={data.symbol} width="95%" />
+        <div key={index} style={{ margin: "15px" }}>
+          <MiniChart symbol={data.symbol} width="99%" />
+        </div>
       ))}
     </div>
   );
@@ -100,11 +106,13 @@ const MainPage = (props) => {
               ) : (
                 <NotLogin navigate={navigate} />
               )}
-              <MiniChart
-                colorTheme="light"
-                locale="kr"
-                width="100%"
-              ></MiniChart>
+              <div style={{ marginTop: "10%" }}>
+                <TickerTape
+                  colorTheme="light"
+                  displayMode="compact"
+                  locale="kr"
+                ></TickerTape>
+              </div>
             </Grid>
             <Grid item xs={3} sx={{ marginTop: "12px" }}>
               <CryptoCurrencyMarket
