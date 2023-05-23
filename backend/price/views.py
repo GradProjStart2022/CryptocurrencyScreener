@@ -5,11 +5,8 @@ from datetime import datetime
 from django.db.models import Max, OuterRef, Subquery, F
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils import timezone
 from rest_framework.decorators import api_view
 from tqdm import tqdm
-
-from alarm.models import Previous
 from price.QueryDict import create_query
 from price.models import Symbol, Price240m, Price60m
 from price.serializers import SymbolSerializer, PriceSerializer30m

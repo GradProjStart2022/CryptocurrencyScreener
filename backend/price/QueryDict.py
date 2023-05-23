@@ -2,9 +2,10 @@ from datetime import datetime, timedelta
 from typing import List
 
 from django.db.models import Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-from alarm.models import Previous
-from filter.models import Filter
+from filter.models import Filter, Previous
 from price.models import Price30m, Price60m, Price240m, Price1d
 
 
@@ -136,3 +137,13 @@ def parse_expression(expression: str, query_dict):
     if isinstance(expression, tuple):
         q_list = [parse_expression(subexp, query_dict) for subexp in expression]
         return q_list[0] & q_list[1]
+
+    @receiver(post_save, sender=Filter)
+    def Filter_post_save(sender, instance, created, **kwargs):
+        if created:
+            if instance.alarm:
+                previous = Previous(
+                    filter_id=instance.id,
+                    old_data=str(create_query(instance.id, "30m", 30)),
+                )
+                previous.save()

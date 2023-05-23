@@ -1,9 +1,4 @@
 from django.db import models
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
-
-from alarm.models import Previous
-from price.QueryDict import create_query
 from users.models import User
 
 
@@ -22,18 +17,6 @@ class Filter(models.Model):
             super(Filter, self).save(*args, **kwargs)
 
 
-# Filter save메소드 트리거
-@receiver(post_save, sender=Filter)
-def Filter_post_save(sender, instance, created, **kwargs):
-    if created:
-        if instance.alarm:
-            previous = Previous(
-                filter_id=instance.id,
-                old_data=str(create_query(instance.id, "30m", 30)),
-            )
-            previous.save()
-
-
 class Setting(models.Model):
     filter = models.ForeignKey(
         Filter, on_delete=models.CASCADE, related_name="settings"
@@ -45,3 +28,16 @@ class Setting(models.Model):
     # TODO null 버그 고쳐야함
     value1 = models.BigIntegerField(null=True)
     value2 = models.BigIntegerField(null=True)
+
+
+class Previous(models.Model):
+    filter = models.OneToOneField(
+        Filter, on_delete=models.CASCADE, related_name="previous"
+    )
+    old_data = models.CharField(max_length=1000)
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        Previous.objects.get(filter_id=self.filter_id).delete()
+        super().save(force_insert, force_update, using, update_fields)
