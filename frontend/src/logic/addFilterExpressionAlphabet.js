@@ -8,6 +8,7 @@ import { isNull } from "lodash-es";
  */
 const addAlphabet = (index, last_alpha) => {
   if (isNull(last_alpha)) {
+    // 필터 신규 제작시
     if (index < 26) {
       // A ~ Z
       return String.fromCharCode(65 + index);
@@ -19,7 +20,8 @@ const addAlphabet = (index, last_alpha) => {
       return String.fromCharCode(65 + alpha_code[0], 65 + alpha_code[1]);
     }
   } else {
-    // todo: 중간에 빠진거 채울지 새거부터 할지
+    // 기존 필터 알파벳 변경시
+    // TODO 중간에 빠진거 채울지 새거부터 할지
     return String();
   }
 };

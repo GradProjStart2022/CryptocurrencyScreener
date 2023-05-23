@@ -7,7 +7,6 @@ const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 /**
  * 트레이딩뷰 심볼 이름을 받아
  * 북마크 배열 요소 삭제 및 서버 delete 로직을 수행
- * todo: 현재 작업중
  * @param {string} symbol 트레이딩뷰 위젯 로드용 심볼 이름
  * @param {number} bookmark_id 삭제할 즐겨찾기 id
  * @param {string} user_email 사용자 email
