@@ -22,12 +22,6 @@ import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import localCSVFetch from "../logic/localCSVFetch.js";
 
-const fail_login = (navigate) => {
-  // 로그인 실패하면 로그인화면으로 돌려보냄
-  alert("로그인에 실패했습니다.");
-  navigate("/login", { replace: true });
-};
-
 /**
  * 카카오 로그인 리다이렉트 페이지
  * @returns 사용자 안내용 페이지 요소 반환
