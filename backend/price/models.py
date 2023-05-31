@@ -11,7 +11,6 @@ class Symbol(models.Model):
         db_table = "Symbol"
 
 
-# TODO 기본키 없애고 외래키만 남겨야함
 class Price30m(models.Model):
     symbol = models.ForeignKey(
         Symbol, on_delete=models.CASCADE, related_name="price30m_symbol"
@@ -106,12 +105,15 @@ class Price30m(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_kor_30m"
+        db_table = "upbit_spot_krw_30m"
 
 
 class Price60m(models.Model):
-    symbol = models.ForeignKey(
-        Symbol, on_delete=models.CASCADE, related_name="price60m_symbol"
+    ID = models.ForeignKey(
+        Symbol,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="price60m_symbol",
     )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
@@ -203,12 +205,15 @@ class Price60m(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_kor_60m"
+        db_table = "upbit_spot_krw_60m"
 
 
 class Price240m(models.Model):
-    symbol = models.ForeignKey(
-        Symbol, on_delete=models.CASCADE, related_name="price240m_symbol"
+    ID = models.ForeignKey(
+        Symbol,
+        primary_key=True,
+        on_delete=models.CASCADE,
+        related_name="price240m_symbol",
     )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
@@ -300,12 +305,15 @@ class Price240m(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_kor_240m"
+        db_table = "upbit_spot_krw_240m"
 
 
 class Price1d(models.Model):
-    symbol = models.ForeignKey(
-        Symbol, on_delete=models.CASCADE, related_name="price1d_symbol"
+    ID = models.ForeignKey(
+        Symbol,
+        primary_key=True,
+        on_delete=models.CASCADE,
+        related_name="price1d_symbol",
     )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
@@ -397,4 +405,4 @@ class Price1d(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_kor_1d"
+        db_table = "upbit_spot_krw_1d"
