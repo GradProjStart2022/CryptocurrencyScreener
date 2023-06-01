@@ -29,10 +29,9 @@ const fail_login = (navigate) => {
 
 /**
  * 카카오 로그인 리다이렉트 페이지
- * @param {any} props react props
  * @returns 사용자 안내용 페이지 요소 반환
  */
-export const KakaoLoginRedirect = (props) => {
+export const KakaoLoginRedirect = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const redux_filter_list = useSelector(
@@ -79,6 +78,7 @@ export const KakaoLoginRedirect = (props) => {
       let is_success = false;
 
       try {
+        // 카카오에 계정 기본 정보 요청
         let resp = await axios.get("https://kapi.kakao.com/v2/user/me", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -119,7 +119,6 @@ export const KakaoLoginRedirect = (props) => {
     if (listSuccess) {
       let is_success = false;
       redux_filter_list.forEach(async (value) => {
-        console.log("value :>> ", value);
         is_success = await getUserFilterSettings(value.id, dispatch);
       });
 

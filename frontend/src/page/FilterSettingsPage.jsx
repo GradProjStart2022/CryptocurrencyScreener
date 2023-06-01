@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isEmpty } from "lodash-es";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,7 +22,7 @@ import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BasicFilterComponent from "../component/BasicFilterList.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
-import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
+import FilterSelectTabs from "../component/modal/FilterSelectTabs.jsx";
 
 /**
  * 필터 편집내역 취소 함수
@@ -52,10 +52,9 @@ const filterCleanup = (
 
 /**
  * 당장 선택한 필터가 없을 때 안내하는 UI 요소를 반환
- * @param {any} props react props
  * @returns 필터 없을 때 안내하는 UI 요소
  */
-const NoFilter = (props) => {
+const NoFilter = () => {
   return (
     <Typography variant="body1" component="div">
       <p>
@@ -68,10 +67,9 @@ const NoFilter = (props) => {
 
 /**
  * 필터상세설정페이지 UI요소 뱉어내는 함수
- * @param {any} props react props
  * @returns 필터상세설정페이지 UI 요소
  */
-const FilterSettingsPage = (props) => {
+const FilterSettingsPage = () => {
   const dispatch = useDispatch();
   /** @type {string} */
   const user_email = useSelector((state) => state.user.email);
@@ -110,6 +108,8 @@ const FilterSettingsPage = (props) => {
 
   // 복합 필터에 대한 기본필터 렌더링 요소
   const [basicFilterCompArr, setBasicFilterCompArr] = useState([]);
+
+  const expInput = useRef();
 
   // 체크한 복합 필터가 바뀔 때마다 정보 불러와서 기본필터정보 렌더링 요소 변경
   useEffect(() => {
@@ -163,6 +163,31 @@ const FilterSettingsPage = (props) => {
     setFilterExp(temp_exp.join("&"));
     setBasicFilterCompArr(temp_comparr);
   }, [completeBasicFilter]);
+
+  function replaceSelectedText() {
+    const selectionStart = expInput.current.selectionStart;
+    const selectionEnd = expInput.current.selectionEnd;
+
+    let selectedText = filterExp.slice(selectionStart, selectionEnd);
+    let changed_val = "";
+    if (selectedText === "&") {
+      changed_val = "|";
+    } else if (selectedText === "|") {
+      changed_val = "&";
+    } else {
+      alert("올바른 연산자를 선택하세요.");
+      return;
+    }
+    let new_filter_exp =
+      filterExp.slice(0, selectionStart) +
+      changed_val +
+      filterExp.slice(selectionEnd);
+    setFilterExp(new_filter_exp);
+  }
+
+  function handleButtonClick() {
+    replaceSelectedText();
+  }
 
   return (
     <div className="App">
@@ -262,10 +287,14 @@ const FilterSettingsPage = (props) => {
                           InputProps={{
                             readOnly: true,
                           }}
+                          inputRef={expInput}
                           sx={{ width: "70%", marginLeft: "12px" }}
                         />
                         {/* todo: 텍스트 긁어서 구문분석하는 라이브러리 추가 및 긁은 텍스트에 대응한 핸들러 기능 추가 */}
-                        <Button variant="outlined" size="small">
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={handleButtonClick}>
                           {"& <-> |"}
                         </Button>
                         <Button variant="contained" size="small">
@@ -344,7 +373,7 @@ const FilterSettingsPage = (props) => {
                             variant="text"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리만 하는 코드 정상작동 확인
+                              // TODO 편집한거 정리만 하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
@@ -359,7 +388,7 @@ const FilterSettingsPage = (props) => {
                             variant="outlined"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리하는 코드 정상작동 확인
+                              // TODO 편집한거 정리하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
@@ -376,7 +405,7 @@ const FilterSettingsPage = (props) => {
                             variant="contained"
                             size="small"
                             onClick={async () => {
-                              // todo: 편집한거 저장하는 코드 정상작동 확인
+                              // TODO 편집한거 저장하는 코드 정상작동 확인
                               let is_success = false;
                               let filter_id = [];
                               try {
@@ -398,7 +427,7 @@ const FilterSettingsPage = (props) => {
                                     );
                                   }
                                 } else {
-                                  // todo: 편집하는 함수 제작
+                                  // TODO 편집하는 함수 제작
                                 }
                                 switch (is_success) {
                                   case true:

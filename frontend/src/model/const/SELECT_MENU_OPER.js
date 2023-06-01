@@ -1,12 +1,12 @@
 const SELECT_MENU_OPER = [
   "below",
-  "below or equal",
+  "below_equal", // 작거나 같음
   "above",
-  "above or equal",
+  "above_equal", // 크거나 같음
   "between",
   "outside",
   "equal",
-  "not equal",
+  "not_equal",
 ];
 
 export default SELECT_MENU_OPER;
