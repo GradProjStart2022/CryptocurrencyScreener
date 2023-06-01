@@ -70,10 +70,9 @@ const AccInfo = (props) => {
 
 /**
  * 로그인 정보 컴포넌트 함수
- * @param {any} props react props
  * @returns 로그인 버튼 혹은 계정 정보 래핑 UI요소
  */
-const LoginInfo = (props) => {
+const LoginInfo = () => {
   const userStore = useSelector((state) => state.user);
   const navigate = useNavigate();
 

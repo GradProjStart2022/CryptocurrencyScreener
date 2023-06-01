@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Grid, IconButton } from "@mui/material";
-import { yellow } from "@mui/material/colors";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -13,17 +12,18 @@ import {
   TechnicalAnalysis,
 } from "react-ts-tradingview-widgets";
 
+import addBookmarkServer from "../logic/addBookmarkServer.js";
+
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import addBookmarkServer from "../logic/addBookmarkServer.js";
+
 /**
  * 종목별 화면 UI 요소 반환 함수
- * @param props react props
  * @returns 종목별 화면 UI
  */
-const ChartPage = (props) => {
-  // todo: 북마크 연동시 나머지 UI 요소들 리렌더링 막기
+const ChartPage = () => {
+  // TODO 북마크 연동시 나머지 UI 요소들 리렌더링 막기
   // const { code } = useParams();
   const location = useLocation();
   // 검색 등에서 넣어둔 종목 객체 찾아오기
@@ -33,7 +33,7 @@ const ChartPage = (props) => {
   const user_email = useSelector((state) => state.user.email);
   const uid = useSelector((state) => state.user.uid);
 
-  // todo: 사용자 북마크 연동
+  // TODO 사용자 북마크 연동
   let [isFavorite, setIsFavorite] = useState(0);
   const changeIdx = () => {
     console.log("Debug/isFavorite :>> ", isFavorite);
@@ -57,7 +57,6 @@ const ChartPage = (props) => {
       );
     } else {
       const success = await addBookmarkServer(
-        // user_email,
         uid,
         coin_obj.name_kr,
         coin_obj.tradingview_upbit_code,
@@ -67,6 +66,7 @@ const ChartPage = (props) => {
       if (success) {
         changeIdx();
       } else {
+        // TODO 즐겨찾기 삭제 서버 전송 실패했을 때 대응
       }
     }
   };
@@ -92,10 +92,8 @@ const ChartPage = (props) => {
                   }}>{`${coin_obj?.name_kr}(${coin_obj?.name_en})`}</h1>
                 <IconButton
                   aria-label="star"
-                  // todo: 색상 변경
                   color="secondary"
-                  onClick={handleBookmarkClick}
-                >
+                  onClick={handleBookmarkClick}>
                   {[<StarBorderIcon />, <StarIcon />][isFavorite]}
                 </IconButton>
               </span>

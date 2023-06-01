@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -10,46 +10,18 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BookmarkCoin from "../component/BookmarkCoin.jsx";
+import { setBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
-/**
- * 즐겨찾는 종목 컴포넌트
- * @param {*} props react props
- * @returns 즐겨찾는 종목 UI 요소
- */
-const BookmarkCoin = (props) => {
-  const removeBookmark = props.removeBookmark;
-  const data = props.data;
-
-  return (
-    <Grid item xs={4}>
-      <IconButton
-        aria-label="star"
-        color="secondary"
-        onClick={() => {
-          removeBookmark(data.symbol);
-        }}>
-        <StarIcon />
-      </IconButton>
-      <MiniChart
-        symbol={data.symbol}
-        colorTheme="light"
-        locale="kr"
-        width="100%"></MiniChart>
-    </Grid>
-  );
-};
-
-const BookmarkPage = (props) => {
+const BookmarkPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let user_email = useSelector((state) => state.user.email);
   /** @type {object[]} */
   let bookmarks = useSelector((state) => state.userBookmark.bookmarks);
-  // let [bookmark, setBookmark] = useState([]);
 
-  // todo: useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
+  // TODO useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
   useEffect(() => {
     /* 
       로그인이랑 연동해서
@@ -95,12 +67,7 @@ const BookmarkPage = (props) => {
               // 종목의 길이가 true인 상황: 종목을 렌더링
               bookmarks.map((data, index) => {
                 return (
-                  <BookmarkCoin
-                    key={index}
-                    data={data}
-                    bookmark_id={data.id}
-                    // removeBookmark={removeBookmark}
-                  />
+                  <BookmarkCoin key={index} data={data} bookmark_id={data.id} />
                 );
               })
             ) : !isEmpty(user_email) ? (

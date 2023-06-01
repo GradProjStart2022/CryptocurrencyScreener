@@ -3,16 +3,23 @@ import { addBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
-// TODO 정상작동 확인
-const addBookmarkServer = async (user_email, crypname_kr, symbol, dispatch) => {
+/**
+ * 서버로 사용자 관심 암호화폐 추가하는 함수
+ * @param {number} user_id 사용자ID번호
+ * @param {string} crypname_kr 암호화폐 이름
+ * @param {string} symbol 암호화폐 코드
+ * @param {Dispatch<AnyAction>} dispatch RTK dispatcher
+ * @returns {Promise<boolean>} 성공여부
+ */
+const addBookmarkServer = async (user_id, crypname_kr, symbol, dispatch) => {
   let return_success = false;
   let resp;
   let attention_data = new FormData();
-  attention_data.append("user", user_email);
+  attention_data.append("user", user_id);
   attention_data.append("cryptoname", crypname_kr);
   attention_data.append("symbol", symbol);
   try {
-    console.log(user_email);
+    console.log(user_id);
     console.log(crypname_kr);
     console.log(symbol);
     resp = await axios.post(`${ATTENTION_URL}`, attention_data);

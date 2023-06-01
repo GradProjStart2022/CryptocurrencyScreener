@@ -9,26 +9,6 @@ import readAlarm from "../../logic/readAlarm.js";
 
 import AlarmList from "../AlarmList.jsx";
 
-// dummy data
-// const notifications2 = [];
-const notifications2 = [
-  {
-    id: 2,
-    message: "1234",
-    is_read: false,
-    user: 2,
-    created_at: "2023-05-15 07:21:56.287729+00:00",
-  },
-  {
-    id: 3,
-    message:
-      "1234이녀석은충분히긴내용을포함한도고생각합니다그래서이녀넉의개행을알아보고잘합니다",
-    is_read: false,
-    user: 2,
-    created_at: "2023-05-15 07:21:56.287729+00:00",
-  },
-];
-
 // 알람 모달 css
 const alarmModalStyle = {
   // 레이아웃 css
@@ -95,7 +75,6 @@ const AlarmModal = (props) => {
 
   // 사용자 ID 변화시 알람 새로 가져옴
   useEffect(() => {
-    // setAlarmState(cloneDeep(notifications2));
     if (uid !== -1) {
       let rslt = false;
       do {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { cloneDeep, isEmpty } from "lodash-es";
+import { isEmpty } from "lodash-es";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -52,10 +52,9 @@ const filterCleanup = (
 
 /**
  * 당장 선택한 필터가 없을 때 안내하는 UI 요소를 반환
- * @param {any} props react props
  * @returns 필터 없을 때 안내하는 UI 요소
  */
-const NoFilter = (props) => {
+const NoFilter = () => {
   return (
     <Typography variant="body1" component="div">
       <p>
@@ -68,10 +67,9 @@ const NoFilter = (props) => {
 
 /**
  * 필터상세설정페이지 UI요소 뱉어내는 함수
- * @param {any} props react props
  * @returns 필터상세설정페이지 UI 요소
  */
-const FilterSettingsPage = (props) => {
+const FilterSettingsPage = () => {
   const dispatch = useDispatch();
   /** @type {string} */
   const user_email = useSelector((state) => state.user.email);
@@ -167,14 +165,10 @@ const FilterSettingsPage = (props) => {
   }, [completeBasicFilter]);
 
   function replaceSelectedText() {
-    // const input = document.querySelector("#filter-name input");
-    // console.log(input);
-    // console.log(expInput.current);
     const selectionStart = expInput.current.selectionStart;
     const selectionEnd = expInput.current.selectionEnd;
 
     let selectedText = filterExp.slice(selectionStart, selectionEnd);
-    console.log(selectedText);
     let changed_val = "";
     if (selectedText === "&") {
       changed_val = "|";
@@ -189,14 +183,6 @@ const FilterSettingsPage = (props) => {
       changed_val +
       filterExp.slice(selectionEnd);
     setFilterExp(new_filter_exp);
-
-    // console.log(selectedText);
-    // selectedText = selectedText.split("&").join("|").split("|").join("&");
-    // const newValue =
-    //   filterExp.slice(0, selectionStart) +
-    //   selectedText +
-    //   filterExp.slice(selectionEnd);
-    // setFilterExp(newValue);
   }
 
   function handleButtonClick() {
@@ -441,7 +427,7 @@ const FilterSettingsPage = (props) => {
                                     );
                                   }
                                 } else {
-                                  // todo: 편집하는 함수 제작
+                                  // TODO 편집하는 함수 제작
                                 }
                                 switch (is_success) {
                                   case true:

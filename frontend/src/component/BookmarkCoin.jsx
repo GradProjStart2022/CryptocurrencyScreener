@@ -1,7 +1,7 @@
-import { MiniChart } from "react-ts-tradingview-widgets";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { MiniChart } from "react-ts-tradingview-widgets";
 import { Grid, IconButton } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
@@ -13,7 +13,6 @@ import removeBookmark from "../logic/removeBookmark.js";
  * @returns 즐겨찾는 종목 UI 요소
  */
 const BookmarkCoin = (props) => {
-  // const removeBookmark = props.removeBookmark;
   const data = props.data;
   const bookmark_id = props.bookmark_id;
 
@@ -36,16 +35,14 @@ const BookmarkCoin = (props) => {
           if (!return_success) {
             navigate(0); // 오류나면 새로고침
           }
-        }}
-      >
+        }}>
         <StarIcon />
       </IconButton>
       <MiniChart
         symbol={data.symbol}
         colorTheme="light"
         locale="kr"
-        width="100%"
-      ></MiniChart>
+        width="100%"></MiniChart>
     </Grid>
   );
 };

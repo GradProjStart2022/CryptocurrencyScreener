@@ -35,7 +35,7 @@ const getSearchComplete = async () => {
         });
       })
       .catch((err) => {
-        // todo 에러처리 및 새로고침
+        // TODO 에러처리 및 새로고침
         alert("내부에서 오류가 발생했습니다.\n사이트를 새로고침해주세요.");
 
         console.log("err :>> ", err);

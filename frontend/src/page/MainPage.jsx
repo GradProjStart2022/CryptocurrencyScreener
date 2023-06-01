@@ -1,5 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import { Grid } from "@mui/material";
 import {
   CryptoCurrencyMarket,
@@ -7,16 +13,11 @@ import {
   TickerTape,
 } from "react-ts-tradingview-widgets";
 
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { isEmpty } from "lodash-es";
-import { useEffect, useState } from "react";
+import { setBookmark } from "../redux/store.js";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import { setBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
@@ -50,10 +51,8 @@ const NotLogin = (props) => {
         className="login-btn"
         onClick={() => {
           navigate("/login");
-          // navigate("/testpage");
         }}>
         로그인
-        {/* 테스트페이지 */}
       </button>
     </div>
   );
@@ -80,11 +79,9 @@ const LoginBookmark = (props) => {
 
 /**
  * 메인화면 UI 요소 뱉어내는 함수
- * @param {any} props react props
  * @returns 메인화면 UI
  */
-const MainPage = (props) => {
-  // let [isLogin, setIsLogin] = useState(false);
+const MainPage = () => {
   let uid = useSelector((state) => state.user.uid);
   let email = useSelector((state) => state.user.email);
   const navigate = useNavigate();
@@ -121,7 +118,6 @@ const MainPage = (props) => {
             spacing={2}
             sx={{ marginLeft: "12px", marginTop: "24px" }}>
             <Grid item xs={9}>
-              {/* todo: 로그인 되었을때 연동 확인 및 디자인 필요 */}
               {uid !== -1 ? (
                 <LoginBookmark />
               ) : (
@@ -131,8 +127,7 @@ const MainPage = (props) => {
                 <TickerTape
                   colorTheme="light"
                   displayMode="compact"
-                  locale="kr"
-                ></TickerTape>
+                  locale="kr"></TickerTape>
               </div>
             </Grid>
             <Grid item xs={3} sx={{ marginTop: "12px" }}>

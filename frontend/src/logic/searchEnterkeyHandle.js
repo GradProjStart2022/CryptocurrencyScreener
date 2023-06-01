@@ -15,7 +15,7 @@ const searchEnterkeyHandle = (
 ) => {
   if (event.key === "Enter") {
     if (userClickedDat === null || userTypingDat !== userClickedDat) {
-      // todo 현재 사용자 친화적이지 않은 UX
+      // TODO 현재 사용자 친화적이지 않은 UX
       alert(
         "이름을 정확히 입력해 주세요.\n밑 이름에서 이미 엔터를 눌렀다면 한번만 더 눌러주세요."
       );

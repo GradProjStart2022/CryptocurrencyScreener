@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { isEmpty } from "lodash-es";
 
 import {
   Card,
@@ -67,10 +66,9 @@ const NoCrypto = () => {
 /**
  * 필터 미선택시 전체 종목이 표시되고
  * 필터 선택시 필터링된 종목이 표시되는 화면
- * @param {any} props react props
  * @returns 필터선택 및 종목 확인 및 선택 화면
  */
-const ChartListPage = (props) => {
+const ChartListPage = () => {
   // 종목 정렬 방법 state todo: 필터링된 종목과 연계
   const [howSort, setHowSort] = useState("");
   const handleSortChange = (event) => {
@@ -96,23 +94,6 @@ const ChartListPage = (props) => {
   // 렌더링용 가격 데이터 state
   const [priceData, setPriceData] = useState([]);
 
-  // 사용자가 선택하는 복합필터 이름 state todo: 선택한 필터와 연동
-  const [uFilterName, setUFilterName] = useState("");
-
-  // UserFilterList 클릭 필터 확인용 넘겨주기 state
-  const [filterListClick, setFilterListClick] = useState(0);
-
-  const menuProps = {
-    anchorOrigin: {
-      vertical: "bottom",
-      horizontal: "right",
-    },
-    transformOrigin: {
-      vertical: "top",
-      horizontal: "right",
-    },
-    getContentAnchorEl: null,
-  };
   // 필터링 데이터 가져오는 코드
   useEffect(() => {
     if (filterListClickID !== 0) {
@@ -180,7 +161,6 @@ const ChartListPage = (props) => {
                         <Typography variant="h5" sx={{ m: 2 }}>
                           종목
                         </Typography>
-                        {/* <h2>종목</h2> */}
                         <FormControl sx={{ m: 2, minWidth: 120 }} size="small">
                           <InputLabel id="filter-period-input-label">
                             종목 필터링 기간(일)
