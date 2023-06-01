@@ -7,7 +7,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from tqdm import tqdm
-from price.QueryDict import create_query
+
+from filter.models import create_query
 from price.models import Symbol, Price240m, Price60m
 from price.serializers import SymbolSerializer, PriceSerializer30m
 from rest_framework.response import Response

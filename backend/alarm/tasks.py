@@ -4,9 +4,8 @@ from celery import Celery
 from celery.schedules import crontab
 from django.utils import timezone
 
-from alarm.models import Previous, Alarm
-from filter.models import Filter
-from price.QueryDict import create_query
+from alarm.models import Alarm
+from filter.models import Filter, Previous, create_query
 from price.models import Symbol
 
 app = Celery("screener")
@@ -86,5 +85,10 @@ app.conf.beat_schedule = {
         "task": "alarm.tasks.create_alarm",
         "schedule": crontab(hour="0", minute="0"),
         "args": ("1",),
+    },
+    "test": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(minute="*/1"),
+        "args": ("30",),
     },
 }

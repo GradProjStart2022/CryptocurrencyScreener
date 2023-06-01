@@ -12,8 +12,11 @@ class Symbol(models.Model):
 
 
 class Price30m(models.Model):
-    symbol = models.ForeignKey(
-        Symbol, on_delete=models.CASCADE, related_name="price30m_symbol"
+    ID = models.ForeignKey(
+        Symbol,
+        primary_key=True,
+        on_delete=models.CASCADE,
+        related_name="price30m_symbol",
     )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     OPEN = models.FloatField(null=True)
