@@ -14,9 +14,7 @@ const getUserFilter = async (email, dispatch) => {
 
   try {
     let resp = await axios.get(`${GET_FILTER_LIST_URL}?email=${email}`);
-    // console.log("resp :>> ", resp);
     let filter_list = resp.data;
-    // console.log("filter_list :>> ", filter_list);
     dispatch(setUserFilterList(filter_list));
     return_success = true;
   } catch (error) {

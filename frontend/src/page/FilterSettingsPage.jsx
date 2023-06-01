@@ -22,7 +22,7 @@ import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BasicFilterComponent from "../component/BasicFilterList.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
-import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
+import FilterSelectTabs from "../component/modal/FilterSelectTabs.jsx";
 
 /**
  * 필터 편집내역 취소 함수
@@ -364,7 +364,7 @@ const FilterSettingsPage = (props) => {
                             variant="text"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리만 하는 코드 정상작동 확인
+                              // TODO 편집한거 정리만 하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
@@ -379,7 +379,7 @@ const FilterSettingsPage = (props) => {
                             variant="outlined"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리하는 코드 정상작동 확인
+                              // TODO 편집한거 정리하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
@@ -396,7 +396,7 @@ const FilterSettingsPage = (props) => {
                             variant="contained"
                             size="small"
                             onClick={async () => {
-                              // todo: 편집한거 저장하는 코드 정상작동 확인
+                              // TODO 편집한거 저장하는 코드 정상작동 확인
                               let is_success = false;
                               let filter_id = [];
                               try {

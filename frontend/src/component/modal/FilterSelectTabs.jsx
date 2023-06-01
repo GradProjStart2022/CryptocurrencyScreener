@@ -10,8 +10,8 @@ import localCSVFetch from "../../logic/localCSVFetch.js";
 import basicValueInit from "../../logic/basicValueInit.js";
 import addAlphabet from "../../logic/addFilterExpressionAlphabet.js";
 
-import SelectWithText from "../../component/basic_filter/SelectWithText.jsx";
-import { TabPanel } from "../../component/TabPanel.jsx";
+import SelectWithText from "../basic_filter/SelectWithText.jsx";
+import { TabPanel } from "../TabPanel.jsx";
 
 /**
  * 기본 필터 컴포넌트를 생성하고 배열에 삽입하는 함수
@@ -84,7 +84,7 @@ const FilterSelectTabs = (props) => {
         setBasicValueHandle(basic_obj_arr);
       } else {
         // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-        // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+        // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
         completeFilter.forEach((value, _) => {
           if (value.is_used === true) {
             basic_obj_arr[value.idx] = cloneDeep(value);
@@ -129,7 +129,7 @@ const FilterSelectTabs = (props) => {
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                 } else {
                   // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                   completeFilter.forEach((value, _) => {
                     if (value.is_used === true) {
@@ -170,7 +170,7 @@ const FilterSelectTabs = (props) => {
                 let last_alpha = null;
                 let gen_idx = 0;
                 if (!isCreate) {
-                  // todo: 필터 수정에 대해 알파벳 어떻게 부여할지 결정
+                  // TODO 필터 수정에 대해 알파벳 어떻게 부여할지 결정
                   // last_alpha = "Z"
                 }
                 basicValueHandle.forEach((value) => {
@@ -277,7 +277,7 @@ const FilterSelectTabs = (props) => {
               alignContent: "start",
               overflow: "scroll",
             }}>
-            {/* todo: 필터링 로직 맞는지 점검 */}
+            {/* TODO 필터링 로직 맞는지 점검 */}
             {basicComponentList.filter((elem) => {
               return elem?.props.valueObj?.is_used === true;
             })}
@@ -297,7 +297,7 @@ const FilterSelectTabs = (props) => {
               alignContent: "start",
               overflow: "scroll",
             }}>
-            {/* todo: recommend 가져오기 + 필터링 로직 해서 컴포넌트 넣기 */}
+            {/* TODO recommend 가져오기 + 필터링 로직 해서 컴포넌트 넣기 */}
           </Grid>
         </Box>
       </TabPanel>
