@@ -51,8 +51,7 @@ const NotLogin = (props) => {
         onClick={() => {
           navigate("/login");
           // navigate("/testpage");
-        }}
-      >
+        }}>
         로그인
         {/* 테스트페이지 */}
       </button>
@@ -120,8 +119,7 @@ const MainPage = (props) => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px" }}
-          >
+            sx={{ marginLeft: "12px", marginTop: "24px" }}>
             <Grid item xs={9}>
               {/* todo: 로그인 되었을때 연동 확인 및 디자인 필요 */}
               {uid !== -1 ? (

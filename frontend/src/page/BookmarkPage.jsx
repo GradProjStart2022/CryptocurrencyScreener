@@ -6,14 +6,40 @@ import { isEmpty } from "lodash-es";
 
 import { Grid } from "@mui/material";
 
-import { setBookmark } from "../redux/store.js";
-
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BookmarkCoin from "../component/BookmarkCoin.jsx";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
+
+/**
+ * 즐겨찾는 종목 컴포넌트
+ * @param {*} props react props
+ * @returns 즐겨찾는 종목 UI 요소
+ */
+const BookmarkCoin = (props) => {
+  const removeBookmark = props.removeBookmark;
+  const data = props.data;
+
+  return (
+    <Grid item xs={4}>
+      <IconButton
+        aria-label="star"
+        color="secondary"
+        onClick={() => {
+          removeBookmark(data.symbol);
+        }}>
+        <StarIcon />
+      </IconButton>
+      <MiniChart
+        symbol={data.symbol}
+        colorTheme="light"
+        locale="kr"
+        width="100%"></MiniChart>
+    </Grid>
+  );
+};
 
 const BookmarkPage = (props) => {
   const navigate = useNavigate();

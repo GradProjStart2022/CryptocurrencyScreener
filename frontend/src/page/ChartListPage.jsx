@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { isEmpty } from "lodash-es";
 
 import {
   Card,
@@ -95,6 +96,23 @@ const ChartListPage = (props) => {
   // 렌더링용 가격 데이터 todo: 모델 독립?
   const [priceData, setPriceData] = useState([]);
 
+  // 사용자가 선택하는 복합필터 이름 state todo: 선택한 필터와 연동
+  const [uFilterName, setUFilterName] = useState("");
+
+  // UserFilterList 클릭 필터 확인용 넘겨주기 state
+  const [filterListClick, setFilterListClick] = useState(0);
+
+  const menuProps = {
+    anchorOrigin: {
+      vertical: "bottom",
+      horizontal: "right",
+    },
+    transformOrigin: {
+      vertical: "top",
+      horizontal: "right",
+    },
+    getContentAnchorEl: null,
+  };
   // 여기에 데이터 가져오는 코드 넣는중
   useEffect(() => {
     if (filterListClickID !== 0) {
