@@ -12,9 +12,8 @@ class Symbol(models.Model):
 
 
 class Price30m(models.Model):
-    ID = models.ForeignKey(
+    symbol = models.ForeignKey(
         Symbol,
-        primary_key=True,
         on_delete=models.CASCADE,
         related_name="price30m_symbol",
     )
@@ -112,10 +111,9 @@ class Price30m(models.Model):
 
 
 class Price60m(models.Model):
-    ID = models.ForeignKey(
+    symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="price60m_symbol",
     )
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
@@ -212,9 +210,8 @@ class Price60m(models.Model):
 
 
 class Price240m(models.Model):
-    ID = models.ForeignKey(
+    symbol = models.ForeignKey(
         Symbol,
-        primary_key=True,
         on_delete=models.CASCADE,
         related_name="price240m_symbol",
     )
@@ -312,9 +309,9 @@ class Price240m(models.Model):
 
 
 class Price1d(models.Model):
-    ID = models.ForeignKey(
+    # id = models.AutoField(primary_key=True, name="id")
+    symbol = models.ForeignKey(
         Symbol,
-        primary_key=True,
         on_delete=models.CASCADE,
         related_name="price1d_symbol",
     )

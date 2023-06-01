@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from tqdm import tqdm
 
 from filter.models import create_query
-from price.models import Symbol, Price240m, Price60m
+from price.models import Symbol, Price240m, Price60m, Price30m
 from price.serializers import SymbolSerializer, PriceSerializer30m
 from rest_framework.response import Response
 
@@ -82,7 +82,10 @@ def import_data(request):
         decoded_file = csv_file.read().decode("utf-8").splitlines()
         reader = csv.DictReader(decoded_file)
         for row in tqdm(reader):
-            data = Price240m(
+
+            # symbol = Symbol.objects.get(id=int(row["ID"]))
+            # print(symbol.symbol_id)
+            data = Price30m(
                 symbol_id=row["ID"],
                 timestamp=datetime.fromisoformat(row["DATE"]),
                 OPEN=float(row["OPEN"] or 0),

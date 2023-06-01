@@ -17,7 +17,6 @@ class Filter(models.Model):
 
     # 최대 10개 저장
     def save(self, *args, **kwargs):
-        # TODO 순환오류 해결 필요 create_query
         if self.alarm:
             previous = Previous(
                 filter_id=self.id,
