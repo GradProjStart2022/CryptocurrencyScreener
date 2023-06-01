@@ -93,7 +93,7 @@ const ChartListPage = (props) => {
   // UserFilterList 클릭 필터 확인용 넘겨주기 state
   const [filterListClickID, setFilterListClickID] = useState(0);
 
-  // 렌더링용 가격 데이터 todo: 모델 독립?
+  // 렌더링용 가격 데이터 state
   const [priceData, setPriceData] = useState([]);
 
   // 사용자가 선택하는 복합필터 이름 state todo: 선택한 필터와 연동
@@ -113,7 +113,7 @@ const ChartListPage = (props) => {
     },
     getContentAnchorEl: null,
   };
-  // 여기에 데이터 가져오는 코드 넣는중
+  // 필터링 데이터 가져오는 코드
   useEffect(() => {
     if (filterListClickID !== 0) {
       getFilteredData(filterListClickID, barTable, dateRange, setPriceData);

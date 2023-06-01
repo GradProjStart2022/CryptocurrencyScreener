@@ -3,7 +3,7 @@ import { addBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
-// todo - 작업중
+// TODO 정상작동 확인
 const addBookmarkServer = async (user_email, crypname_kr, symbol, dispatch) => {
   let return_success = false;
   let resp;
