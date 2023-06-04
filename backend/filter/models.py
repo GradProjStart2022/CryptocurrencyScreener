@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 
@@ -51,7 +52,10 @@ class Previous(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        Previous.objects.get(filter_id=self.filter_id).delete()
+        try:
+            Previous.objects.get(filter_id=self.filter_id).delete()
+        except ObjectDoesNotExist:
+            pass
         super().save(force_insert, force_update, using, update_fields)
 
 

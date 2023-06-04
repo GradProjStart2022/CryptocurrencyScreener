@@ -17,7 +17,7 @@ class Price30m(models.Model):
         on_delete=models.CASCADE,
         related_name="price30m_symbol",
     )
-    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    timestamp = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -116,7 +116,7 @@ class Price60m(models.Model):
         on_delete=models.CASCADE,
         related_name="price60m_symbol",
     )
-    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    timestamp = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -215,7 +215,7 @@ class Price240m(models.Model):
         on_delete=models.CASCADE,
         related_name="price240m_symbol",
     )
-    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    timestamp = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -315,7 +315,7 @@ class Price1d(models.Model):
         on_delete=models.CASCADE,
         related_name="price1d_symbol",
     )
-    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    timestamp = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
