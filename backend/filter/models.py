@@ -29,6 +29,9 @@ class Filter(models.Model):
         else:
             super(Filter, self).save(*args, **kwargs)
 
+    class Meta:
+        db_table = "Filter"
+
 
 class Setting(models.Model):
     filter = models.ForeignKey(
@@ -41,6 +44,9 @@ class Setting(models.Model):
     # TODO null 버그 고쳐야함
     value1 = models.BigIntegerField(null=True)
     value2 = models.BigIntegerField(null=True)
+
+    class Meta:
+        db_table = "Setting"
 
 
 class Previous(models.Model):
@@ -57,6 +63,9 @@ class Previous(models.Model):
         except ObjectDoesNotExist:
             pass
         super().save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = "Previous"
 
 
 def create_query(filter_pk: int, table: str, range: int) -> List[str]:
