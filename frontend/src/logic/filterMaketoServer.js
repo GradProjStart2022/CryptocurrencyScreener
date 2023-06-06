@@ -22,7 +22,7 @@ const filterDataCustom = async (completeBasicFilter, filter_id) => {
       modified_filter_form.append("name", value.name);
       modified_filter_form.append("sign", value.oper);
       modified_filter_form.append("value1", value.value1);
-      // todo: 추후 서버에서 value2 null 버그 픽스예정
+      // TODO 추후 서버에서 value2 null 버그 픽스 예정, 이후 value2 로직 수정
       modified_filter_form.append(
         "value2",
         isNil(value.value2) ? -1 : value.value2
@@ -75,7 +75,6 @@ const filterMake = async (
 
     resp = await axios.post(FILTER_INIT_URL, filter_init_form);
     filled_id[0] = resp.data.id;
-    console.log("filled_id :>> ", filled_id);
     return_success = await filterDataCustom(completeBasicFilter, filled_id[0]);
 
     return_success = await getUserFilter(user_email, dispatch);

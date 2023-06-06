@@ -3,6 +3,8 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 /**
  * 사용자 기본 정보 redux store
  * access_token, 이름, 이메일, 사용자 사진 보관
+ * 사용자 기본 정보 redux store
+ * access_token, 이름, 이메일, 사용자 사진 보관
  */
 let user = createSlice({
   name: "user",

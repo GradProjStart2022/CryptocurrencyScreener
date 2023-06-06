@@ -3,15 +3,14 @@ import { cloneDeep, isEmpty } from "lodash-es";
 
 import { Box, Button, Grid, Typography, Tabs, Tab } from "@mui/material";
 
-import SELECT_MENU_LIST from "../../model/const/SELECT_MENU_LIST.js";
 import SELECT_MENU_OPER from "../../model/const/SELECT_MENU_OPER.js";
 import { basicFilterArr } from "../../model/basic_filter_const.js";
 import localCSVFetch from "../../logic/localCSVFetch.js";
 import basicValueInit from "../../logic/basicValueInit.js";
 import addAlphabet from "../../logic/addFilterExpressionAlphabet.js";
 
-import SelectWithText from "../../component/basic_filter/SelectWithText.jsx";
-import { TabPanel } from "../../component/TabPanel.jsx";
+import SelectWithText from "../basic_filter/SelectWithText.jsx";
+import { TabPanel } from "../TabPanel.jsx";
 
 /**
  * 기본 필터 컴포넌트를 생성하고 배열에 삽입하는 함수
@@ -84,7 +83,7 @@ const FilterSelectTabs = (props) => {
         setBasicValueHandle(basic_obj_arr);
       } else {
         // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-        // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+        // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
         completeFilter.forEach((value, _) => {
           if (value.is_used === true) {
             basic_obj_arr[value.idx] = cloneDeep(value);
@@ -129,7 +128,7 @@ const FilterSelectTabs = (props) => {
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                 } else {
                   // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                   completeFilter.forEach((value, _) => {
                     if (value.is_used === true) {
@@ -149,7 +148,7 @@ const FilterSelectTabs = (props) => {
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                 } else {
                   // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                   completeFilter.forEach((value, _) => {
                     if (value.is_used === true) {
@@ -170,7 +169,7 @@ const FilterSelectTabs = (props) => {
                 let last_alpha = null;
                 let gen_idx = 0;
                 if (!isCreate) {
-                  // todo: 필터 수정에 대해 알파벳 어떻게 부여할지 결정
+                  // TODO 필터 수정에 대해 알파벳 어떻게 부여할지 결정
                   // last_alpha = "Z"
                 }
                 basicValueHandle.forEach((value) => {
@@ -277,7 +276,7 @@ const FilterSelectTabs = (props) => {
               alignContent: "start",
               overflow: "scroll",
             }}>
-            {/* todo: 필터링 로직 맞는지 점검 */}
+            {/* TODO 필터링 로직 맞는지 점검 */}
             {basicComponentList.filter((elem) => {
               return elem?.props.valueObj?.is_used === true;
             })}
@@ -297,7 +296,7 @@ const FilterSelectTabs = (props) => {
               alignContent: "start",
               overflow: "scroll",
             }}>
-            {/* todo: recommend 가져오기 + 필터링 로직 해서 컴포넌트 넣기 */}
+            {/* TODO recommend 가져오기 + 필터링 로직 해서 컴포넌트 넣기 */}
           </Grid>
         </Box>
       </TabPanel>
@@ -340,30 +339,3 @@ export default FilterSelectTabs;
 //   valEnd={1000}
 //   minDist={10}
 // />
-
-/**
- * 문제발생시 44줄에 복원
- * 컴포넌트에 필요한 핸들링 변수를 초기화하는 함수
- * @param {number} length 필요한 컴포넌트 수
- * @returns {object[]} 초기화가 완료된 handling 요소 object 배열
- */
-// const basicValueInit = (length) => {
-//   let temp_init_state = [];
-//   for (let index = 0; index < length; index++) {
-//     // 연산자 기호 데이터 추가
-//     temp_init_state.push({
-//       idx: index,
-//       is_used: false,
-//       indicatior: basicFilterArr[index].abbreviation,
-//       oper_kor: SELECT_MENU_LIST[0],
-//       oper: SELECT_MENU_OPER[0],
-//       value1: 0,
-//       value2: 0,
-//       is_dual_value: false,
-//       name: "",
-//       name_kr: basicFilterArr[index].name_kr,
-//     });
-//   }
-
-//   return temp_init_state;
-// };

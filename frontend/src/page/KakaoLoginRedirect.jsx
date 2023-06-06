@@ -29,10 +29,9 @@ const fail_login = (navigate) => {
 
 /**
  * 카카오 로그인 리다이렉트 페이지
- * @param {any} props react props
  * @returns 사용자 안내용 페이지 요소 반환
  */
-export const KakaoLoginRedirect = (props) => {
+export const KakaoLoginRedirect = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const redux_filter_list = useSelector(

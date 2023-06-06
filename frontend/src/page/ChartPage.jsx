@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Grid, IconButton } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
@@ -11,23 +12,28 @@ import {
   TechnicalAnalysis,
 } from "react-ts-tradingview-widgets";
 
+import addBookmarkServer from "../logic/addBookmarkServer.js";
+
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 
 /**
  * 종목별 화면 UI 요소 반환 함수
- * @param props react props
  * @returns 종목별 화면 UI
  */
-const ChartPage = (props) => {
-  // todo: 북마크 연동시 나머지 UI 요소들 리렌더링 막기
+const ChartPage = () => {
+  // TODO 북마크 연동시 나머지 UI 요소들 리렌더링 막기
   // const { code } = useParams();
   const location = useLocation();
   // 검색 등에서 넣어둔 종목 객체 찾아오기
   const coin_obj = location.state?.coin;
 
-  // todo: 사용자 북마크 연동
+  const dispatch = useDispatch();
+  const user_email = useSelector((state) => state.user.email);
+  const uid = useSelector((state) => state.user.uid);
+
+  // TODO 사용자 북마크 연동
   let [isFavorite, setIsFavorite] = useState(0);
   const changeIdx = () => {
     console.log("Debug/isFavorite :>> ", isFavorite);
@@ -41,6 +47,27 @@ const ChartPage = (props) => {
       default:
         setIsFavorite(0);
         break;
+    }
+  };
+
+  const handleBookmarkClick = async () => {
+    if (!user_email || !coin_obj.name_kr || !coin_obj.tradingview_upbit_code) {
+      console.log(
+        `user_email: ${user_email} / coin_obj: ${coin_obj.name_kr}, ${coin_obj.tradingview_upbit_code}`
+      );
+    } else {
+      const success = await addBookmarkServer(
+        uid,
+        coin_obj.name_kr,
+        coin_obj.tradingview_upbit_code,
+        dispatch
+      );
+      console.log(`success: ${success}`);
+      if (success) {
+        changeIdx();
+      } else {
+        // TODO 즐겨찾기 삭제 서버 전송 실패했을 때 대응
+      }
     }
   };
 
@@ -65,9 +92,8 @@ const ChartPage = (props) => {
                   }}>{`${coin_obj?.name_kr}(${coin_obj?.name_en})`}</h1>
                 <IconButton
                   aria-label="star"
-                  // todo: 색상 변경
                   color="secondary"
-                  onClick={changeIdx}>
+                  onClick={handleBookmarkClick}>
                   {[<StarBorderIcon />, <StarIcon />][isFavorite]}
                 </IconButton>
               </span>

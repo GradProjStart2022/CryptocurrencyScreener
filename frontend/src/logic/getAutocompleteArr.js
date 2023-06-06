@@ -20,10 +20,6 @@ const getSearchComplete = async () => {
         let jongmokJson = resp.data;
 
         jongmokJson.forEach((elem, index) => {
-          // 과다 데이터 방지 로직
-          if (index >= 114) {
-            return false;
-          }
           let addStr = elem.name_kr + "/" + elem.name_en;
 
           searchObjValue.push({
@@ -39,7 +35,7 @@ const getSearchComplete = async () => {
         });
       })
       .catch((err) => {
-        // todo 에러처리 및 새로고침
+        // TODO 에러처리 및 새로고침
         alert("내부에서 오류가 발생했습니다.\n사이트를 새로고침해주세요.");
 
         console.log("err :>> ", err);

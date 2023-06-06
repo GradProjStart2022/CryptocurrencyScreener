@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -12,18 +12,18 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BookmarkCoin from "../component/BookmarkCoin.jsx";
+import { setBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
-const BookmarkPage = (props) => {
+const BookmarkPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let user_email = useSelector((state) => state.user.email);
   /** @type {object[]} */
   let bookmarks = useSelector((state) => state.userBookmark.bookmarks);
-  // let [bookmark, setBookmark] = useState([]);
 
-  // todo: useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
+  // TODO useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
   useEffect(() => {
     /* 
       로그인이랑 연동해서
@@ -69,12 +69,7 @@ const BookmarkPage = (props) => {
               // 종목의 길이가 true인 상황: 종목을 렌더링
               bookmarks.map((data, index) => {
                 return (
-                  <BookmarkCoin
-                    key={index}
-                    data={data}
-                    bookmark_id={data.id}
-                    // removeBookmark={removeBookmark}
-                  />
+                  <BookmarkCoin key={index} data={data} bookmark_id={data.id} />
                 );
               })
             ) : !isEmpty(user_email) ? (
