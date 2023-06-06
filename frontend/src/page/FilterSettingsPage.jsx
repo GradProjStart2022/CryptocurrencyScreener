@@ -203,6 +203,54 @@ const FilterSettingsPage = (props) => {
     replaceSelectedText();
   }
 
+  const handleFilterExpChange = (event) => {
+    setFilterExp(event.target.value);
+  };
+
+  const handleSaveButtonClick = async () => {
+    try {
+      let is_success = false;
+      let filter_id = [];
+
+      if (isCreate) {
+        // 새 필터 생성
+        const updatedFilterExp = expInput.current.value;
+        is_success = await filterMake(
+          completeBasicFilter,
+          updatedFilterExp,
+          inputFilterName,
+          user_email,
+          uid,
+          filter_id,
+          dispatch
+        );
+        if (is_success) {
+          console.log("filter_id:", filter_id);
+          is_success = await getUserFilterSettings(filter_id[0], dispatch);
+        }
+      } else {
+        // Todo: 필터 편집에 대한 로직 구현
+      }
+
+      if (is_success) {
+        alert("생성되었습니다."); // 성공 메시지 표시
+        filterCleanup(
+          isCreate,
+          setInputFilterName,
+          setFilterExp,
+          setCompleteBasicFilter,
+          setBasicFilterCompArr
+        );
+        setFilterListClickID(0);
+        setIsCreate(false);
+      } else {
+        alert("생성 실패"); // 실패 메시지 표시
+      }
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
+
   return (
     <div className="App">
       <SideNavBar />
@@ -304,9 +352,7 @@ const FilterSettingsPage = (props) => {
                           variant="outlined"
                           size="small"
                           value={filterExp}
-                          InputProps={{
-                            readOnly: true,
-                          }}
+                          onChange={handleFilterExpChange}
                           inputRef={expInput}
                           sx={{ width: "70%", marginLeft: "12px" }}
                         />
@@ -435,53 +481,54 @@ const FilterSettingsPage = (props) => {
                           <Button
                             variant="contained"
                             size="small"
-                            onClick={async () => {
-                              // todo: 편집한거 저장하는 코드 정상작동 확인
-                              let is_success = false;
-                              let filter_id = [];
-                              try {
-                                if (isCreate) {
-                                  is_success = await filterMake(
-                                    completeBasicFilter,
-                                    filterExp,
-                                    inputFilterName,
-                                    user_email,
-                                    uid,
-                                    filter_id,
-                                    dispatch
-                                  );
-                                  if (is_success) {
-                                    console.log("filter_id :>> ", filter_id);
-                                    is_success = await getUserFilterSettings(
-                                      filter_id[0],
-                                      dispatch
-                                    );
-                                  }
-                                } else {
-                                  // todo: 편집하는 함수 제작
-                                }
-                                switch (is_success) {
-                                  case true:
-                                    alert("생성되었습니다.");
-                                    filterCleanup(
-                                      isCreate,
-                                      setInputFilterName,
-                                      setFilterExp,
-                                      setCompleteBasicFilter,
-                                      setBasicFilterCompArr
-                                    );
-                                    setFilterListClickID(0);
-                                    setIsCreate(false);
-                                    break;
-                                  case false:
-                                  default:
-                                    alert("생성중 문제가 발생했습니다.");
-                                    break;
-                                }
-                              } catch (error) {
-                                console.log("error :>> ", error);
-                              }
-                            }}
+                            // onClick={async () => {
+                            //   // todo: 편집한거 저장하는 코드 정상작동 확인
+                            //   let is_success = false;
+                            //   let filter_id = [];
+                            //   try {
+                            //     if (isCreate) {
+                            //       is_success = await filterMake(
+                            //         completeBasicFilter,
+                            //         filterExp,
+                            //         inputFilterName,
+                            //         user_email,
+                            //         uid,
+                            //         filter_id,
+                            //         dispatch
+                            //       );
+                            //       if (is_success) {
+                            //         console.log("filter_id :>> ", filter_id);
+                            //         is_success = await getUserFilterSettings(
+                            //           filter_id[0],
+                            //           dispatch
+                            //         );
+                            //       }
+                            //     } else {
+                            //       // todo: 편집하는 함수 제작
+                            //     }
+                            //     switch (is_success) {
+                            //       case true:
+                            //         alert("생성되었습니다.");
+                            //         filterCleanup(
+                            //           isCreate,
+                            //           setInputFilterName,
+                            //           setFilterExp,
+                            //           setCompleteBasicFilter,
+                            //           setBasicFilterCompArr
+                            //         );
+                            //         setFilterListClickID(0);
+                            //         setIsCreate(false);
+                            //         break;
+                            //       case false:
+                            //       default:
+                            //         alert("생성중 문제가 발생했습니다.");
+                            //         break;
+                            //     }
+                            //   } catch (error) {
+                            //     console.log("error :>> ", error);
+                            //   }
+                            // }}
+                            onClick={handleSaveButtonClick}
                           >
                             저장
                           </Button>
