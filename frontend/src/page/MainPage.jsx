@@ -1,19 +1,16 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { Grid } from "@mui/material";
-import { CryptoCurrencyMarket, MiniChart } from "react-ts-tradingview-widgets";
-
-import { useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-
-import { Grid } from "@mui/material";
 import {
   CryptoCurrencyMarket,
   MiniChart,
   TickerTape,
 } from "react-ts-tradingview-widgets";
+
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { setBookmark } from "../redux/store.js";
 

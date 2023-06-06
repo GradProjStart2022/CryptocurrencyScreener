@@ -2,6 +2,39 @@ import axios from "axios";
 import { isEmpty } from "lodash-es";
 
 const SCREEN_PRICE_URL = "http://127.0.0.1:8000/price/screening/";
+const PRICE_DATA_URL = "http://127.0.0.1:8000/price/prices/";
+
+/**
+ * 필터링된 종목의 세부 가격 데이터를 가져오는 함수
+ * @param {object[]} price_data 사전에 가져온 필터링된 종목 object 배열
+ * @param {string[]} symbol_ids 필터링된 종목의 내부 식별용 ID가 저장된 배열
+ */
+const getFilteredPrice = async (price_data, symbol_ids) => {
+  try {
+    let resp = await axios.get(PRICE_DATA_URL, {
+      params: {
+        symbol_ids: JSON.stringify(symbol_ids),
+      },
+    });
+    resp.data.forEach((elem, index) => {
+      price_data[index] = {
+        ...elem,
+        ...price_data[index],
+      };
+    });
+  } catch (error) {
+    console.log("getFilteredPrice error :>> ", error);
+    price_data.forEach((elem, index) => {
+      price_data[index] = {
+        OPEN: -1,
+        CLOSE: -1,
+        VOLUME: -1,
+        ...elem,
+      };
+    });
+  }
+};
+
 /**
  * 서버에서 필터링된 종목 데이터 받아
  * 모델에 넣어주는 함수
@@ -33,7 +66,6 @@ const getFilteredData = async (
 
     if (Object.keys(resp.data).includes("error")) {
       // 혹시나 200인데 error를 수신할 시
-      console.log("getFilteredData none :>> ", resp.data);
       price_data = [
         {
           id: 1,
@@ -41,6 +73,9 @@ const getFilteredData = async (
           name_en: "Error",
           symbol_id: 0,
           ticker: "Error",
+          OPEN: -1,
+          CLOSE: -1,
+          VOLUME: -1,
         },
       ];
       return_success = false;
@@ -53,17 +88,26 @@ const getFilteredData = async (
           name_en: "No Filter Data",
           symbol_id: 0,
           ticker: "No Filter Data",
+          OPEN: -1,
+          CLOSE: -1,
+          VOLUME: -1,
         },
       ];
       return_success = false;
     } else {
+      /** @type {string[]} */
+      let symbol_ids = [];
+
       // 필터링 데이터 정상 수신
       resp.data.forEach((elem, index) => {
+        symbol_ids.push(elem.symbol_id);
         price_data.push({
           id: index,
           ...elem,
         });
       });
+
+      await getFilteredPrice(price_data, symbol_ids);
 
       return_success = true;
     }
@@ -77,6 +121,9 @@ const getFilteredData = async (
         name_en: "Error",
         symbol_id: 0,
         ticker: "Error",
+        OPEN: -1,
+        CLOSE: -1,
+        VOLUME: -1,
       },
     ]);
     return_success = false;

@@ -57,32 +57,31 @@ const CoinTableRow = (props) => {
       </TableCell>
       {/* 종목코드 -> ticker */}
       <TableCell align="right">{row.ticker}</TableCell>
-      {/* 가격 -> 대응없음? */}
-      <TableCell align="right">
-        {/* {row.price.toLocaleString()} */}준비중
-      </TableCell>
-      {/* (구)전일대비 -> 대응없음 */}
+      {/* 시가 -> 구 가격 */}
+      <TableCell align="right">{row.OPEN.toLocaleString()}</TableCell>
+      {/* 종가 -> 구 전일대비 */}
       <TableCell
         align="right"
         // style={{
         //   color: row.change >= 0 ? "red" : "blue",
         // }}
       >
+        {row.CLOSE.toLocaleString()}
         {/* {row.change.toLocaleString()}
           {row.change >= 0 ? (
             <ArrowDropUp fontSize="small" />
           ) : (
             <ArrowDropDown fontSize="small" />
           )} */}
-        준비중
       </TableCell>
-      {/* (구)등락률 -> 대응없음 */}
+      {/* 거래량 -> 구 등락률 */}
       <TableCell
         align="right"
         // style={{
         //   color: row.percent >= 0 ? "red" : "blue",
         // }}
       >
+        {row.VOLUME.toLocaleString()}
         {/* {row.percent.toLocaleString(undefined, {
             maximumFractionDigits: 2,
           })}
@@ -92,7 +91,6 @@ const CoinTableRow = (props) => {
           ) : (
             <ArrowDropDown fontSize="small" />
           )} */}
-        준비중
       </TableCell>
     </TableRow>
   );
