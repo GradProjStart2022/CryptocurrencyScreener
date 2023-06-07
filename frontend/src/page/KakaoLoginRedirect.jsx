@@ -119,7 +119,6 @@ export const KakaoLoginRedirect = (props) => {
     if (listSuccess) {
       let is_success = false;
       redux_filter_list.forEach(async (value) => {
-        console.log("value :>> ", value);
         is_success = await getUserFilterSettings(value.id, dispatch);
       });
 

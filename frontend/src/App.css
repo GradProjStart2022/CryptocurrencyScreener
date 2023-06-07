@@ -108,3 +108,18 @@
 .acc-name {
   color: #69728d;
 }
+
+.setpage-filterselect-area {
+  height: 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 1vw 0px 1vw;
+}
+
+.setpage-modify-btnarea {
+  height: 12%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
