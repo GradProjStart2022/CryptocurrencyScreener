@@ -2,6 +2,17 @@ from rest_framework import serializers
 from price.models import Symbol, Price60m, Price30m, Price240m, Price1d
 
 
+class PriceSerializer(serializers.Serializer):
+    name_kr = serializers.CharField()
+    name_en = serializers.CharField()
+    ticker = serializers.CharField()
+    symbol_id = serializers.IntegerField()
+    timestamp = serializers.DateTimeField()
+    LOW = serializers.FloatField()
+    HIGH = serializers.FloatField()
+    VOLUME = serializers.FloatField()
+
+
 class PriceSerializer30m(serializers.ModelSerializer):
     class Meta:
         model = Price30m
