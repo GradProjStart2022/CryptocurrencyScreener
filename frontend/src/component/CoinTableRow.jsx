@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { isNil, isEmpty } from "lodash-es";
 
 import { TableCell, TableRow } from "@mui/material";
-import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import { searchObjValue } from "../model/search_const";
 
 /**
@@ -57,41 +56,12 @@ const CoinTableRow = (props) => {
       </TableCell>
       {/* 종목코드 -> ticker */}
       <TableCell align="right">{row.ticker}</TableCell>
-      {/* 시가 -> 구 가격 */}
-      <TableCell align="right">{row.OPEN.toLocaleString()}</TableCell>
-      {/* 종가 -> 구 전일대비 */}
-      <TableCell
-        align="right"
-        // style={{
-        //   color: row.change >= 0 ? "red" : "blue",
-        // }}
-      >
-        {row.CLOSE.toLocaleString()}
-        {/* {row.change.toLocaleString()}
-          {row.change >= 0 ? (
-            <ArrowDropUp fontSize="small" />
-          ) : (
-            <ArrowDropDown fontSize="small" />
-          )} */}
-      </TableCell>
+      {/* 저가 -> 구 가격 */}
+      <TableCell align="right">{row.LOW.toLocaleString()}</TableCell>
+      {/* 고가 -> 구 전일대비 */}
+      <TableCell align="right">{row.HIGH.toLocaleString()}</TableCell>
       {/* 거래량 -> 구 등락률 */}
-      <TableCell
-        align="right"
-        // style={{
-        //   color: row.percent >= 0 ? "red" : "blue",
-        // }}
-      >
-        {row.VOLUME.toLocaleString()}
-        {/* {row.percent.toLocaleString(undefined, {
-            maximumFractionDigits: 2,
-          })}
-          %
-          {row.percent >= 0 ? (
-            <ArrowDropUp fontSize="small" />
-          ) : (
-            <ArrowDropDown fontSize="small" />
-          )} */}
-      </TableCell>
+      <TableCell align="right">{row.VOLUME.toLocaleString()}</TableCell>
     </TableRow>
   );
 };
