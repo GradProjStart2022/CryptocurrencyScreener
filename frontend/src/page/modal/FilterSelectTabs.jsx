@@ -139,7 +139,7 @@ const FilterSelectTabs = (props) => {
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                 } else {
                   // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
                   basic_obj_arr = basicValueInit(basicFilterArr.length);
                   completeFilter.forEach((value, _) => {
                     if (value.is_used === true) {

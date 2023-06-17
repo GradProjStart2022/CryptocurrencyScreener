@@ -24,6 +24,7 @@ import BasicFilterComponent from "../component/BasicFilterList.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
 import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
 import removeFilter from "../logic/removeFilter.js";
+import filterModify from "../logic/filterModify.js";
 
 /**
  * 필터 편집내역 취소 함수
@@ -219,11 +220,20 @@ const FilterSettingsPage = () => {
           is_success = await getUserFilterSettings(filter_id[0], dispatch);
         }
       } else {
-        // TODO 필터 편집에 대한 로직 구현
+        // 필터 편집(딸린 기본 필터들은 수정 불가)
+        is_success = await filterModify(
+          filterListClickID,
+          uid,
+          user_email,
+          inputFilterName,
+          filterExp,
+          dispatch
+        );
       }
 
       if (is_success) {
-        alert("생성되었습니다."); // 성공 메시지 표시
+        let success_msg = isCreate ? "생성되었습니다." : "수정되었습니다.";
+        alert(success_msg); // 성공 메시지 표시
         filterCleanup(
           isCreate,
           setInputFilterName,
@@ -238,6 +248,7 @@ const FilterSettingsPage = () => {
       }
     } catch (error) {
       console.log("error:", error);
+      alert("수행 중 오류가 발생했습니다.");
     }
   };
 
@@ -366,12 +377,15 @@ const FilterSettingsPage = () => {
                               : inputFilterName}
                             의 필터 목록
                           </Typography>
-                          <Button
-                            onClick={handleBFliterOpen}
-                            variant="contained"
-                            size="small">
-                            <AddIcon fontSize="small" />
-                          </Button>
+                          {/* 생성할때만 기본 필터 추가 가능 */}
+                          {isCreate && (
+                            <Button
+                              onClick={handleBFliterOpen}
+                              variant="contained"
+                              size="small">
+                              <AddIcon fontSize="small" />
+                            </Button>
+                          )}
                           <Modal
                             open={openBFilter}
                             onClose={handleBFliterClose}>

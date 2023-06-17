@@ -2,7 +2,7 @@ import axios from "axios";
 import { isNil } from "lodash-es";
 import getUserFilter from "./getUserFilterFromServer.js";
 
-const FILTER_INIT_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_SERVER_URL = "http://127.0.0.1:8000/filter/api/filter/";
 
 /**
  * 프론트에 최적화된 필터 정보 object 배열에서 필요한 요소만 가져와서
@@ -29,13 +29,13 @@ const filterDataCustom = async (completeBasicFilter, filter_id) => {
       );
 
       await axios.post(
-        `${FILTER_INIT_URL}${filter_id}/settings/`,
+        `${FILTER_SERVER_URL}${filter_id}/settings/`,
         modified_filter_form
       );
     });
   } catch (error) {
     return_success = false;
-    await axios.delete(`${FILTER_INIT_URL}${filter_id}/`);
+    await axios.delete(`${FILTER_SERVER_URL}${filter_id}/`);
   } finally {
     return Promise.resolve(return_success);
   }
@@ -73,7 +73,7 @@ const filterMake = async (
     filter_init_form.append("alarm", false);
     filter_init_form.append("time", 60);
 
-    resp = await axios.post(FILTER_INIT_URL, filter_init_form);
+    resp = await axios.post(FILTER_SERVER_URL, filter_init_form);
     filled_id[0] = resp.data.id;
 
     return_success = await filterDataCustom(completeBasicFilter, filled_id[0]);
