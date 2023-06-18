@@ -13,6 +13,13 @@ import addAlphabet from "../../logic/addFilterExpressionAlphabet.js";
 import SelectWithText from "../../component/basic_filter/SelectWithText.jsx";
 import { TabPanel } from "../../component/TabPanel.jsx";
 
+const listTabSxCss = {
+  height: "100%",
+  maxHeight: "100%",
+  alignContent: "start",
+  overflow: "scroll",
+};
+
 /**
  * 기본 필터 컴포넌트를 생성하고 배열에 삽입하는 함수
  * @param {JSX.element[]} component_arr 렌더링할 컴포넌트가 삽입되는 배열
@@ -62,6 +69,10 @@ const FilterSelectTabs = (props) => {
   /** @type {React.Dispatch<React.SetStateAction<object[]>>} */
   const setCompleteFilter = props.setCompleteBasicFilter;
 
+  /** top5 필터 리스트 (이름, 카운트만 가짐)
+   * @type {object[]} */
+  const topFiveList = props.topFiveList;
+
   // 어느 탭인지 확인하는 변수
   const [tabValue, setTabValue] = useState(0);
   const handleTabChange = (event, newValue) => {
@@ -87,15 +98,7 @@ const FilterSelectTabs = (props) => {
         // TODO 편집시에는 지금 기존 필터 데이터 아무것도 안들어감
         completeFilter.forEach((value, _) => {
           if (value.is_used === true) {
-            console.log(
-              "basic_obj_arr[value.idx] :>> ",
-              basic_obj_arr[value.idx]
-            );
             basic_obj_arr[value.idx] = cloneDeep(value);
-            console.log(
-              "basic_obj_arr[value.idx] :>> ",
-              basic_obj_arr[value.idx]
-            );
           }
         });
         setBasicValueHandle(basic_obj_arr);
@@ -215,22 +218,14 @@ const FilterSelectTabs = (props) => {
           <Tab label="서술적" />
           <Tab label="기술적" />
           <Tab label="나의 필터" />
-          <Tab label="추천 필터" />
+          <Tab label="TOP5 필터" />
         </Tabs>
         {/* 탭 버튼 끝 */}
       </Box>
       {/* 전체 필터 영역 시작 */}
       <TabPanel value={tabValue} index={0}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
-          <Grid
-            container
-            spacing={0}
-            sx={{
-              height: "100%",
-              maxHeight: "100%",
-              alignContent: "start",
-              overflow: "scroll",
-            }}>
+          <Grid container spacing={0} sx={listTabSxCss}>
             {basicComponentList}
           </Grid>
         </Box>
@@ -239,15 +234,7 @@ const FilterSelectTabs = (props) => {
       {/* 서술적 필터 영역 시작 */}
       <TabPanel value={tabValue} index={1}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
-          <Grid
-            container
-            spacing={0}
-            sx={{
-              height: "100%",
-              maxHeight: "100%",
-              alignContent: "start",
-              overflow: "scroll",
-            }}>
+          <Grid container spacing={0} sx={listTabSxCss}>
             {basicComponentList.filter((elem) => {
               return elem?.props.filterType === "descriptive";
             })}
@@ -258,15 +245,7 @@ const FilterSelectTabs = (props) => {
       {/* 기술적 필터 영역 시작 */}
       <TabPanel value={tabValue} index={2}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
-          <Grid
-            container
-            spacing={0}
-            sx={{
-              height: "100%",
-              maxHeight: "100%",
-              alignContent: "start",
-              overflow: "scroll",
-            }}>
+          <Grid container spacing={0} sx={listTabSxCss}>
             {basicComponentList.filter((elem) => {
               return elem?.props.filterType === "technical";
             })}
@@ -277,15 +256,7 @@ const FilterSelectTabs = (props) => {
       {/* 나의 필터 영역 시작 */}
       <TabPanel value={tabValue} index={3}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
-          <Grid
-            container
-            spacing={0}
-            sx={{
-              height: "100%",
-              maxHeight: "100%",
-              alignContent: "start",
-              overflow: "scroll",
-            }}>
+          <Grid container spacing={0} sx={listTabSxCss}>
             {/* todo: 필터링 로직 맞는지 점검 */}
             {basicComponentList.filter((elem) => {
               return elem?.props.valueObj?.is_used === true;
@@ -294,19 +265,15 @@ const FilterSelectTabs = (props) => {
         </Box>
       </TabPanel>
       {/* 나의 필터 영역 끝 */}
-      {/* 추천 필터 영역 시작 */}
+      {/* TOP5 필터 영역 시작 */}
       <TabPanel value={tabValue} index={4}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
-          <Grid
-            container
-            spacing={0}
-            sx={{
-              height: "100%",
-              maxHeight: "100%",
-              alignContent: "start",
-              overflow: "scroll",
-            }}>
-            {/* todo: recommend 가져오기 + 필터링 로직 해서 컴포넌트 넣기 */}
+          <Grid container spacing={0} sx={listTabSxCss}>
+            {/* TODO: 필터링 로직 정상작동 확인 */}
+            {basicComponentList.filter((elem) => {
+              let abb = elem?.props.valueObj?.abbreviation;
+              return topFiveList.find((value) => value.indicator === abb);
+            })}
           </Grid>
         </Box>
       </TabPanel>

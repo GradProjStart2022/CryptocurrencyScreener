@@ -16,6 +16,9 @@ import AddIcon from "@mui/icons-material/Add";
 
 import filterMake from "../logic/filterMaketoServer.js";
 import getUserFilterSettings from "../logic/getUserFilterSettings.js";
+import removeFilter from "../logic/removeFilter.js";
+import filterModify from "../logic/filterModify.js";
+import getTopFive from "../logic/getTopFive.js";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
@@ -23,8 +26,6 @@ import SideNavBar from "../component/SideNavbar.jsx";
 import BasicFilterComponent from "../component/BasicFilterList.jsx";
 import UserFilterList from "../component/UserFilterList.jsx";
 import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
-import removeFilter from "../logic/removeFilter.js";
-import filterModify from "../logic/filterModify.js";
 
 /**
  * 필터 편집내역 취소 함수
@@ -114,7 +115,19 @@ const FilterSettingsPage = () => {
   // 복합 필터에 대한 기본필터 렌더링 요소
   const [basicFilterCompArr, setBasicFilterCompArr] = useState([]);
 
+  // top5 필터 리스트
+  const [topFiveList, setTopFiveList] = useState([]);
+
   const expInput = useRef();
+
+  // 페이지 접속시 많이 사용한 지표를 갱신
+  useEffect(() => {
+    const waitfive = async () => {
+      let dat = await getTopFive();
+      setTopFiveList(dat);
+    };
+    waitfive();
+  }, []);
 
   // 체크한 복합 필터가 바뀔 때마다 정보 불러와서 기본필터정보 렌더링 요소 변경
   useEffect(() => {
@@ -404,6 +417,7 @@ const FilterSettingsPage = () => {
                                 filterListClickID={filterListClickID}
                                 completeBasicFilter={completeBasicFilter}
                                 setCompleteBasicFilter={setCompleteBasicFilter}
+                                topFiveList={topFiveList}
                               />
                             </Box>
                           </Modal>
