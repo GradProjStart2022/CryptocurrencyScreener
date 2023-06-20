@@ -30,10 +30,10 @@ import FilterSelectTabs from "./modal/FilterSelectTabs.jsx";
 /**
  * 필터 편집내역 취소 함수
  * @param {boolean} isCreate 생성모드인지 확인
- * @param {*} setInputFilterName 필터이름 state setter
- * @param {*} setFilterExp 복합필터 표현식 state setter
- * @param {*} setCompleteBasicFilter 기본필터 정보 배열 state setter
- * @param {*} basicFilterCompArr 기본필터 렌더링 배열 state setter
+ * @param {React.dispatch<React.SetStateAction<any>>} setInputFilterName 필터이름 state setter
+ * @param {React.dispatch<React.SetStateAction<any>>} setFilterExp 복합필터 표현식 state setter
+ * @param {React.dispatch<React.SetStateAction<any>>} setCompleteBasicFilter 기본필터 정보 배열 state setter
+ * @param {React.dispatch<React.SetStateAction<any>>} basicFilterCompArr 기본필터 렌더링 배열 state setter
  */
 const filterCleanup = (
   isCreate,
@@ -46,10 +46,9 @@ const filterCleanup = (
     setInputFilterName("");
     setFilterExp("");
     setCompleteBasicFilter([]);
-    // basicFilterCompArr.length = 0;
     setBasicFilterCompArr([]);
   } else {
-    // todo: 기존 필터 저장 내역과 연동
+    // TODO 기존 필터 저장 내역과 연동
     // TODO 현재 필터 삭제시 사용하게 작동
     setInputFilterName("");
     setFilterExp("");
@@ -59,11 +58,10 @@ const filterCleanup = (
 };
 
 /**
- * 당장 선택한 필터가 없을 때 안내하는 UI 요소를 반환
- * @param {any} props react props
+ * 선택한 필터가 없을 때 안내하는 UI
  * @returns 필터 없을 때 안내하는 UI 요소
  */
-const NoFilter = (props) => {
+const NoFilter = () => {
   return (
     <Typography variant="body1" component="div">
       <p>
@@ -76,10 +74,9 @@ const NoFilter = (props) => {
 
 /**
  * 필터상세설정페이지 UI요소 뱉어내는 함수
- * @param {any} props react props
  * @returns 필터상세설정페이지 UI 요소
  */
-const FilterSettingsPage = (props) => {
+const FilterSettingsPage = () => {
   const dispatch = useDispatch();
   /** @type {string} */
   const user_email = useSelector((state) => state.user.email);
@@ -93,8 +90,6 @@ const FilterSettingsPage = (props) => {
   const redux_filter_data = useSelector(
     (state) => state.userFilter.filter_data
   );
-
-  const redux_userFilterSelector = useSelector((state) => state.userFilter);
 
   // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
@@ -149,7 +144,7 @@ const FilterSettingsPage = (props) => {
         temp_comparr.push(
           <BasicFilterComponent
             code={elem.name}
-            name={elem.name_kr}
+            name={isEmpty(elem.name_kr) ? elem.indicator : elem.name_kr}
             oper={elem.oper}
             value1={elem.value1}
             value2={elem.value2}
@@ -162,7 +157,7 @@ const FilterSettingsPage = (props) => {
     }
   }, [filterListClickID]);
 
-  // 생성에 대한 기본필터 state 변경될 때마다 기본필터 렌더링 요소 변경
+  // 생성에 대한 기본필터 state 변경될 때 기본필터 렌더링 요소 변경
   useEffect(() => {
     let temp_exp = [];
     setBasicFilterCompArr([]);
@@ -190,10 +185,12 @@ const FilterSettingsPage = (props) => {
     setFilterExp(event.target.value);
   };
 
-  const handleSaveButtonClick = async () => {
+  const handleSaveBtnClk = async () => {
     try {
-      const expression = document.getElementById("filter-exp").value;
-      if (!isValidExpression(expression)) {
+      // const expression = document.getElementById("filter-exp").value;
+      // const expression = expInput.current.value;
+      const updatedFilterExp = expInput.current.value;
+      if (!isValidExpression(updatedFilterExp)) {
         alert("조건식이 유효하지 않습니다.");
         return;
       }
@@ -202,7 +199,6 @@ const FilterSettingsPage = (props) => {
 
       if (isCreate) {
         // 새 필터 생성
-        const updatedFilterExp = expInput.current.value;
         is_success = await filterMake(
           completeBasicFilter,
           updatedFilterExp,
@@ -217,8 +213,7 @@ const FilterSettingsPage = (props) => {
           is_success = await getUserFilterSettings(filter_id[0], dispatch);
         }
       } else {
-        // Todo: 필터 편집에 대한 로직 구현
-        const updatedFilterExp = expInput.current.value;
+        // TODO 필터 편집에 대한 로직 구현
         is_success = await filterModify(
           filterListClickID,
           uid,
@@ -287,8 +282,7 @@ const FilterSettingsPage = (props) => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}
-          >
+            sx={{ marginLeft: "12px", marginTop: "24px", minHeight: "90%" }}>
             {/* 사용자 필터 목록 영역 */}
             <UserFilterList
               isSettings={true}
@@ -311,8 +305,7 @@ const FilterSettingsPage = (props) => {
                     filterListClickID === 0 && !isCreate ? 0 : 1
                   ],
                   height: "72vh",
-                }}
-              >
+                }}>
                 {/* 필터 선택 여부에 따라 안내 멘트 혹은 편집 컴포넌트를 출력 */}
                 {filterListClickID === 0 && !isCreate ? (
                   <NoFilter />
@@ -321,8 +314,7 @@ const FilterSettingsPage = (props) => {
                     {/* 필터이름 영역 시작 */}
                     <Typography
                       component="div"
-                      sx={{ height: "10%", width: "100%" }}
-                    >
+                      sx={{ height: "10%", width: "100%" }}>
                       <Paper
                         elevation={1}
                         sx={{
@@ -331,8 +323,7 @@ const FilterSettingsPage = (props) => {
                           display: "flex",
                           justifyContent: "space-around",
                           alignItems: "center",
-                        }}
-                      >
+                        }}>
                         <Typography variant={"h6"} component="div">
                           필터 이름
                         </Typography>
@@ -352,8 +343,7 @@ const FilterSettingsPage = (props) => {
                     {/* 조건식 영역 시작 */}
                     <Typography
                       component="div"
-                      sx={{ height: "10%", width: "100%" }}
-                    >
+                      sx={{ height: "10%", width: "100%" }}>
                       <Paper
                         elevation={1}
                         sx={{
@@ -362,8 +352,7 @@ const FilterSettingsPage = (props) => {
                           display: "flex",
                           justifyContent: "space-around",
                           alignItems: "center",
-                        }}
-                      >
+                        }}>
                         <Typography variant={"h6"} component="div">
                           조건식
                         </Typography>
@@ -382,21 +371,11 @@ const FilterSettingsPage = (props) => {
                     {/* 기본필터들 영역 시작 */}
                     <Typography
                       component="div"
-                      sx={{ height: "80%", width: "100%" }}
-                    >
+                      sx={{ height: "80%", width: "100%" }}>
                       <Paper
                         elevation={1}
-                        sx={{ height: "100%", width: "100%" }}
-                      >
-                        <div
-                          style={{
-                            height: "8%",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            padding: "0px 1vw 0px 1vw",
-                          }}
-                        >
+                        sx={{ height: "100%", width: "100%" }}>
+                        <div className="setpage-filterselect-area">
                           <Typography variant="h6" component="div">
                             {isEmpty(inputFilterName)
                               ? "이름없는 필터"
@@ -408,15 +387,13 @@ const FilterSettingsPage = (props) => {
                             <Button
                               onClick={handleBFliterOpen}
                               variant="contained"
-                              size="small"
-                            >
+                              size="small">
                               <AddIcon fontSize="small" />
                             </Button>
                           )}
                           <Modal
                             open={openBFilter}
-                            onClose={handleBFliterClose}
-                          >
+                            onClose={handleBFliterClose}>
                             <Box
                               sx={{
                                 position: "absolute",
@@ -425,8 +402,7 @@ const FilterSettingsPage = (props) => {
                                 width: "80%",
                                 height: "80%",
                                 bgcolor: "#ffffff",
-                              }}
-                            >
+                              }}>
                               <FilterSelectTabs
                                 handleBFliterClose={handleBFliterClose}
                                 isCreate={isCreate}
@@ -444,24 +420,48 @@ const FilterSettingsPage = (props) => {
                             height: "80%",
                             padding: "0px 4vw 0px 4vw",
                             overflow: "auto",
-                          }}
-                        >
+                          }}>
                           {basicFilterCompArr}
                         </Box>
                         {/* 필터에 있는 기본필터들 컴포넌트 끝 */}
-                        <div
-                          style={{
-                            height: "12%",
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            alignItems: "center",
-                          }}
-                        >
+                        <div className="setpage-modify-btnarea">
+                          {!isCreate && (
+                            <Button
+                              variant="contained"
+                              size="small"
+                              color="error"
+                              onClick={() => {
+                                if (window.confirm("삭제하시겠습니까?")) {
+                                  let rslt = removeFilter(
+                                    filterListClickID,
+                                    user_email,
+                                    redux_filter_list,
+                                    dispatch
+                                  );
+                                  filterCleanup(
+                                    isCreate,
+                                    setInputFilterName,
+                                    setFilterExp,
+                                    setCompleteBasicFilter,
+                                    setBasicFilterCompArr
+                                  );
+                                  let msg = rslt
+                                    ? "삭제되었습니다."
+                                    : "오류가 발생했습니다.";
+                                  alert(msg);
+                                  setFilterListClickID(0);
+                                } else {
+                                  alert("취소되었습니다.");
+                                }
+                              }}>
+                              삭제
+                            </Button>
+                          )}
                           <Button
                             variant="text"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리만 하는 코드 정상작동 확인
+                              // TODO 편집한거 정리만 하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
@@ -469,15 +469,14 @@ const FilterSettingsPage = (props) => {
                                 setCompleteBasicFilter,
                                 setBasicFilterCompArr
                               );
-                            }}
-                          >
+                            }}>
                             초기화
                           </Button>
                           <Button
                             variant="outlined"
                             size="small"
                             onClick={() => {
-                              // todo: 편집한거 정리하는 코드 정상작동 확인
+                              // TODO 편집한거 정리하는 코드 정상작동 확인
                               filterCleanup(
                                 isCreate,
                                 setInputFilterName,
@@ -487,15 +486,13 @@ const FilterSettingsPage = (props) => {
                               );
                               setFilterListClickID(0);
                               setIsCreate(false);
-                            }}
-                          >
+                            }}>
                             취소
                           </Button>
                           <Button
                             variant="contained"
                             size="small"
-                            onClick={handleSaveButtonClick}
-                          >
+                            onClick={handleSaveBtnClk}>
                             저장
                           </Button>
                         </div>
