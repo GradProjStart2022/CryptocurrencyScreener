@@ -27,10 +27,10 @@ import FilterSelectTabs from "../component/modal/FilterSelectTabs.jsx";
 /**
  * 필터 편집내역 취소 함수
  * @param {boolean} isCreate 생성모드인지 확인
- * @param {*} setInputFilterName 필터이름 state setter
- * @param {*} setFilterExp 복합필터 표현식 state setter
- * @param {*} setCompleteBasicFilter 기본필터 정보 배열 state setter
- * @param {*} basicFilterCompArr 기본필터 렌더링 배열 state setter
+ * @param {React.Dispatch<React.SetStateAction<any>>} setInputFilterName 필터이름 state setter
+ * @param {React.Dispatch<React.SetStateAction<any>>} setFilterExp 복합필터 표현식 state setter
+ * @param {React.Dispatch<React.SetStateAction<any>>} setCompleteBasicFilter 기본필터 정보 배열 state setter
+ * @param {React.Dispatch<React.SetStateAction<any>>} setBasicFilterCompArr 기본필터 렌더링 배열 state setter
  */
 const filterCleanup = (
   isCreate,
@@ -83,8 +83,6 @@ const FilterSettingsPage = () => {
   const redux_filter_data = useSelector(
     (state) => state.userFilter.filter_data
   );
-
-  const redux_userFilterSelector = useSelector((state) => state.userFilter);
 
   // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
@@ -311,6 +309,7 @@ const FilterSettingsPage = () => {
                         elevation={1}
                         sx={{ height: "100%", width: "100%" }}>
                         <div
+                          className="filter-settings-basic-wrapper"
                           style={{
                             height: "8%",
                             display: "flex",
@@ -362,13 +361,7 @@ const FilterSettingsPage = () => {
                           {basicFilterCompArr}
                         </Box>
                         {/* 필터에 있는 기본필터들 컴포넌트 끝 */}
-                        <div
-                          style={{
-                            height: "12%",
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            alignItems: "center",
-                          }}>
+                        <div className="filter-settings-btn-wrapper">
                           <Button
                             variant="text"
                             size="small"
@@ -420,7 +413,6 @@ const FilterSettingsPage = () => {
                                     dispatch
                                   );
                                   if (is_success) {
-                                    console.log("filter_id :>> ", filter_id);
                                     is_success = await getUserFilterSettings(
                                       filter_id[0],
                                       dispatch

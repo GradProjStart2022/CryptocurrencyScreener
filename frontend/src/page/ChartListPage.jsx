@@ -221,9 +221,9 @@ const ChartListPage = () => {
                           <TableRow>
                             <TableCell>종목명</TableCell>
                             <TableCell align="right">종목코드</TableCell>
-                            <TableCell align="right">현재가</TableCell>
-                            <TableCell align="right">전일대비</TableCell>
-                            <TableCell align="right">등락률</TableCell>
+                            <TableCell align="right">저가</TableCell>
+                            <TableCell align="right">고가</TableCell>
+                            <TableCell align="right">거래량</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

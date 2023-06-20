@@ -6,11 +6,12 @@ import { isEmpty } from "lodash-es";
 
 import { Grid } from "@mui/material";
 
+import { setBookmark } from "../redux/store.js";
+
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BookmarkCoin from "../component/BookmarkCoin.jsx";
-import { setBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 

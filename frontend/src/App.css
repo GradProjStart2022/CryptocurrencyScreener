@@ -108,3 +108,10 @@
 .acc-name {
   color: #69728d;
 }
+
+.filter-settings-btn-wrapper {
+  height: "12%";
+  display: "flex";
+  justify-content: "flex-end";
+  align-items: "center";
+}
