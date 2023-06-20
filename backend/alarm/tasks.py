@@ -1,5 +1,5 @@
 from typing import Set
-
+import os
 from celery import Celery
 from celery.schedules import crontab
 from django.utils import timezone
@@ -8,7 +8,37 @@ from alarm.models import Alarm
 from filter.models import Filter, Previous, create_query
 from price.models import Symbol
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "screener.settings")
 app = Celery("screener")
+app.conf.beat_schedule = {
+    "my_task_30min": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(minute="*/30"),
+        "args": ("30",),
+    },
+    "my_task_1hour": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(hour="*/1"),
+        "args": ("60",),
+    },
+    "my_task_4hour": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(hour="*/4"),
+        "args": ("240",),
+    },
+    "my_task_1d": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(hour="0", minute="0"),
+        "args": ("1",),
+    },
+    "test": {
+        "task": "alarm.tasks.create_alarm",
+        "schedule": crontab(second="*/30"),
+        "args": ("30",),
+    },
+}
+app.config_from_object("django.conf:settings", namespace="CELERY")
+app.autodiscover_tasks()
 
 
 @app.task
@@ -63,32 +93,3 @@ def create_message(n: int, name: str, new: Set[int], old: Set[int]) -> str:
     )
 
     return f"{name} 필터에서 새로운 종목 {new_symbol[:5]} 등 추가되고 {old_symbol[:5]} 등 종목이 제거 되었습니다. 총 {n}개의 종목이 변경되었습니다."
-
-
-app.conf.beat_schedule = {
-    "my_task_30min": {
-        "task": "alarm.tasks.create_alarm",
-        "schedule": crontab(minute="*/30"),
-        "args": ("30",),
-    },
-    "my_task_1hour": {
-        "task": "alarm.tasks.create_alarm",
-        "schedule": crontab(hour="*/1"),
-        "args": ("60",),
-    },
-    "my_task_4hour": {
-        "task": "alarm.tasks.create_alarm",
-        "schedule": crontab(hour="*/4"),
-        "args": ("240",),
-    },
-    "my_task_1d": {
-        "task": "alarm.tasks.create_alarm",
-        "schedule": crontab(hour="0", minute="0"),
-        "args": ("1",),
-    },
-    "test": {
-        "task": "alarm.tasks.create_alarm",
-        "schedule": crontab(minute="*/1"),
-        "args": ("30",),
-    },
-}

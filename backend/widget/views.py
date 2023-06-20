@@ -23,7 +23,7 @@ def import_csv(request):
             if row["unable_marketwidget"] == "TRUE":
                 flag = True
             widget = Widget(
-                name_kr=row["\ufeffname_kr"],
+                name_kr=row["name_kr"],
                 name_en=row["name_en"],
                 tradingview_market_code=row["tradingview_market_code"],
                 tradingview_upbit_code=row["tradingview_upbit_code"],

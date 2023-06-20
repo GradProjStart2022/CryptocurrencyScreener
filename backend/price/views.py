@@ -20,35 +20,32 @@ def screening(request):
 
     try:
         filtered_symbol = create_query(filter_pk, table, date_range)
-        symbols = Symbol.objects.filter(symbol_id__in=filtered_symbol)
+        prices = Price30m.objects.filter(symbol_id__in=filtered_symbol).filter(
+            timestamp=Subquery(
+                Price30m.objects.filter(symbol_id=OuterRef("symbol_id"))
+                .order_by("-timestamp")
+                .values("timestamp")[:1]
+            )
+        )
+        result = []
+
+        for price in prices:
+            symbol = Symbol.objects.get(symbol_id=price.symbol_id)
+            data = {
+                "name_kr": symbol.name_kr.encode("utf-8").decode("utf-8"),
+                "name_en": symbol.name_en,
+                "ticker": symbol.ticker,
+                "symbol_id": price.symbol_id,
+                "timestamp": price.timestamp.isoformat(),
+                "LOW": price.LOW,
+                "HIGH": price.HIGH,
+                "VOLUME": price.VOLUME,
+            }
+            result.append(data)
+
+        json_data = json.dumps(result, ensure_ascii=False).encode("utf-8")
     except:
         return JsonResponse({"error": "screening Error"})
-
-    prices = Price240m.objects.filter(symbol_id__in=filtered_symbol).filter(
-        timestamp=Subquery(
-            Price240m.objects.filter(symbol_id=OuterRef("symbol_id"))
-            .order_by("-timestamp")
-            .values("timestamp")[:1]
-        )
-    )
-
-    result = []
-    for price in prices:
-        data = {
-            "name_kr": symbols.get(symbol_id=price.symbol_id)
-            .name_kr.encode("utf-8")
-            .decode("utf-8"),
-            "name_en": symbols.get(symbol_id=price.symbol_id).name_en,
-            "ticker": symbols.get(symbol_id=price.symbol_id).ticker,
-            "symbol_id": price.symbol_id,
-            "timestamp": price.timestamp.isoformat(),
-            "LOW": price.LOW,
-            "HIGH": price.HIGH,
-            "VOLUME": price.VOLUME,
-        }
-        result.append(data)
-
-    json_data = json.dumps(result, ensure_ascii=False).encode("utf-8")
 
     return HttpResponse(json_data, content_type="application/json; charset=utf-8")
 
