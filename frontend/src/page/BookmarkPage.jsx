@@ -7,6 +7,7 @@ import { isEmpty } from "lodash-es";
 import { Grid } from "@mui/material";
 
 import { setBookmark } from "../redux/store.js";
+import removeBookmark from "../logic/removeBookmark.js";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
@@ -18,6 +19,7 @@ const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 const BookmarkPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  /** @type {string} */
   let user_email = useSelector((state) => state.user.email);
   /** @type {object[]} */
   let bookmarks = useSelector((state) => state.userBookmark.bookmarks);
@@ -36,7 +38,6 @@ const BookmarkPage = () => {
         .get(`${ATTENTION_URL}?email=${user_email}`)
         .then((resp) => {
           dispatch(setBookmark(resp.data));
-          // setBookmark(response.data);
         })
         .catch((err) => {
           console.log("BookmarkPage UseEffect err>>>", err);
@@ -68,7 +69,12 @@ const BookmarkPage = () => {
               // 종목의 길이가 true인 상황: 종목을 렌더링
               bookmarks.map((data, index) => {
                 return (
-                  <BookmarkCoin key={index} data={data} bookmark_id={data.id} />
+                  <BookmarkCoin
+                    key={index}
+                    data={data}
+                    bookmark_id={data.id}
+                    removeBookmark={removeBookmark}
+                  />
                 );
               })
             ) : !isEmpty(user_email) ? (

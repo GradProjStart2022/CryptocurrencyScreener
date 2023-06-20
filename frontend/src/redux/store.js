@@ -1,7 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 /**
- * 사용자 정보 redux store
+ * 사용자 기본 정보 redux store
  * access_token, 이름, 이메일, 사용자 사진 보관
  */
 let user = createSlice({
@@ -48,24 +48,57 @@ let user = createSlice({
 
 /**
  * 사용자 필터 정보 redux store
- * * 복합필터 목록(filter_list), 복합필터 상세 정보(filter_data) 보관
+ * 복합필터 목록(filter_list), 복합필터 상세 정보(filter_data) 보관
  */
 let userFilter = createSlice({
   name: "userFilter",
   initialState: { filter_list: [], filter_data: [] },
   reducers: {
+    // 필터 목록 값 변경
     setUserFilterList: (state, action) => {
       state.filter_list = action.payload;
     },
+    // 필터 상세 정보 값 변경
     setUserFilterData: (state, action) => {
       state.filter_data = action.payload;
     },
+    // 필터 상세 정보 값 추가
     addUserFilterData: (state, action) => {
       state.filter_data.push(action.payload);
     },
+    // 사용자 필터 정보 삭제
     clearUserFilter: (state) => {
       state.filter_list = [];
       state.filter_data = [];
+    },
+  },
+});
+
+/**
+ * 사용자 즐겨찾기 정보 redux store
+ */
+let userBookmark = createSlice({
+  name: "userBookmark",
+  initialState: { bookmarks: [], isFavorite: false },
+  reducers: {
+    // 즐겨찾기 정보 값 변경
+    setBookmark: (state, action) => {
+      state.bookmarks = action.payload;
+    },
+    // 즐겨찾기 정보 추가
+    addBookmark: (state, action) => {
+      if (state.bookmarks.length === 3) {
+        // 이미 3개 차 있으면 서버 로직과 같이 맨 앞 요소 제거
+        state.bookmarks.splice(0, 1);
+      }
+      state.bookmarks.push(action.payload);
+    },
+    // 즐겨찾기 정보 전체 삭제
+    clearBookmark: (state) => {
+      state.bookmarks = [];
+    },
+    setIsFavorite: (state, action) => {
+      state.isFavorite = action.payload;
     },
   },
 });
@@ -99,21 +132,28 @@ let basicFilterName = createSlice({
   },
 });
 
+// 기본 필터 정보 dispatcher
 export let { setFilterData, addFilterData, clearFilterData } =
   basicFilterName.actions;
+// 사용자 필터 dispatcher
 export let {
   setUserFilterList,
   setUserFilterData,
   addUserFilterData,
   clearUserFilter,
 } = userFilter.actions;
+// 사용자 기본 정보 dispatcher
 export let { setToken, setAccname, setEmail, setImg, setUID, clearUser } =
   user.actions;
- 
+// 사용자 즐겨찾기 정보 dispatcher
+export let { setBookmark, addBookmark, clearBookmark, setIsFavorite } =
+  userBookmark.actions;
+// reducer
 export default configureStore({
   reducer: {
     user: user.reducer,
     userFilter: userFilter.reducer,
+    userBookmark: userBookmark.reducer,
     basicFilterName: basicFilterName.reducer,
   },
 });

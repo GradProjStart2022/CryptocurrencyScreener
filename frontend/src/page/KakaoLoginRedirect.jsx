@@ -82,6 +82,7 @@ export const KakaoLoginRedirect = () => {
       let is_success = false;
 
       try {
+        // 카카오에 계정 기본 정보 요청
         let resp = await axios.get("https://kapi.kakao.com/v2/user/me", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
