@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { cloneDeep, isEmpty } from "lodash-es";
+import { useSelector } from "react-redux";
 
 import { Box, Button, Grid, Typography, Tabs, Tab } from "@mui/material";
 
-import SELECT_MENU_LIST from "../../model/const/SELECT_MENU_LIST.js";
 import SELECT_MENU_OPER from "../../model/const/SELECT_MENU_OPER.js";
-import { basicFilterArr } from "../../model/basic_filter_const.js";
-import localCSVFetch from "../../logic/localCSVFetch.js";
 import basicValueInit from "../../logic/basicValueInit.js";
 import addAlphabet from "../../logic/addFilterExpressionAlphabet.js";
 
@@ -42,6 +40,7 @@ const basicComponentInit = (
         filterName={element?.name_kr}
         // selectMenu={SELECT_MENU_LIST}
         filterType={element?.type}
+        filterAbb={element?.abbreviation}
         valueObj={basic_value}
         valueSetter={setBasicValue}
       />
@@ -73,7 +72,12 @@ const FilterSelectTabs = (props) => {
    * @type {object[]} */
   const topFiveList = props.topFiveList;
 
-  // 어느 탭인지 확인하는 변수
+  // 기본필터정보 redux store
+  const basicFilterArr = useSelector(
+    (state) => state.basicFilterName.basicFilterArr
+  );
+
+  // 선택된 탭인지 확인하는 변수
   const [tabValue, setTabValue] = useState(0);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -86,25 +90,21 @@ const FilterSelectTabs = (props) => {
   const [basicValueHandle, setBasicValueHandle] = useState([]);
 
   let new_basic_comp_list = [];
-  /** CSV파일 해독 후 기본 필터들의 핸들링 변수 생성 */
+  /** 기본 필터들의 핸들링 변수 생성 */
   useEffect(() => {
-    const awaitCSV = async () => {
-      await localCSVFetch("basic_filter_name.csv", basicFilterArr);
-      let basic_obj_arr = basicValueInit(basicFilterArr.length);
-      if (filterListClickID === 0 && isEmpty(completeFilter)) {
-        setBasicValueHandle(basic_obj_arr);
-      } else {
-        // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-        // TODO 편집시에는 지금 기존 필터 데이터 아무것도 안들어감
-        completeFilter.forEach((value, _) => {
-          if (value.is_used === true) {
-            basic_obj_arr[value.idx] = cloneDeep(value);
-          }
-        });
-        setBasicValueHandle(basic_obj_arr);
-      }
-    };
-    awaitCSV();
+    let basic_obj_arr = basicValueInit(basicFilterArr);
+    if (filterListClickID === 0 && isEmpty(completeFilter)) {
+      setBasicValueHandle(basic_obj_arr);
+    } else {
+      // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
+      // TODO 편집시에는 지금 기존 필터 데이터 아무것도 안들어감
+      completeFilter.forEach((value, _) => {
+        if (value.is_used === true) {
+          basic_obj_arr[value.idx] = cloneDeep(value);
+        }
+      });
+      setBasicValueHandle(basic_obj_arr);
+    }
   }, []);
 
   /** 핸들링 변수를 포함해 기본 필터들 컴포넌트 생성 */
@@ -139,11 +139,11 @@ const FilterSelectTabs = (props) => {
               onClick={() => {
                 let basic_obj_arr = [];
                 if (isCreate) {
-                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                  basic_obj_arr = basicValueInit(basicFilterArr);
                 } else {
                   // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
                   // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
-                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                  basic_obj_arr = basicValueInit(basicFilterArr);
                   completeFilter.forEach((value, _) => {
                     if (value.is_used === true) {
                       basic_obj_arr[value.idx] = cloneDeep(value);
@@ -159,11 +159,11 @@ const FilterSelectTabs = (props) => {
               onClick={() => {
                 let basic_obj_arr = [];
                 if (isCreate) {
-                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                  basic_obj_arr = basicValueInit(basicFilterArr);
                 } else {
                   // basic_obj_arr과 기존 필터 데이터(completeFilter) 병합
-                  // todo: 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
-                  basic_obj_arr = basicValueInit(basicFilterArr.length);
+                  // TODO 혹시나 기존 필터 데이터 다를 경우 병합 로직 수정
+                  basic_obj_arr = basicValueInit(basicFilterArr);
                   completeFilter.forEach((value, _) => {
                     if (value.is_used === true) {
                       basic_obj_arr[value.idx] = cloneDeep(value);
@@ -257,7 +257,7 @@ const FilterSelectTabs = (props) => {
       <TabPanel value={tabValue} index={3}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid container spacing={0} sx={listTabSxCss}>
-            {/* todo: 필터링 로직 맞는지 점검 */}
+            {/* TODO 필터링 로직 맞는지 점검 */}
             {basicComponentList.filter((elem) => {
               return elem?.props.valueObj?.is_used === true;
             })}
@@ -269,9 +269,8 @@ const FilterSelectTabs = (props) => {
       <TabPanel value={tabValue} index={4}>
         <Box sx={{ height: "68vh", overflow: "scroll" }}>
           <Grid container spacing={0} sx={listTabSxCss}>
-            {/* TODO: 필터링 로직 정상작동 확인 */}
             {basicComponentList.filter((elem) => {
-              let abb = elem?.props.valueObj?.abbreviation;
+              let abb = elem?.props?.filterAbb;
               return topFiveList.find((value) => value.indicator === abb);
             })}
           </Grid>

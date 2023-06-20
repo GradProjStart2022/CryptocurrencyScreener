@@ -20,6 +20,7 @@ import {
 
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
+import localCSVFetch from "../logic/localCSVFetch.js";
 
 const fail_login = (navigate) => {
   // 로그인 실패하면 로그인화면으로 돌려보냄
@@ -29,14 +30,16 @@ const fail_login = (navigate) => {
 
 /**
  * 카카오 로그인 리다이렉트 페이지
- * @param {any} props react props
  * @returns 사용자 안내용 페이지 요소 반환
  */
-export const KakaoLoginRedirect = (props) => {
+export const KakaoLoginRedirect = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const redux_filter_list = useSelector(
     (state) => state.userFilter.filter_list
+  );
+  const basicFilterArr = useSelector(
+    (state) => state.basicFilterName.basicFilterArr
   );
 
   const [code, setCode] = useState("");
@@ -114,16 +117,44 @@ export const KakaoLoginRedirect = (props) => {
     }
   }, [accessToken]);
 
-  // 필터정보목록에 대한 상세정보 갱신 로직
+  // 필터정보목록에 대한 복합필터 상세정보 갱신 로직
   useEffect(() => {
-    if (listSuccess) {
+    const csvToSettings = async () => {
       let is_success = false;
-      redux_filter_list.forEach(async (value) => {
-        is_success = await getUserFilterSettings(value.id, dispatch);
-      });
+      try {
+        is_success = await localCSVFetch(
+          "basic_filter_name.csv",
+          dispatch,
+          basicFilterArr
+        );
 
-      // 모든 작업 완료 후 홈으로 화면 전환시켜줌
-      navigate("/", { replace: true });
+        // 필터별 설정 가져옴
+        redux_filter_list.forEach(async (value) => {
+          is_success = await getUserFilterSettings(
+            value.id,
+            dispatch,
+            basicFilterArr
+          );
+        });
+
+        if (is_success) {
+          // 모든 작업 정상 완료시 홈으로 화면 전환
+          navigate("/", { replace: true });
+        } else {
+          // 필터별 설정 가져오기 문제시
+          alert("로그인 후처리 작업에 실패했습니다.\n다시 로그인해 주세요.");
+          alert(`${basicFilterArr}`);
+          navigate("/login", { replace: true });
+        }
+      } catch (error) {
+        // 정보 csv 해독 실패시
+        alert("로그인 후처리 작업에 실패했습니다.\n다시 로그인해 주세요.");
+        navigate("/login", { replace: true });
+      }
+    };
+
+    if (listSuccess) {
+      csvToSettings();
     }
   }, [listSuccess]);
 
