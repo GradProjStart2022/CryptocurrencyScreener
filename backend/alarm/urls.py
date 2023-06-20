@@ -6,4 +6,5 @@ from alarm import views
 
 urlpatterns = [
     path("", views.AlarmView.as_view()),
+    path("test/", views.test),
 ]

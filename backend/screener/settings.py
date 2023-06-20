@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django_pydenticon",
     "corsheaders",
     "django_extensions",
+    "django_apscheduler",
     # django-rest-framework
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
@@ -210,3 +211,7 @@ GRAPH_MODELS = {
     "all_applications": True,
     "group_models": True,
 }
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 60  # Seconds
+SCHEDULER_DEFAULT = True  # apps.py 참고

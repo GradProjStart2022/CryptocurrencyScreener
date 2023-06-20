@@ -1,7 +1,10 @@
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from alarm.models import Alarm
+from alarm.scheduler import create_alarm
 from alarm.serializers import AlarmSerializer
 
 
@@ -21,3 +24,13 @@ class AlarmView(APIView):
         alarm.save()
         serializer = self.serializer_class(alarm)
         return Response(serializer.data)
+
+
+@api_view(["GET"])
+def test(request):
+    create_alarm(30)
+    data = {
+        "name": "John Doe",
+        "age": 30,
+    }
+    return JsonResponse(data)
