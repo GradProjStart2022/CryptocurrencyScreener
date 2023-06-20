@@ -1,40 +1,41 @@
 import axios from "axios";
-import { isNil } from "lodash-es";
+import { isEmpty, isNil } from "lodash-es";
 
 import { addUserFilterData } from "../redux/store.js";
-import localCSVFetch from "./localCSVFetch.js";
-import { basicFilterArr } from "../model/basic_filter_const.js";
 
-const FILTER_SETTINGS_URL_PREFIX = "http://127.0.0.1:8000/filter/api/filter/";
-const FILTER_SETTINGS_URL_SUBFIX = "/settings/";
+const FILTER_SERVER_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_SERVER_SETTINGS_URL = "/settings/";
 
-const indicatorToKRName = (indicator) => {
+/**
+ * api 필터 코드에서 한국어 필터 이름으로 변환하는 함수
+ * @param {string} indicator api 내부 식별용 필터명
+ * @param {object[]} basicFilterArr 기본필터변수 redux store 변수
+ * @returns {string} 변환된 한국어 필터 이름
+ */
+const indicatorToKRName = (indicator, basicFilterArr) => {
   let return_value = "";
 
-  localCSVFetch("basic_filter_name.csv", basicFilterArr)
-    .then((resp) => {
-      let match_basic = basicFilterArr.find((value) => {
-        return value.abbreviation === indicator;
-      });
+  let match_basic = basicFilterArr.find((value) => {
+    return value.abbreviation === indicator;
+  });
 
-      return_value = match_basic.name_kr;
-    })
-    .catch((err) => {
-      console.log("err :>> ", err);
-      return_value = "";
-    })
-    .finally(() => {
-      return return_value;
-    });
+  if (!isEmpty(match_basic)) {
+    return_value = match_basic?.name_kr;
+  } else {
+    return_value = "";
+  }
+
+  return return_value;
 };
 
 /**
- * 해당 필터ID에 대한 기본필터 설정들 가져와 redux store에 저장하는 함수
+ * 해당 필터ID에 대한 기본필터 설정들 가져와 사용자 필터 redux store에 저장하는 함수
  * @param {number} id DB filter ID
- * @param {Dispatch<AnyAction>} dispatch RTK dispatcher
+ * @param {import("react").Dispatch<import("@reduxjs/toolkit").AnyAction>} dispatch RTK dispatcher
+ * @param {object[]} basicFilterArr 기본필터정보 redux Store 변수
  * @returns {Promise<boolean>} 성공여부 + promise 객체
  */
-const getUserFilterSettings = async (id, dispatch) => {
+const getUserFilterSettings = async (id, dispatch, basicFilterArr) => {
   let return_success = true;
   let refined_data = {
     filter_id: id,
@@ -43,7 +44,7 @@ const getUserFilterSettings = async (id, dispatch) => {
   };
 
   axios
-    .get(`${FILTER_SETTINGS_URL_PREFIX}${id}${FILTER_SETTINGS_URL_SUBFIX}`)
+    .get(`${FILTER_SERVER_URL}${id}${FILTER_SERVER_SETTINGS_URL}`)
     .then((resp) => {
       let data = resp.data;
       data.forEach((value) => {
@@ -60,7 +61,7 @@ const getUserFilterSettings = async (id, dispatch) => {
           value2: value.value2,
           is_dual_value: val_isDualValue,
           name: value.name,
-          name_kr: indicatorToKRName(value.indicator),
+          name_kr: indicatorToKRName(value.indicator, basicFilterArr),
         };
 
         refined_data.exp_alpha_list.push(value.name);

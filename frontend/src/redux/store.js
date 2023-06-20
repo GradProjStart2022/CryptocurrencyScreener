@@ -1,11 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 /**
- * 사용자 기본 정보 redux store
- * access_token, 이름, 이메일, 사용자 사진 보관
- * 사용자 기본 정보 redux store
- * access_token, 이름, 이메일, 사용자 사진 보관
- * 사용자 기본 정보 redux store
+ * 사용자 정보 redux store
  * access_token, 이름, 이메일, 사용자 사진 보관
  */
 let user = createSlice({
@@ -52,25 +48,21 @@ let user = createSlice({
 
 /**
  * 사용자 필터 정보 redux store
- * 복합필터 목록(filter_list), 복합필터 상세 정보(filter_data) 보관
+ * * 복합필터 목록(filter_list), 복합필터 상세 정보(filter_data) 보관
  */
 let userFilter = createSlice({
   name: "userFilter",
   initialState: { filter_list: [], filter_data: [] },
   reducers: {
-    // 필터 목록 값 변경
     setUserFilterList: (state, action) => {
       state.filter_list = action.payload;
     },
-    // 필터 상세 정보 값 변경
     setUserFilterData: (state, action) => {
       state.filter_data = action.payload;
     },
-    // 필터 상세 정보 값 추가
     addUserFilterData: (state, action) => {
       state.filter_data.push(action.payload);
     },
-    // 사용자 필터 정보 삭제
     clearUserFilter: (state) => {
       state.filter_list = [];
       state.filter_data = [];
@@ -79,44 +71,49 @@ let userFilter = createSlice({
 });
 
 /**
- * 사용자 즐겨찾기 정보 redux store
+ * basic_filter_name.csv 저장용 redux store
+ *
+ * abbreviation: API 전송용 기본 필터 약어
+ *
+ * name_kr: jsx 컴포넌트 표시용 한국어 이름
+ *
+ * name_en: 영어 이름
+ *
+ * type: 모달 표시용 타입(서술적, 기술적 2가지만 존재)
  */
-let userBookmark = createSlice({
-  name: "userBookmark",
-  initialState: { bookmarks: [] },
+let basicFilterName = createSlice({
+  name: "basicFilterArr",
+  initialState: {
+    basicFilterArr: [],
+  },
   reducers: {
-    // 즐겨찾기 정보 값 변경
-    setBookmark: (state, action) => {
-      state.bookmarks = action.payload;
+    setFilterData: (state, action) => {
+      state.basicFilterArr = action.payload;
     },
-    // 즐겨찾기 정보 추가
-    addBookmark: (state, action) => {
-      state.bookmarks.push(action.payload);
+    addFilterData: (state, action) => {
+      state.basicFilterArr.push(action.payload);
     },
-    // 즐겨찾기 정보 삭제
-    clearBookmark: (state) => {
-      state.bookmarks = [];
+    clearFilterData: (state) => {
+      state.basicFilterArr = [];
     },
   },
 });
 
-// 사용자 필터 dispatcher
+export let { setFilterData, addFilterData, clearFilterData } =
+  basicFilterName.actions;
 export let {
   setUserFilterList,
   setUserFilterData,
   addUserFilterData,
   clearUserFilter,
 } = userFilter.actions;
-// 사용자 기본 정보 dispatcher
 export let { setToken, setAccname, setEmail, setImg, setUID, clearUser } =
   user.actions;
-// 사용자 즐겨찾기 정보 dispatcher
-export let { setBookmark, addBookmark, clearBookmark } = userBookmark.actions;
-// reducer
+ 
 export default configureStore({
   reducer: {
     user: user.reducer,
     userFilter: userFilter.reducer,
-    userBookmark: userBookmark.reducer,
+    basicFilterName: basicFilterName.reducer,
   },
 });

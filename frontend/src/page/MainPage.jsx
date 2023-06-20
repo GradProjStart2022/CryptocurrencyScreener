@@ -52,6 +52,7 @@ const NotLogin = (props) => {
           navigate("/login");
         }}>
         로그인
+        {/* 테스트페이지 */}
       </button>
     </div>
   );
