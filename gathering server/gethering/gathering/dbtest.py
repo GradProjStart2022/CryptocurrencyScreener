@@ -19,8 +19,8 @@ import logging
 
 import _upbit
 import utils.rds as rds
-db_data = 'mysql+pymysql://' + 'screener' + ':' + 'screener' + '@' + '127.0.0.1' + ':3306/' \
-  + 'screener' + '?charset=utf8'
+db_data = 'mysql+pymysql://' + 'root' + ':' + 'upbit_kor' + '@' + '127.0.0.1' + ':3306/' \
+  + '2264' + '?charset=utf8'
 engine = create_engine(db_data)
 
 RDS = rds.Database()
@@ -75,12 +75,33 @@ if check['code']:
 
 
 
-engine = create_engine('mysql+pymysql://screener:screener@localhost/screener', echo=False)
+engine = create_engine('mysql+pymysql://root:2264@localhost/upbit_kor', echo=False)
 
 metadata = MetaData()
+# np.random.seed(123)
+# tb_df = pd.DataFrame({'open': np.random.rand(30),
+#                    'high': np.random.rand(30),
+#                    'low': np.random.rand(30),
+#                    'close': np.random.rand(30),
+#                    'volume': np.random.rand(30)})
+#
+# tb_df=ta.calculate_ta(tb_df)
+# tb_df.columns = [col.upper() if "_" not in col else col for col in tb_df.columns]
+# columns = tb_df.columns.tolist()
+# print(columns[5:])
+
+
+
+symbols_table = Table('symbols', metadata, autoload=True, autoload_with=engine)
+# upbit_spot_krw_240m_table = Table(
+#     upbit_spot_krw_240m,
+#     metadata,
+#     *[Column(col, String(255)) for col in columns]
+# )
+
 
 # SQLite3 데이터베이스 연결
-con = sqlite3.connect('test(30min).db')
+con = sqlite3.connect('test(240min).db')
 
 # 커서 생성
 cursor = con.cursor()
@@ -92,14 +113,14 @@ cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 tables = cursor.fetchall()
 
 # 새로운 데이터프레임 생성
-df = pd.DataFrame(columns=['table_name', 'symbol_id', 'ticker'])
+df = pd.DataFrame(columns=['table_name', 'id', 'ticker'])
 
 # MySQL에 연결
 mysql_conn = pymysql.connect(
     host='localhost',
-    user='screener',
-    password='screener',
-    database='screener'
+    user='root',
+    password='2264',
+    database='upbit_kor'
 )
 
 # 각 테이블 이름 출력 및 MySQL에서 SYMBOLS 테이블의 id 가져오기
@@ -117,11 +138,11 @@ for table_name in tables:
             id, ticker = result
 
             # 데이터프레임에 추가
-            df = df.append({'symbol_id': id, 'table_name': table_name[0], 'ticker': ticker}, ignore_index=True)
+            df = df.append({'id': id, 'table_name': table_name[0], 'ticker': ticker}, ignore_index=True)
 
 
  # 각 데이터프레임을 MySQL에 추가
-for symbol_id, ticker, table in zip(df['symbol_id'], df['ticker'], df['table_name']):
+for id, ticker, table in zip(df['id'], df['ticker'], df['table_name']):
     cursor = con.cursor()
     cursor.execute(f"SELECT * FROM {table}")
 
@@ -132,14 +153,14 @@ for symbol_id, ticker, table in zip(df['symbol_id'], df['ticker'], df['table_nam
     rows = cursor.fetchall()
     rows = pd.DataFrame(rows, columns=columns)
     rows['TICKER'] = ticker
-    rows['symbol_id'] = symbol_id
+    rows['ID'] = id
     rows = rows.rename(columns={'DATE': 'TIMESTAMP'})
 
     ta.calculate_ta(rows)
     rows.columns = [col.upper() if "_" not in col else col for col in rows.columns]
     rows.replace([np.inf, -np.inf], np.nan, inplace=True)
     try:
-        rows.to_sql('upbit_spot_krw_30m', con=engine, if_exists='append', index=False, chunksize=10000)
+        rows.to_sql('upbit_spot_krw_240m', con=engine, if_exists='append', index=False, chunksize=10000)
         print(f"{table} to_sql success")
     except Exception as e:
         print(f"{table} to_sql failed: {str(e)}")
