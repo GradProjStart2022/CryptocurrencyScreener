@@ -17,7 +17,6 @@ import { setBookmark } from "../redux/store.js";
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
-import { setBookmark } from "../redux/store.js";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
@@ -117,8 +116,7 @@ const MainPage = () => {
           <Grid
             container
             spacing={2}
-            sx={{ marginLeft: "12px", marginTop: "24px" }}
-          >
+            sx={{ marginLeft: "12px", marginTop: "24px" }}>
             <Grid item xs={9}>
               {uid !== -1 ? (
                 <LoginBookmark />

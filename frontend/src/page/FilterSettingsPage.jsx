@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { cloneDeep, isEmpty } from "lodash-es";
+import { isEmpty } from "lodash-es";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -187,8 +187,6 @@ const FilterSettingsPage = () => {
 
   const handleSaveBtnClk = async () => {
     try {
-      // const expression = document.getElementById("filter-exp").value;
-      // const expression = expInput.current.value;
       const updatedFilterExp = expInput.current.value;
       if (!isValidExpression(updatedFilterExp)) {
         alert("조건식이 유효하지 않습니다.");

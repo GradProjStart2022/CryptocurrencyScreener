@@ -71,27 +71,6 @@ const ChartPage = () => {
     }
   };
 
-  const handleBookmarkClick = async () => {
-    if (!user_email || !coin_obj.name_kr || !coin_obj.tradingview_upbit_code) {
-      console.log(
-        `user_email: ${user_email} / coin_obj: ${coin_obj.name_kr}, ${coin_obj.tradingview_upbit_code}`
-      );
-    } else {
-      const success = await addBookmarkServer(
-        uid,
-        coin_obj.name_kr,
-        coin_obj.tradingview_upbit_code,
-        dispatch
-      );
-      console.log(`success: ${success}`);
-      if (success) {
-        changeIdx();
-      } else {
-        // TODO 즐겨찾기 삭제 서버 전송 실패했을 때 대응
-      }
-    }
-  };
-
   return (
     <div className="App">
       <SideNavBar />
