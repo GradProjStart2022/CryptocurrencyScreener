@@ -1,6 +1,4 @@
-# 프로젝트 개요
-
-한국공학대학교 2023년 졸업작품 S2-6팀 암호화폐 스크리너 프로젝트입니다.
+# 암호화폐 스크리닝 프로젝트
 
 ---
 
@@ -9,6 +7,9 @@
 - 개요
 - 팀원 소개
 - 기술 스택
+  - 게더링 서버
+  - 웹 백엔드 서버
+  - 웹 프론트엔드 클라이언트
 - 아키텍처 구성도
 - DB 구성도
 - 파트별 기능 설명
@@ -24,11 +25,11 @@
 ## 프로젝트 소개
 
 <p align="justify">
-프로젝트 개요/동기
-</p>
+한국공학대학교 2023년 졸업작품 S2-6팀 암호화폐 스크리너 프로젝트입니다.
 
-<p align="center">
-GIF Images
+해당 프로젝트에서는 암호화폐 가격 지표를 가져온 후, 가격에 연관된 지표들을 연산합니다.
+이를 사용자가 지정한 값에 맞게 필터링 한 후 해당되는 암호화폐를 안내합니다.
+
 </p>
 
 <br/>
@@ -51,15 +52,15 @@ GIF Images
 
 ### 웹 백엔드 서버
 
-| Django |  Redis   | MariaDB  |  Celery   | Django REST Framework |
-| :----: | :------: | :------: | :-------: | :-------------------: |
-| ![dj]  | ![redis] | ![maria] | ![celery] |       ![DRESTF]       |
+|                            Django                            |                            Redis                            |                            MariaDB                            |  Celery   |                    Django REST Framework                     |
+| :----------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------: | :-------: | :----------------------------------------------------------: |
+| <img src="/readme_assets/django.svg" width=100 height=100 /> | <img src="/readme_assets/redis.svg" width=100 height=100 /> | <img src="/readme_assets/mariadb.svg" width=100 height=100 /> | ![celery] | <img src="/readme_assets/djrest.png" width=200 height=100 /> |
 
 ### 웹 프론트엔드 클라이언트
 
-| JavaScript |  React   |  Redux   |  MUI   |  CSS   |  Emotion   |
-| :--------: | :------: | :------: | :----: | :----: | :--------: |
-|   ![js]    | ![react] | ![redux] | ![mui] | ![css] | ![emotion] |
+| JavaScript |  React   |                            Redux                            |                            MUI                            |  CSS   |                                                 Emotion                                                  |
+| :--------: | :------: | :---------------------------------------------------------: | :-------------------------------------------------------: | :----: | :------------------------------------------------------------------------------------------------------: |
+|   ![js]    | ![react] | <img src="/readme_assets/redux.svg" width=100 height=100 /> | <img src="/readme_assets/mui.svg" width=100 height=100 /> | ![css] | <img src="https://raw.githubusercontent.com/emotion-js/emotion/main/emotion.png" width=100 height=100 /> |
 
 <br/>
 
@@ -108,8 +109,5 @@ GIF Images
 <!-- Stack Icon Refernces -->
 
 [js]: /readme_assets/javascript.svg
-[redux]: /readme_assets/redux.svg
 [react]: /readme_assets/react.svg
-[mui]: /readme_assets/mui.svg
 [css]: /readme_assets/css.svg
-[emotion]: https://raw.githubusercontent.com/emotion-js/emotion/main/emotion.png
