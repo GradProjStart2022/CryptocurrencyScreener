@@ -32,9 +32,9 @@ def screening(request):
         for price in prices:
             symbol = Symbol.objects.get(symbol_id=price.symbol_id)
             data = {
-                "name_kr": symbol.name_kr.encode("utf-8").decode("utf-8"),
-                "name_en": symbol.name_en,
-                "ticker": symbol.ticker,
+                "name_kr": symbol.NAME_KR.encode("utf-8").decode("utf-8"),
+                "name_en": symbol.NAME_EN,
+                "ticker": symbol.TICKER,
                 "symbol_id": price.symbol_id,
                 "timestamp": price.timestamp.isoformat(),
                 "LOW": price.LOW,
@@ -59,9 +59,9 @@ def import_symbol(request):
         for row in reader:
             symbol = Symbol(
                 symbol_id=row["id"],
-                name_en=row["name_en"],
-                name_kr=row["name_kr"],
-                ticker=row["ticker"],
+                NAME_EN=row["name_en"],
+                NAME_KR=row["name_kr"],
+                TICKER=row["ticker"],
             )
             symbol.save()
 

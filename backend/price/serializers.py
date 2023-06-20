@@ -24,7 +24,7 @@ class SymbolSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Symbol
-        fields = ["name_kr", "name_en", "symbol_id", "ticker", "price"]
+        fields = ["NAME_KR", "NAME_EN", "symbol_id", "TICKER", "price"]
 
 
 class PriceSerializer60m(serializers.ModelSerializer):

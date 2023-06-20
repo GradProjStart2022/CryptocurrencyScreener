@@ -2,13 +2,13 @@ from django.db import models
 
 # Create your models here.
 class Symbol(models.Model):
-    symbol_id = models.IntegerField(primary_key=True, name="symbol_id")
-    ticker = models.CharField(max_length=255)
-    name_en = models.CharField(max_length=255)
-    name_kr = models.CharField(max_length=255)
+    symbol_id = models.AutoField(primary_key=True, name="symbol_id")
+    TICKER = models.CharField(max_length=255)
+    NAME_EN = models.CharField(max_length=255)
+    NAME_KR = models.CharField(max_length=255)
 
     class Meta:
-        db_table = "Symbol"
+        db_table = "SYMBOLS"
 
 
 class Price30m(models.Model):
@@ -17,7 +17,8 @@ class Price30m(models.Model):
         on_delete=models.CASCADE,
         related_name="price30m_symbol",
     )
-    timestamp = models.DateTimeField(null=True)
+    TICKER = models.CharField(max_length=255)
+    DATE = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -116,7 +117,8 @@ class Price60m(models.Model):
         on_delete=models.CASCADE,
         related_name="price60m_symbol",
     )
-    timestamp = models.DateTimeField(null=True)
+    TICKER = models.CharField(max_length=255)
+    DATE = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -215,7 +217,8 @@ class Price240m(models.Model):
         on_delete=models.CASCADE,
         related_name="price240m_symbol",
     )
-    timestamp = models.DateTimeField(null=True)
+    TICKER = models.CharField(max_length=255)
+    DATE = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -315,7 +318,8 @@ class Price1d(models.Model):
         on_delete=models.CASCADE,
         related_name="price1d_symbol",
     )
-    timestamp = models.DateTimeField(null=True)
+    TICKER = models.CharField(max_length=255)
+    DATE = models.DateTimeField(null=True)
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
