@@ -54,7 +54,7 @@
 
 |                            Django                            |                            Redis                            |                            MariaDB                            |  Celery   |                    Django REST Framework                     |
 | :----------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------: | :-------: | :----------------------------------------------------------: |
-| <img src="/readme_assets/django.svg" width=100 height=100 /> | <img src="/readme_assets/redis.svg" width=100 height=100 /> | <img src="/readme_assets/mariadb.svg" width=100 height=100 /> | ![celery] | <img src="/readme_assets/djrest.png" width=200 height=100 /> |
+| <img src="/readme_assets/django.svg" width=100 height=100 /> | <img src="/readme_assets/redis.svg" width=100 height=100 /> | <img src="/readme_assets/mariadb.svg" width=100 height=100 /> | <img src="https://docs.celeryq.dev/en/stable/_static/celery_512.png" width=100 height=100 /> | <img src="/readme_assets/djrest.png" width=200 height=100 /> |
 
 ### 웹 프론트엔드 클라이언트
 
