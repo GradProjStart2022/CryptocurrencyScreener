@@ -87,9 +87,13 @@ let userBookmark = createSlice({
     },
     // 즐겨찾기 정보 추가
     addBookmark: (state, action) => {
+      if (state.bookmarks.length === 3) {
+        // 이미 3개 차 있으면 서버 로직과 같이 맨 앞 요소 제거
+        state.bookmarks.splice(0, 1);
+      }
       state.bookmarks.push(action.payload);
     },
-    // 즐겨찾기 정보 삭제
+    // 즐겨찾기 정보 전체 삭제
     clearBookmark: (state) => {
       state.bookmarks = [];
     },

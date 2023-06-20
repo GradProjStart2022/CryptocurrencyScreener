@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -16,13 +16,13 @@ import BookmarkCoin from "../component/BookmarkCoin.jsx";
 
 const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
 
-const BookmarkPage = (props) => {
+const BookmarkPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  /** @type {string} */
   let user_email = useSelector((state) => state.user.email);
   /** @type {object[]} */
   let bookmarks = useSelector((state) => state.userBookmark.bookmarks);
-  // let [bookmark, setBookmark] = useState([]);
 
   // todo: useEffetct 내부 로직 로그인 직후로 옮기기(로그인 직후 홈화면 즐겨찾기 대응)
   useEffect(() => {
@@ -38,7 +38,6 @@ const BookmarkPage = (props) => {
         .get(`${ATTENTION_URL}?email=${user_email}`)
         .then((resp) => {
           dispatch(setBookmark(resp.data));
-          // setBookmark(response.data);
         })
         .catch((err) => {
           console.log("BookmarkPage UseEffect err>>>", err);
