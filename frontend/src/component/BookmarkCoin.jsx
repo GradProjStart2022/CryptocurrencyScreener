@@ -28,7 +28,6 @@ const BookmarkCoin = (props) => {
         color="secondary"
         onClick={async () => {
           let return_success = await removeBookmark(
-            data.symbol,
             bookmark_id,
             user_email,
             dispatch
@@ -36,16 +35,14 @@ const BookmarkCoin = (props) => {
           if (!return_success) {
             navigate(0); // 오류나면 새로고침
           }
-        }}
-      >
+        }}>
         <StarIcon />
       </IconButton>
       <MiniChart
         symbol={data.symbol}
         colorTheme="light"
         locale="kr"
-        width="100%"
-      ></MiniChart>
+        width="100%" />
     </Grid>
   );
 };
