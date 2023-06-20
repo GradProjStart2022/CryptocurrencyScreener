@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Grid, IconButton } from "@mui/material";
-import { yellow } from "@mui/material/colors";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -17,6 +16,8 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import addBookmarkServer from "../logic/addBookmarkServer.js";
+
+import { setIsFavorite } from "../redux/store.js";
 /**
  * 종목별 화면 UI 요소 반환 함수
  * @param props react props
@@ -32,9 +33,11 @@ const ChartPage = (props) => {
   const dispatch = useDispatch();
   const user_email = useSelector((state) => state.user.email);
   const uid = useSelector((state) => state.user.uid);
+  const bookmarks = useSelector((state) => state.userBookmark.bookmarks);
+  const isFavorite = useSelector((state) => state.userBookmark.isFavorite);
 
   // todo: 사용자 북마크 연동
-  let [isFavorite, setIsFavorite] = useState(0);
+  //let [isFavorite, setIsFavorite] = useState(0);
   const changeIdx = () => {
     console.log("Debug/isFavorite :>> ", isFavorite);
     switch (isFavorite) {
@@ -49,6 +52,17 @@ const ChartPage = (props) => {
         break;
     }
   };
+
+  // useEffect(() => {
+  //   if (
+  //     bookmarks.some(
+  //       (bookmark) => bookmark.symbol === coin_obj.tradingview_upbit_code
+  //     )
+  //   ) {
+  //     console.log("true");
+  //     // changeIdx();
+  //   }
+  // }, [bookmarks, coin_obj]);
 
   const handleBookmarkClick = async () => {
     if (!user_email || !coin_obj.name_kr || !coin_obj.tradingview_upbit_code) {
@@ -65,7 +79,8 @@ const ChartPage = (props) => {
       );
       console.log(`success: ${success}`);
       if (success) {
-        changeIdx();
+        // changeIdx();
+        dispatch(setIsFavorite(!isFavorite));
       } else {
       }
     }
@@ -98,7 +113,8 @@ const ChartPage = (props) => {
                   color="secondary"
                   onClick={handleBookmarkClick}
                 >
-                  {[<StarBorderIcon />, <StarIcon />][isFavorite]}
+                  {/* {[<StarBorderIcon />, <StarIcon />][isFavorite]} */}
+                  {isFavorite ? <StarIcon /> : <StarBorderIcon />}
                 </IconButton>
               </span>
             </Grid>
@@ -142,4 +158,4 @@ const ChartPage = (props) => {
   );
 };
 
-export default ChartPage;
+export default memo(ChartPage);

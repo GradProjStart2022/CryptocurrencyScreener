@@ -79,7 +79,7 @@ let userFilter = createSlice({
  */
 let userBookmark = createSlice({
   name: "userBookmark",
-  initialState: { bookmarks: [] },
+  initialState: { bookmarks: [], isFavorite: false },
   reducers: {
     // 즐겨찾기 정보 값 변경
     setBookmark: (state, action) => {
@@ -92,6 +92,9 @@ let userBookmark = createSlice({
     // 즐겨찾기 정보 삭제
     clearBookmark: (state) => {
       state.bookmarks = [];
+    },
+    setIsFavorite: (state, action) => {
+      state.isFavorite = action.payload;
     },
   },
 });
@@ -107,7 +110,8 @@ export let {
 export let { setToken, setAccname, setEmail, setImg, setUID, clearUser } =
   user.actions;
 // 사용자 즐겨찾기 정보 dispatcher
-export let { setBookmark, addBookmark, clearBookmark } = userBookmark.actions;
+export let { setBookmark, addBookmark, clearBookmark, setIsFavorite } =
+  userBookmark.actions;
 // reducer
 export default configureStore({
   reducer: {

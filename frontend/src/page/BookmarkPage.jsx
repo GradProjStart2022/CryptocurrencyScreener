@@ -7,6 +7,7 @@ import { isEmpty } from "lodash-es";
 import { Grid } from "@mui/material";
 
 import { setBookmark } from "../redux/store.js";
+import removeBookmark from "../logic/removeBookmark.js";
 
 import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
@@ -73,7 +74,7 @@ const BookmarkPage = (props) => {
                     key={index}
                     data={data}
                     bookmark_id={data.id}
-                    // removeBookmark={removeBookmark}
+                    removeBookmark={removeBookmark}
                   />
                 );
               })
