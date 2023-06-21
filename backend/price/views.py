@@ -21,10 +21,10 @@ def screening(request):
     try:
         filtered_symbol = create_query(filter_pk, table, date_range)
         prices = Price30m.objects.filter(symbol_id__in=filtered_symbol).filter(
-            timestamp=Subquery(
+            DATE=Subquery(
                 Price30m.objects.filter(symbol_id=OuterRef("symbol_id"))
-                .order_by("-timestamp")
-                .values("timestamp")[:1]
+                .order_by("-DATE")
+                .values("DATE")[:1]
             )
         )
         result = []
@@ -36,7 +36,7 @@ def screening(request):
                 "name_en": symbol.NAME_EN,
                 "ticker": symbol.TICKER,
                 "symbol_id": price.symbol_id,
-                "timestamp": price.timestamp.isoformat(),
+                "timestamp": price.DATE.isoformat(),
                 "LOW": price.LOW,
                 "HIGH": price.HIGH,
                 "VOLUME": price.VOLUME,
@@ -84,7 +84,7 @@ def import_data(request):
                 date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
                 data = Price240m(
                     symbol_id=row["ID"],
-                    timestamp=date,
+                    DATE=date,
                     OPEN=float(row["OPEN"] or 0),
                     HIGH=float(row["HIGH"] or 0),
                     LOW=float(row["LOW"] or 0),
