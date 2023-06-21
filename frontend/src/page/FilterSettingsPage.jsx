@@ -91,6 +91,11 @@ const FilterSettingsPage = () => {
     (state) => state.userFilter.filter_data
   );
 
+  /** @type {object[]} */
+  const basicFilterArr = useSelector(
+    (state) => state.basicFilterName.basicFilterArr
+  );
+
   // 기본필터 탭 열고 닫는 state 변수
   const [openBFilter, setOpenBFilter] = useState(false);
   const handleBFliterOpen = () => setOpenBFilter(true);
@@ -208,7 +213,11 @@ const FilterSettingsPage = () => {
         );
         if (is_success) {
           console.log("filter_id:", filter_id);
-          is_success = await getUserFilterSettings(filter_id[0], dispatch);
+          is_success = await getUserFilterSettings(
+            filter_id[0],
+            dispatch,
+            basicFilterArr
+          );
         }
       } else {
         // TODO 필터 편집에 대한 로직 구현
