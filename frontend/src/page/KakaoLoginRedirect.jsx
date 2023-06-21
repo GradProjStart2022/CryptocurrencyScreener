@@ -159,19 +159,6 @@ export const KakaoLoginRedirect = () => {
     }
   }, [listSuccess]);
 
-  // 필터정보목록에 대한 상세정보 갱신 로직
-  useEffect(() => {
-    if (listSuccess) {
-      let is_success = false;
-      redux_filter_list.forEach(async (value) => {
-        is_success = await getUserFilterSettings(value.id, dispatch);
-      });
-
-      // 모든 작업 완료 후 홈으로 화면 전환시켜줌
-      navigate("/", { replace: true });
-    }
-  }, [listSuccess]);
-
   return (
     <div className="App">
       <SideNavBar />
