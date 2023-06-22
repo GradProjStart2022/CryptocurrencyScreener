@@ -52,8 +52,8 @@
 
 ### 웹 백엔드 서버
 
-|                            Django                            |                            Redis                            |                            MariaDB                            |  Celery   |                    Django REST Framework                     |
-| :----------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------: | :-------: | :----------------------------------------------------------: |
+|                            Django                            |                            Redis                            |                            MariaDB                            |                                            Celery                                            |                    Django REST Framework                     |
+| :----------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :----------------------------------------------------------: |
 | <img src="/readme_assets/django.svg" width=100 height=100 /> | <img src="/readme_assets/redis.svg" width=100 height=100 /> | <img src="/readme_assets/mariadb.svg" width=100 height=100 /> | <img src="https://docs.celeryq.dev/en/stable/_static/celery_512.png" width=100 height=100 /> | <img src="/readme_assets/djrest.png" width=200 height=100 /> |
 
 ### 웹 프론트엔드 클라이언트
@@ -101,6 +101,26 @@
 ## 작동 예시
 
 <p align="justify">
+
+### 암호화폐 상세 정보 표시
+
+![CoinDesc](/readme_assets/coin_desc.png)
+
+### 필터 생성
+
+![FilterSetting](/readme_assets/filter_setting.png)
+
+### 필터링 결과 표시
+
+![FilterRslt](/readme_assets/filter_rslt.png)
+
+### 알람 설정 및 수신 알람 표시 모달
+
+![AlarmOutput](/readme_assets/alarm.png)
+
+### 즐겨찾기 목록 표시
+
+![Bookmarks](/readme_assets/bookmarks.png)
 
 </p>
 
