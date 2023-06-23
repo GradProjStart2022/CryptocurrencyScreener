@@ -21,7 +21,7 @@ import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import AlarmTableRow from "../component/AlarmTableRow.jsx";
 
-const AlarmSettingsPage = (props) => {
+const AlarmSettingsPage = () => {
   const dispatch = useDispatch();
   const filter_list = useSelector((state) => state.userFilter.filter_list);
   const uid = useSelector((state) => state.user.uid);

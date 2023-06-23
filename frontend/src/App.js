@@ -14,8 +14,6 @@ import { KakaoLoginRedirect } from "./page/KakaoLoginRedirect";
 import { GoogleLoginRedirect } from "./page/GoogleLoginRedirect";
 import TDWidgetRedirectPage from "./page/TDWidgetRedirectPage.jsx";
 
-import TestPage from "./page/TestPage.jsx";
-
 function App() {
   return (
     <Routes>
@@ -41,7 +39,6 @@ function App() {
       {/* 사용자별 즐겨찾기 목록 페이지 */}
       <Route path="/bookmark/" element={<BookmarkPage />} />
       {/* 없는 경로들 404 페이지 처리 */}
-      <Route path="/testpage" element={<TestPage />} />
       <Route path="*" element={<Page404 />} />
     </Routes>
   );

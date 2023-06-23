@@ -28,7 +28,6 @@ const BookmarkCoin = (props) => {
         color="secondary"
         onClick={async () => {
           let return_success = await removeBookmark(
-            data.symbol,
             bookmark_id,
             user_email,
             dispatch
@@ -43,7 +42,7 @@ const BookmarkCoin = (props) => {
         symbol={data.symbol}
         colorTheme="light"
         locale="kr"
-        width="100%"></MiniChart>
+        width="100%" />
     </Grid>
   );
 };

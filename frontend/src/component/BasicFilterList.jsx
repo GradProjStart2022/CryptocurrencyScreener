@@ -11,6 +11,7 @@ const item_batch_css = {
   backgroundColor: "#ffffff",
 };
 
+// TODO 삭제 및 순서변경 로직 수정하는 것인지 확인 필요
 /**
  * 복합필터를 편집할 때 나타나는
  * 해당 복합필터에 있는 기본필터들 표시용 UI 컴포넌트
