@@ -20,6 +20,7 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import AlarmTableRow from "../component/AlarmTableRow.jsx";
+import TGSettingsModal from "../component/modal/TGSettingsModal.jsx";
 
 const AlarmSettingsPage = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,11 @@ const AlarmSettingsPage = () => {
   const [isModify, setIsModify] = useState(false);
   // 취소버튼 클릭 확인 state
   const [clickCancel, setClickCancel] = useState(false);
+
+  // 텔레그램 설정 모달 상태 state
+  const [isTgModalOpen, setIsTgModalOpen] = useState(false);
+  const handleTgModalOpen = () => setIsTgModalOpen(true);
+  const handleTgModalClose = () => setIsTgModalOpen(false);
 
   // 각 요소별 switch state
   const [switchStates, setSwitchStates] = useState({});
@@ -54,6 +60,21 @@ const AlarmSettingsPage = () => {
       [id]: event.target.value,
     }));
     setIsModify(true);
+  };
+
+  const confirmModify = async () => {
+    let rslt = await setAlarmSettings(
+      uid,
+      filter_list,
+      switchStates,
+      selectValues
+    );
+    if (rslt) {
+      alert("수정 완료되었습니다.");
+      setIsModify(false);
+    } else {
+      alert("수정 중 문제가 발생했습니다.");
+    }
   };
 
   // 필터에 맞게 각 state 초기화
@@ -104,10 +125,22 @@ const AlarmSettingsPage = () => {
               justifyContent: "space-between",
             }}>
             <h1>알림 설정</h1>
+            <TGSettingsModal
+              isTgModalOpen={isTgModalOpen}
+              handleTgModalClose={handleTgModalClose}
+            />
             <span style={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  handleTgModalOpen();
+                }}>
+                텔레그램 설정
+              </Button>
               {isModify && (
                 <Button
                   variant="outlined"
+                  sx={{ marginLeft: "8vw" }}
                   onClick={() => {
                     setClickCancel(true);
                   }}>
@@ -117,20 +150,9 @@ const AlarmSettingsPage = () => {
               {isModify && (
                 <Button
                   variant="contained"
-                  sx={{ marginLeft: "4vw" }}
-                  onClick={async () => {
-                    let rslt = await setAlarmSettings(
-                      uid,
-                      filter_list,
-                      switchStates,
-                      selectValues
-                    );
-                    if (rslt) {
-                      alert("수정 완료되었습니다.");
-                      setIsModify(false);
-                    } else {
-                      alert("수정 중 문제가 발생했습니다.");
-                    }
+                  sx={{ marginLeft: "2vw" }}
+                  onClick={() => {
+                    confirmModify();
                   }}>
                   변경
                 </Button>
