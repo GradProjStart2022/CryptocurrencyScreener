@@ -78,3 +78,12 @@ class Attention(models.Model):
 
     class Meta:
         db_table = "Attention"
+
+
+class Telegram(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    Token = models.CharField(max_length=255, unique=True)
+    Chat_Id = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = "Telegram"
