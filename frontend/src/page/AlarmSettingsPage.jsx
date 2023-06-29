@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import {
   Table,
@@ -22,6 +23,8 @@ import SideNavBar from "../component/SideNavbar.jsx";
 import AlarmTableRow from "../component/AlarmTableRow.jsx";
 import TGSettingsModal from "../component/modal/TGSettingsModal.jsx";
 
+const TELEGRAM_SERVER_URL = "http://localhost:8000/users/api/telegram/";
+
 const AlarmSettingsPage = () => {
   const dispatch = useDispatch();
   const filter_list = useSelector((state) => state.userFilter.filter_list);
@@ -37,6 +40,10 @@ const AlarmSettingsPage = () => {
   const [isTgModalOpen, setIsTgModalOpen] = useState(false);
   const handleTgModalOpen = () => setIsTgModalOpen(true);
   const handleTgModalClose = () => setIsTgModalOpen(false);
+
+  // 텔레그램 정보 state
+  const [tokenVal, setTokenVal] = useState("");
+  const [botID, setBotID] = useState("");
 
   // 각 요소별 switch state
   const [switchStates, setSwitchStates] = useState({});
@@ -108,6 +115,24 @@ const AlarmSettingsPage = () => {
     }
   }, [isModify]);
 
+  // 초기 접속시 텔레그램 키 수령
+  useEffect(() => {
+    const getTG = async () => {
+      if (uid !== -1) {
+        try {
+          let resp = await axios.get(`${TELEGRAM_SERVER_URL}${uid}`);
+          setTokenVal(resp?.data?.Token);
+          setBotID(resp?.data?.Chat_Id);
+        } catch (error) {
+          console.log("AlarmSettingsPage TG error :>> ", error);
+          setTokenVal("");
+          setBotID("");
+        }
+      }
+    };
+    getTG();
+  }, []);
+
   return (
     <div className="App">
       <SideNavBar />
@@ -128,6 +153,10 @@ const AlarmSettingsPage = () => {
             <TGSettingsModal
               isTgModalOpen={isTgModalOpen}
               handleTgModalClose={handleTgModalClose}
+              tokenVal={tokenVal}
+              setTokenVal={setTokenVal}
+              botID={botID}
+              setBotID={setBotID}
             />
             <span style={{ display: "flex", alignItems: "center" }}>
               <Button
