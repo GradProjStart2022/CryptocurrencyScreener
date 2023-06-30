@@ -35,8 +35,10 @@ const TGSettingsModal = (props) => {
   useEffect(() => {
     if (isEmpty(botID) && isEmpty(tokenVal)) {
       setIsInit(true);
+    } else {
+      setIsInit(false);
     }
-  }, []);
+  }, [isTgModalOpen]);
 
   return (
     <Modal open={isTgModalOpen} onClose={handleTgModalClose}>

@@ -120,7 +120,8 @@ const AlarmSettingsPage = () => {
     const getTG = async () => {
       if (uid !== -1) {
         try {
-          let resp = await axios.get(`${TELEGRAM_SERVER_URL}${uid}`);
+          // let resp = await axios.get(`${TELEGRAM_SERVER_URL}${uid}`); // 호스팅 이후 정식사용시 활성화
+          let resp = await axios.get(`/users/api/telegram/${uid}`); // 개발시 CORS 이슈 대응
           setTokenVal(resp?.data?.Token);
           setBotID(resp?.data?.Chat_Id);
         } catch (error) {

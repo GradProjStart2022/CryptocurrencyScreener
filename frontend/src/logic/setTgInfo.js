@@ -5,7 +5,7 @@ const TELEGRAM_SERVER_URL = "http://localhost:8000/users/api/telegram/";
 const setTgInfo = async (uid, token, bot_id) => {
   try {
     let dat = new FormData();
-    dat.append("User", uid);
+    dat.append("user", uid);
     dat.append("Token", token);
     dat.append("Chat_Id", bot_id);
 
