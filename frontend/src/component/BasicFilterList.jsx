@@ -15,7 +15,7 @@ const item_batch_css = {
 /**
  * 복합필터를 편집할 때 나타나는
  * 해당 복합필터에 있는 기본필터들 표시용 UI 컴포넌트
- * todo: 삭제 및 순서변경 로직 추가해야 함 -> ABC표현식, 정보객체배열 등 같이 수정될 것 많음
+ * TODO 삭제 및 순서변경 로직 추가해야 함 -> ABC표현식, 정보객체배열 등 같이 수정될 것 많음
  * @param {string} props react props
  * @returns 복합필터에 사용한 기본필터 UI 요소
  */

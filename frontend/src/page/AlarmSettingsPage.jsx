@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import {
   Table,
@@ -20,6 +21,9 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import AlarmTableRow from "../component/AlarmTableRow.jsx";
+import TGSettingsModal from "../component/modal/TGSettingsModal.jsx";
+
+const TELEGRAM_SERVER_URL = "http://localhost:8000/users/api/telegram/";
 
 const AlarmSettingsPage = () => {
   const dispatch = useDispatch();
@@ -31,6 +35,15 @@ const AlarmSettingsPage = () => {
   const [isModify, setIsModify] = useState(false);
   // 취소버튼 클릭 확인 state
   const [clickCancel, setClickCancel] = useState(false);
+
+  // 텔레그램 설정 모달 상태 state
+  const [isTgModalOpen, setIsTgModalOpen] = useState(false);
+  const handleTgModalOpen = () => setIsTgModalOpen(true);
+  const handleTgModalClose = () => setIsTgModalOpen(false);
+
+  // 텔레그램 정보 state
+  const [tokenVal, setTokenVal] = useState("");
+  const [botID, setBotID] = useState("");
 
   // 각 요소별 switch state
   const [switchStates, setSwitchStates] = useState({});
@@ -54,6 +67,21 @@ const AlarmSettingsPage = () => {
       [id]: event.target.value,
     }));
     setIsModify(true);
+  };
+
+  const confirmModify = async () => {
+    let rslt = await setAlarmSettings(
+      uid,
+      filter_list,
+      switchStates,
+      selectValues
+    );
+    if (rslt) {
+      alert("수정 완료되었습니다.");
+      setIsModify(false);
+    } else {
+      alert("수정 중 문제가 발생했습니다.");
+    }
   };
 
   // 필터에 맞게 각 state 초기화
@@ -87,6 +115,25 @@ const AlarmSettingsPage = () => {
     }
   }, [isModify]);
 
+  // 초기 접속시 텔레그램 키 수령
+  useEffect(() => {
+    const getTG = async () => {
+      if (uid !== -1) {
+        try {
+          // let resp = await axios.get(`${TELEGRAM_SERVER_URL}${uid}`); // 호스팅 이후 정식사용시 활성화
+          let resp = await axios.get(`/users/api/telegram/${uid}`); // 개발시 CORS 이슈 대응
+          setTokenVal(resp?.data?.Token);
+          setBotID(resp?.data?.Chat_Id);
+        } catch (error) {
+          console.log("AlarmSettingsPage TG error :>> ", error);
+          setTokenVal("");
+          setBotID("");
+        }
+      }
+    };
+    getTG();
+  }, []);
+
   return (
     <div className="App">
       <SideNavBar />
@@ -104,10 +151,26 @@ const AlarmSettingsPage = () => {
               justifyContent: "space-between",
             }}>
             <h1>알림 설정</h1>
+            <TGSettingsModal
+              isTgModalOpen={isTgModalOpen}
+              handleTgModalClose={handleTgModalClose}
+              tokenVal={tokenVal}
+              setTokenVal={setTokenVal}
+              botID={botID}
+              setBotID={setBotID}
+            />
             <span style={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  handleTgModalOpen();
+                }}>
+                텔레그램 설정
+              </Button>
               {isModify && (
                 <Button
                   variant="outlined"
+                  sx={{ marginLeft: "8vw" }}
                   onClick={() => {
                     setClickCancel(true);
                   }}>
@@ -117,20 +180,9 @@ const AlarmSettingsPage = () => {
               {isModify && (
                 <Button
                   variant="contained"
-                  sx={{ marginLeft: "4vw" }}
-                  onClick={async () => {
-                    let rslt = await setAlarmSettings(
-                      uid,
-                      filter_list,
-                      switchStates,
-                      selectValues
-                    );
-                    if (rslt) {
-                      alert("수정 완료되었습니다.");
-                      setIsModify(false);
-                    } else {
-                      alert("수정 중 문제가 발생했습니다.");
-                    }
+                  sx={{ marginLeft: "2vw" }}
+                  onClick={() => {
+                    confirmModify();
                   }}>
                   변경
                 </Button>
