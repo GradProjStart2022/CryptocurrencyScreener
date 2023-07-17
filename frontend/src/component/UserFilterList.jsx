@@ -61,7 +61,7 @@ const UserFilterList = (props) => {
             사용자
             {isSettings ? <br /> : " "}
             필터 목록
-            {isSettings && (
+            {isSettings && filterList.length < 11 && (
               <Button
                 variant="contained"
                 size="small"

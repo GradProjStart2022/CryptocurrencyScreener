@@ -2,6 +2,7 @@ import axios from "axios";
 import { isEmpty } from "lodash-es";
 
 const SCREEN_PRICE_URL = "http://127.0.0.1:8000/price/screening/";
+
 /**
  * 서버에서 필터링된 종목 데이터 받아
  * 모델에 넣어주는 함수
@@ -33,7 +34,6 @@ const getFilteredData = async (
 
     if (Object.keys(resp.data).includes("error")) {
       // 혹시나 200인데 error를 수신할 시
-      console.log("getFilteredData none :>> ", resp.data);
       price_data = [
         {
           id: 1,
@@ -41,6 +41,9 @@ const getFilteredData = async (
           name_en: "Error",
           symbol_id: 0,
           ticker: "Error",
+          LOW: -1,
+          HIGH: -1,
+          VOLUME: -1,
         },
       ];
       return_success = false;
@@ -53,12 +56,19 @@ const getFilteredData = async (
           name_en: "No Filter Data",
           symbol_id: 0,
           ticker: "No Filter Data",
+          LOW: -1,
+          HIGH: -1,
+          VOLUME: -1,
         },
       ];
       return_success = false;
     } else {
+      /** @type {string[]} */
+      let symbol_ids = [];
+
       // 필터링 데이터 정상 수신
       resp.data.forEach((elem, index) => {
+        symbol_ids.push(elem.symbol_id);
         price_data.push({
           id: index,
           ...elem,
@@ -77,6 +87,9 @@ const getFilteredData = async (
         name_en: "Error",
         symbol_id: 0,
         ticker: "Error",
+        LOW: -1,
+        HIGH: -1,
+        VOLUME: -1,
       },
     ]);
     return_success = false;

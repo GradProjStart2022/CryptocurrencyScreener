@@ -1,17 +1,16 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
-import { useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-
 import { Grid } from "@mui/material";
 import {
   CryptoCurrencyMarket,
   MiniChart,
   TickerTape,
 } from "react-ts-tradingview-widgets";
+
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { setBookmark } from "../redux/store.js";
 
@@ -53,6 +52,7 @@ const NotLogin = (props) => {
           navigate("/login");
         }}>
         로그인
+        {/* 테스트페이지 */}
       </button>
     </div>
   );

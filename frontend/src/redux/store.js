@@ -1,8 +1,6 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 /**
- * 사용자 정보 redux store
- * access_token, 이름, 이메일, 사용자 사진 보관
  * 사용자 기본 정보 redux store
  * access_token, 이름, 이메일, 사용자 사진 보관
  */
@@ -81,7 +79,7 @@ let userFilter = createSlice({
  */
 let userBookmark = createSlice({
   name: "userBookmark",
-  initialState: { bookmarks: [] },
+  initialState: { bookmarks: [], isFavorite: false },
   reducers: {
     // 즐겨찾기 정보 값 변경
     setBookmark: (state, action) => {
@@ -89,15 +87,54 @@ let userBookmark = createSlice({
     },
     // 즐겨찾기 정보 추가
     addBookmark: (state, action) => {
+      if (state.bookmarks.length === 3) {
+        // 이미 3개 차 있으면 서버 로직과 같이 맨 앞 요소 제거
+        state.bookmarks.splice(0, 1);
+      }
       state.bookmarks.push(action.payload);
     },
-    // 즐겨찾기 정보 삭제
+    // 즐겨찾기 정보 전체 삭제
     clearBookmark: (state) => {
       state.bookmarks = [];
+    },
+    setIsFavorite: (state, action) => {
+      state.isFavorite = action.payload;
     },
   },
 });
 
+/**
+ * basic_filter_name.csv 저장용 redux store
+ *
+ * abbreviation: API 전송용 기본 필터 약어
+ *
+ * name_kr: jsx 컴포넌트 표시용 한국어 이름
+ *
+ * name_en: 영어 이름
+ *
+ * type: 모달 표시용 타입(서술적, 기술적 2가지만 존재)
+ */
+let basicFilterName = createSlice({
+  name: "basicFilterArr",
+  initialState: {
+    basicFilterArr: [],
+  },
+  reducers: {
+    setFilterData: (state, action) => {
+      state.basicFilterArr = action.payload;
+    },
+    addFilterData: (state, action) => {
+      state.basicFilterArr.push(action.payload);
+    },
+    clearFilterData: (state) => {
+      state.basicFilterArr = [];
+    },
+  },
+});
+
+// 기본 필터 정보 dispatcher
+export let { setFilterData, addFilterData, clearFilterData } =
+  basicFilterName.actions;
 // 사용자 필터 dispatcher
 export let {
   setUserFilterList,
@@ -109,12 +146,14 @@ export let {
 export let { setToken, setAccname, setEmail, setImg, setUID, clearUser } =
   user.actions;
 // 사용자 즐겨찾기 정보 dispatcher
-export let { setBookmark, addBookmark, clearBookmark } = userBookmark.actions;
+export let { setBookmark, addBookmark, clearBookmark, setIsFavorite } =
+  userBookmark.actions;
 // reducer
 export default configureStore({
   reducer: {
     user: user.reducer,
     userFilter: userFilter.reducer,
     userBookmark: userBookmark.reducer,
+    basicFilterName: basicFilterName.reducer,
   },
 });
