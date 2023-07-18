@@ -1,40 +1,45 @@
 from rest_framework import serializers
-from price.models import Upbit, Symbol, ScreeningTest, SymbolTest
+from price.models import Symbol, Price60m, Price30m, Price240m, Price1d
 
-# TODO model명 변경
+
+class PriceSerializer(serializers.Serializer):
+    name_kr = serializers.CharField()
+    name_en = serializers.CharField()
+    ticker = serializers.CharField()
+    symbol_id = serializers.IntegerField()
+    timestamp = serializers.DateTimeField()
+    LOW = serializers.FloatField()
+    HIGH = serializers.FloatField()
+    VOLUME = serializers.FloatField()
+
+
 class PriceSerializer30m(serializers.ModelSerializer):
     class Meta:
-        model = ScreeningTest
-        fields = ["symbol_id", "timestamp", "OPEN", "CLOSE", "HIGH", "LOW", "VOLUME"]
+        model = Price30m
+        fields = ["symbol_id", "DATE", "OPEN", "CLOSE", "HIGH", "LOW", "VOLUME"]
 
 
 class SymbolSerializer(serializers.ModelSerializer):
     price = PriceSerializer30m(read_only=True)
 
     class Meta:
-        model = SymbolTest
-        fields = ["name_kr", "name_en", "symbol_id", "ticker", "price"]
+        model = Symbol
+        fields = ["NAME_KR", "NAME_EN", "symbol_id", "TICKER", "price"]
 
 
 class PriceSerializer60m(serializers.ModelSerializer):
     class Meta:
-        model = ScreeningTest
+        model = Price60m
         fields = "__all__"
 
 
 class PriceSerializer240m(serializers.ModelSerializer):
     class Meta:
-        model = ScreeningTest
+        model = Price240m
         fields = "__all__"
 
 
 class PriceSerializer1d(serializers.ModelSerializer):
     class Meta:
-        model = ScreeningTest
-        fields = "__all__"
-
-
-class PriceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ScreeningTest
+        model = Price1d
         fields = "__all__"

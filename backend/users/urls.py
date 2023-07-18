@@ -5,6 +5,7 @@ from users.googlevview import GoogleLogin
 
 router = DefaultRouter()
 router.register("attention", views.AttentionViewSet)
+router.register("telegram", views.TelegramViewSet)
 # router.register("user", views.UserViewSet)
 
 

@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from json.decoder import JSONDecodeError
 from rest_framework import status
 from rest_framework.decorators import action, api_view
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.kakao import views as kakao_view
@@ -17,10 +17,10 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
-from .models import User, Attention
+from .models import User, Attention, Telegram
 from allauth.socialaccount.providers.kakao.views import KakaoOAuth2Adapter
 
-from .serializers import AttentionSerializer, UserSerializer
+from .serializers import AttentionSerializer, UserSerializer, TelegramSerializer
 
 BASE_URL = "http://localhost:8000/"
 KAKAO_CALLBACK_URI = BASE_URL + "users/kakao/callback/"
@@ -190,3 +190,8 @@ class AttentionViewSet(ModelViewSet):
         # qs = User.objects.get(id=id)
         serializer = AttentionSerializer(qs, many=True)
         return Response(serializer.data)
+
+
+class TelegramViewSet(ModelViewSet):
+    queryset = Telegram.objects.all()
+    serializer_class = TelegramSerializer

@@ -53,6 +53,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+    class Meta:
+        db_table = "User"
+
 
 class Attention(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="attentions")
@@ -72,3 +75,15 @@ class Attention(models.Model):
             objects_filter[0].delete()
 
         super(Attention, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "Attention"
+
+
+class Telegram(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    Token = models.CharField(max_length=255, unique=True)
+    Chat_Id = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = "Telegram"

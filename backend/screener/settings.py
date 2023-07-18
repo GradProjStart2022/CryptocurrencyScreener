@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django_pydenticon",
     "corsheaders",
     "django_extensions",
+    "django_apscheduler",
     # django-rest-framework
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
     "filter",
     "widget",
     "price",
+    "alarm",
 ]
 
 MIDDLEWARE = [
@@ -103,9 +105,17 @@ WSGI_APPLICATION = "screener.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "screener",
+        "USER": "screener",
+        "PASSWORD": "screener",
+        "HOST": "localhost",
+        "PORT": "3306",
     }
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
 }
 
 
@@ -137,11 +147,11 @@ AUTHENTICATION_BACKENDS = (
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -201,3 +211,7 @@ GRAPH_MODELS = {
     "all_applications": True,
     "group_models": True,
 }
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 60  # Seconds
+SCHEDULER_DEFAULT = True  # apps.py 참고

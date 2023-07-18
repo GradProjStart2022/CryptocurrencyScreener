@@ -8,3 +8,6 @@ class Widget(models.Model):
     tradingview_upbit_code = models.CharField(max_length=100)
     upbit_stock_code = models.CharField(max_length=100)
     unable_marketwidget = models.BooleanField()
+
+    class Meta:
+        db_table = "Widget"
