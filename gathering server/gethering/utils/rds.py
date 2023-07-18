@@ -4,11 +4,13 @@ import pymysql
 class Database():
     def __init__(self):
         self.db = pymysql.connect(host='127.0.0.1', # assign your rds address
-                                user='root', # assign your id
-                                password='2264', # assign your password
-                                db='upbit_kor',
+                                user='screener', # assign your id
+                                password='screener', # assign your password
+                                db='screener',
                                 port=3306,
-                                charset='utf8')
+                                charset='utf8',
+                                autocommit = True
+        )
 
         self.cursor = self.db.cursor(pymysql.cursors.DictCursor)
 

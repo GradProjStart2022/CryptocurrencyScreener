@@ -5,8 +5,10 @@ import sqlite3
 import schedule
 import tqdm
 import logging
-
+import talib.abstract as ta
 import _upbit
+from datetime import datetime, timedelta
+
 
 logger = logging.getLogger('gathering')
 
@@ -135,6 +137,7 @@ class Upbit_Gathering():
                                'low_price': 'low',
                                'trade_price': 'close',
                                'candle_acc_trade_volume': 'volume'}, inplace=True)
+            close_price = df['close'].values
 
             result = df[['date', 'open', 'high', 'low', 'close', 'volume']]
 
@@ -220,7 +223,7 @@ class Upbit_Gathering():
                             if self.interval == '1w' or self.interval == '1M':
                                 if row['date'] in local_db_df['date'].to_list():
                                     update_sql = f"""UPDATE KRW_{name}
-                                                SET open='{row['open']}', high='{row['high']}', low='{row['low']}', close='{row['close']}', volume='{row['volume']}', rsi='{row['rsi']}'
+                                                SET open='{row['open']}', high='{row['high']}', low='{row['low']}', close='{row['close']}', volume='{row['volume']}'
                                                 WHERE date='{local_db_df.iloc[0]['date']}';"""
 
                                     self.cursor.execute(update_sql)
@@ -229,7 +232,7 @@ class Upbit_Gathering():
                                 else:
                                     insert_sql = f"""
                                                 insert into KRW_{name}
-                                                values ('{row['date']}','{row['open']}','{row['high']}','{row['low']}','{row['close']}','{row['volume']}','{row['rsi']}')
+                                                values ('{row['date']}','{row['open']}','{row['high']}','{row['low']}','{row['close']}','{row['volume']}'
                                                 """
                                     self.cursor.execute(insert_sql)
                                     self.con.commit()
@@ -263,7 +266,7 @@ class Upbit_Gathering():
 
             except DatabaseError:
                 self.cursor.execute(
-                    f"CREATE TABLE KRW_{name}(date text, open float, high float, low float, close float, volume float, rsi float)")
+                    f"CREATE TABLE KRW_{name}(date text, open float, high float, low float, close float, volume float)")
 
                 result = newcoin_gathering(name, end_date)
 
@@ -272,3 +275,14 @@ class Upbit_Gathering():
 
             result['data'] = result['data'].iloc[::-1]
             result['data'].to_sql(f'KRW_{name}', self.con, if_exists='append', index=False)
+if __name__ == "__main__":
+    # 현재 날짜
+    now = datetime.now()
+
+    # 1년 전 날짜
+    one_year_ago = now - timedelta(days=365)
+
+    # 1년 전 날짜를 문자열로 변환 (YYYY-MM-DD 형식)
+    end_date = one_year_ago.strftime('%Y-%m-%d')
+    obj = Upbit_Gathering('KRW', '30min')
+    obj.gathering(end_date)

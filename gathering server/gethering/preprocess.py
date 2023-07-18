@@ -13,8 +13,8 @@ import utils.rds as rds
 
 logger = logging.getLogger('preprocess')
 
-db_data = 'mysql+pymysql://' + 'admin' + ':' + 'id' + '@' + 'address' + ':3306/' \
-          + 'password' + '?charset=utf8'
+db_data = 'mysql+pymysql://' + 'root' + ':' + 'upbit_kor' + '@' + '127.0.0.1' + ':3306/' \
+          + '2264' + '?charset=utf8'
 engine = create_engine(db_data)
 
 RDS = rds.Database()
@@ -202,14 +202,12 @@ class CoinPreProcess():
 
         for i in tq_range:
             name = table_name.iloc[i]['name']
-            print(name)
 
             tq_range.set_description(f"{interval} {name} 전처리")
 
             new_data = list()
 
             table_sql = f'''select id from upbit_kor.SYMBOLS where ticker = '{name[4:]}';'''
-
             id = RDS.executeOne(table_sql)
 
             # rds에 없는 종목
@@ -218,199 +216,6 @@ class CoinPreProcess():
 
             local_sql = f'''select date, open, high, low, close, volume from {name};'''
 
-            if self.check_interval == 'min':
-                rds_interval = f'{self.interval}M'
-            elif self.check_interval == 'day':
-                rds_interval = f'{self.interval}D'
-            elif self.check_interval == 'week':
-                rds_interval = f'{self.interval}W'
-            elif self.check_interval == 'month':
-                rds_interval = 'MONTH'
-
-            rds_sql = f"""select * from UPBIT_SPOT_KRW_{rds_interval} where id = '{id['id']}' order by cast(TIMESTAMP as unsigned) desc LIMIT 10;"""
-
-            local_db_df = pd.read_sql(local_sql, self.con, index_col=None)
-            rds_df = pd.read_sql(rds_sql, RDS.db, index_col=None)
-
-            '''
-            rds_df의 마지막 row의 시간이 db_df의 어디에 속하는지 확인필요, local_db_df date(int(YYYYMMDDHHMM)), rds_df(timestampUTC)
-
-            local_df 보다 rds_df가 더 최신일 수 있음 데이터를 채워 넣기 때문에
-             -> local_df timestamp < rds_df timestamp 이면 continue
-
-            그 후에 전처리 -> DB 업로드
-            '''
-            try:
-                # 주봉은 매일 실행 시 해당 주 동안에는 동일한 date에서 가격만 변경됨
-                # 같은 날짜에 update 처리
-                if interval == 'week' or interval == 'month':
-                    for idx, row in local_db_df.loc[local_db_df['date'][local_db_df['date'].isin([
-                                                                                                     datetime.datetime.utcfromtimestamp(
-                                                                                                             int(
-                                                                                                                     rds_df.iloc[
-                                                                                                                         0][
-                                                                                                                         'TIMESTAMP'])).strftime(
-                                                                                                             "%Y-%m-%dT%H:%M:%S")])].index[0]:].iterrows():
-                        if row['date'] in local_db_df['date'].to_list():
-                            update_sql = f"""
-                                        update UPBIT_SPOT_KRW_{rds_interval}
-                                        set OPEN='{row['open']}',HIGH='{row['high']}',LOW='{row['low']}',CLOSE='{row['close']}',VOLUME='{row['volume']}'
-                                        where TIMESTAMP='{rds_df.iloc[0]['TIMESTAMP']}' and ID='{id['id']}';
-                                        """
-                            RDS.execute(update_sql)
-                            RDS.commit()
-
-                        else:
-                            insert_sql = f"""
-                                        insert into UPBIT_SPOT_KRW_{rds_interval}
-                                        values ('{calendar.timegm(datetime.datetime.strptime(row['date'], "%Y-%m-%dT%H:%M:%S").timetuple())}','{row['open']}','{row['high']}','{row['low']}','{row['close']}','{row['volume']}')
-                                        """
-                            self.cursor.execute(insert_sql)
-                            self.con.commit()
-
-                    continue
-
-                # local_time(string) -> timestamp
-                check_date_local = int(datetime.datetime.strftime(
-                    datetime.datetime.strptime(local_db_df['date'].iloc[-1], "%Y-%m-%dT%H:%M:%S"), "%Y%m%d%H%M"))
-
-                # rds_time -> int(YYYYMMDDHHMMSS)
-                check_date_rds = int(
-                    datetime.datetime.utcfromtimestamp(int(rds_df.iloc[0]['TIMESTAMP'])).strftime("%Y%m%d%H%M"))
-
-                # local db가 RDS DB보다 아직 최신 데이터가 아님
-                if check_date_local <= check_date_rds:
-                    continue
-
-                else:
-                    # rds_db는 데이터를 채워넣었기 때문에 다를 수도 있음
-                    # check_date 이후로 데이터를 가져와서 넣으면 됨
-                    # check_date 이후에 데이터가 없어서 비는 경우 발생함
-                    check_date, drop_check = self.check_new_date(local_db_df['date'], check_date_rds)
-
-                    local_db_df = \
-                        local_db_df.iloc[check_date:]  # 이것만 다시 전처리 후 업로드하면 됨
-
-            except IndexError:
-                drop_check = False
-
-            # 데이터 프레임 row을 돌면서 데이터가 있는지 확인
-            for idx1, row in local_db_df.iterrows():
-                try:
-                    curr_date = datetime.datetime.strptime(str(row['date']), "%Y-%m-%dT%H:%M:%S")
-                    next_date = datetime.datetime.strptime(str(local_db_df.loc[idx1 + 1, 'date']), "%Y-%m-%dT%H:%M:%S")
-
-                    # interval로 확인
-                    if self.check_interval == 'min':
-                        if next_date - curr_date == datetime.timedelta(minutes=self.interval):
-                            continue
-
-                        else:
-                            '''
-                            curr과 next가 같은 날인가
-                            -> Y curr~next 까지 데이터 채운다.
-                            '''
-                            # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
-
-                            for idx2 in range(self.get_interval(curr_date, next_date) - 1):
-                                new_data.append({'date': datetime.datetime.strftime(curr_date
-                                                                                    + datetime.timedelta(
-                                    minutes=(idx2 * self.interval) + self.interval), "%Y-%m-%dT%H:%M:%S"),
-                                                 'open': local_db_df.loc[idx1, 'open'],
-                                                 'high': local_db_df.loc[idx1, 'high'],
-                                                 'low': local_db_df.loc[idx1, 'low'],
-                                                 'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
-
-                    elif self.check_interval == 'day':
-                        if next_date - curr_date == datetime.timedelta(days=self.interval):
-                            continue
-
-                        else:
-                            '''
-                            curr과 next가 같은 날인가
-                            -> Y curr~next 까지 데이터 채운다.
-                            '''
-                            # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
-
-                            for idx2 in range(self.get_interval(curr_date, next_date) - 1):
-                                new_data.append({'date': datetime.datetime.strftime(curr_date
-                                                                                    + datetime.timedelta(days=idx2 + 1),
-                                                                                    "%Y-%m-%dT%H:%M:%S"),
-                                                 'open': local_db_df.loc[idx1, 'open'],
-                                                 'high': local_db_df.loc[idx1, 'high'],
-                                                 'low': local_db_df.loc[idx1, 'low'],
-                                                 'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
-
-                    elif self.check_interval == 'week':
-                        if next_date - curr_date == datetime.timedelta(weeks=self.interval):
-                            continue
-
-                        else:
-                            '''
-                            curr과 next가 같은 날인가
-                            -> Y curr~next 까지 데이터 채운다.
-                            '''
-                            # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
-
-                            for idx2 in range(self.get_interval(curr_date, next_date) - 1):
-                                new_data.append({'date': datetime.datetime.strftime(curr_date
-                                                                                    + datetime.timedelta(
-                                    weeks=idx2 + 1), "%Y-%m-%dT%H:%M:%S"),
-                                                 'open': local_db_df.loc[idx1, 'open'],
-                                                 'high': local_db_df.loc[idx1, 'high'],
-                                                 'low': local_db_df.loc[idx1, 'low'],
-                                                 'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
-
-                    elif self.check_interval == 'month':
-                        # interval로 확인
-                        if relativedelta(next_date, curr_date).months == 1:
-                            continue
-
-                        else:
-                            '''
-                            curr과 next가 같은 날인가
-                            -> Y curr~next 까지 데이터 채운다.
-                            '''
-                            # curr과 next가 같은 날이므로 curr~next까지 데이터를 채운다.
-                            delta = relativedelta(next_date, curr_date)  # 두 날짜의 차이 구하기
-                            result = 12 * delta.years + delta.months
-                            for idx3 in range(result - 1):
-                                N_next_day = curr_date + relativedelta(months=idx3 + 1)
-                                new_data.append({'date': N_next_day.strftime("%Y-%m-%dT%H:%M:%S"),
-                                                 'open': local_db_df.loc[idx1, 'open'],
-                                                 'high': local_db_df.loc[idx1, 'high'],
-                                                 'low': local_db_df.loc[idx1, 'low'],
-                                                 'close': local_db_df.loc[idx1, 'close'],
-                                                 'volume': 0})
-
-                except KeyError:
-                    pass
-
-                except Exception as e:
-                    logging.exception(e)
-
-            local_db_df = local_db_df.append(new_data, ignore_index=True)
-            local_db_df.sort_values(by='date', inplace=True)
-
-            if drop_check:
-                local_db_df = local_db_df.iloc[1:, :]
-
-            local_db_df['date'] = local_db_df['date'].apply(
-                lambda row: calendar.timegm(datetime.datetime.strptime(str(row), "%Y-%m-%dT%H:%M:%S").timetuple()))
-
-            local_db_df['id'] = id['id']
-            local_db_df.rename(columns={'date': 'timestamp'}, inplace=True)
-
-            # local_db_df.to_sql(f'UPBIT_SPOT_KRW_{rds_interval}',engine, if_exists='append', index=False)
-
-            del local_db_df
-            gc.collect()
-
-        RDS.db.close()
-        return
 
 
 if __name__ == "__main__":
