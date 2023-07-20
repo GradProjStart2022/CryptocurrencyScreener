@@ -8,6 +8,9 @@ import logging
 import talib.abstract as ta
 import _upbit
 from datetime import datetime, timedelta
+import datetime
+from datetime import datetime, timedelta
+
 
 
 logger = logging.getLogger('gathering')
@@ -36,7 +39,7 @@ class Upbit_Gathering():
             self.interval = '1M'
 
         self.api = _upbit.Upbit_Api()
-        self.con = sqlite3.connect(f"./test({interval}).db")
+        self.con = sqlite3.connect(f"./({interval}).db")
         self.cursor = self.con.cursor()
 
     def get_ticker_list(self):
@@ -137,7 +140,6 @@ class Upbit_Gathering():
                                'low_price': 'low',
                                'trade_price': 'close',
                                'candle_acc_trade_volume': 'volume'}, inplace=True)
-            close_price = df['close'].values
 
             result = df[['date', 'open', 'high', 'low', 'close', 'volume']]
 
@@ -146,7 +148,7 @@ class Upbit_Gathering():
         except Exception as e:
             print(e)
 
-    def gathering(self, end_date=''):
+    def gathering(self, end_date='', start_date=''):
         """
         UPbit KRW 코인 데이터 수집기
         DB에 저장한다.
@@ -154,26 +156,28 @@ class Upbit_Gathering():
         Parameters:
             end_date
                 수집 종료 날짜
-                defalut: '' 당일 의미
+                default: '' (current day)
+            start_date
+                수집 시작 날짜
+                default: one year before the current day
 
         return
-
         """
 
-        def to_utctime(end_date):
-            if end_date == '':
-                return end_date
+        def to_utctime(date):
+            if date == '':
+                return date
 
-            local_time = datetime.strptime(end_date, "%Y-%m-%d")
+            local_time = datetime.strptime(date, "%Y-%m-%d")
             utc_time = local_time - timedelta(hours=9)
 
             return utc_time.strftime("%Y-%m-%d %H:%M:%S")
 
-        def newcoin_gathering(name, end_date):
+        def newcoin_gathering(name, end_date, start_date):
             result = self.get_candle(ticker=name, to=to_utctime(end_date))
             to = result['data'].iloc[-1]['date'].replace('T', ' ')
 
-            while (True):
+            while True:
                 result2 = self.get_candle(ticker=name, to=to)
 
                 if result2['code'] == False:
@@ -184,6 +188,10 @@ class Upbit_Gathering():
 
                 to = result2['data'].iloc[-1]['date'].replace('T', ' ')
 
+                # Check if the start date is reached
+                if datetime.strptime(to[:10], "%Y-%m-%d") <= datetime.strptime(start_date, "%Y-%m-%d"):
+                    break
+
             return result
 
         ticker_df = self.get_ticker_list()
@@ -191,19 +199,34 @@ class Upbit_Gathering():
         tq_range = tqdm.trange(len(ticker_df['TICKER']), ncols=100)
 
         for i in tq_range:
-
             name = ticker_df.iloc[i]['TICKER']
             tq_range.set_description(f"{self.interval} {name} 수집")
 
             try:
-                local_sql = f'''select date, open, high, low, close, volume from KRW_{name} order by date desc limit 10;'''
+                # Check if the table exSSists
+                table_exists_sql = f"SELECT name FROM sqlite_master WHERE type='table' AND name='KRW_{name}';"
+                table_exists = self.con.execute(table_exists_sql).fetchone()
+
+                if not table_exists:
+                    # Create the table if it doesn't exist
+                    create_table_sql = f"""CREATE TABLE KRW_{name} (
+                        date TEXT,
+                        open FLOAT,
+                        high FLOAT,
+                        low FLOAT,
+                        close FLOAT,
+                        volume FLOAT
+                    );"""
+                    self.con.execute(create_table_sql)
+                    self.con.commit()
+
+                local_sql = f"SELECT date, open, high, low, close, volume FROM KRW_{name} ORDER BY date DESC LIMIT 10;"
                 local_db_df = pd.read_sql(local_sql, self.con, index_col=None)
 
                 if local_db_df.empty:
-                    result = newcoin_gathering(name=name, end_date=end_date)
+                    result = newcoin_gathering(name=name, end_date=end_date, start_date=start_date)
                     result['data'] = result['data'].iloc[::-1]
                     result['data'].to_sql(f'KRW_{name}', self.con, if_exists='append', index=False)
-
                     continue
 
                 last_time = local_db_df.iloc[0]['date']
@@ -214,7 +237,6 @@ class Upbit_Gathering():
                 if len(result['data']['date'][(result['data']['date'].isin([last_time]))]) != 0:
 
                     if self.interval == '1w' or self.interval == '1M':
-
                         for idx, row in result['data'].loc[
                                         :result['data']['date'][result['data']['date'].isin([last_time])].index[
                                             0]].iloc[::-1].iterrows():
@@ -222,19 +244,22 @@ class Upbit_Gathering():
                             # 같은 날짜에 update 처리
                             if self.interval == '1w' or self.interval == '1M':
                                 if row['date'] in local_db_df['date'].to_list():
+                                    # Update existing row
                                     update_sql = f"""UPDATE KRW_{name}
-                                                SET open='{row['open']}', high='{row['high']}', low='{row['low']}', close='{row['close']}', volume='{row['volume']}'
-                                                WHERE date='{local_db_df.iloc[0]['date']}';"""
+                                                    SET open='{row['open']}', high='{row['high']}', low='{row['low']}',
+                                                    close='{row['close']}', volume='{row['volume']}'
+                                                    WHERE date='{local_db_df.iloc[0]['date']}';"""
 
-                                    self.cursor.execute(update_sql)
+                                    self.con.execute(update_sql)
                                     self.con.commit()
 
                                 else:
+                                    # Insert new row
                                     insert_sql = f"""
-                                                insert into KRW_{name}
-                                                values ('{row['date']}','{row['open']}','{row['high']}','{row['low']}','{row['close']}','{row['volume']}'
-                                                """
-                                    self.cursor.execute(insert_sql)
+                                                    INSERT INTO KRW_{name}
+                                                    VALUES ('{row['date']}', '{row['open']}', '{row['high']}',
+                                                    '{row['low']}', '{row['close']}', '{row['volume']}');"""
+                                    self.con.execute(insert_sql)
                                     self.con.commit()
 
                         continue
@@ -243,46 +268,35 @@ class Upbit_Gathering():
                         (result['data'].loc[
                          :result['data']['date'][result['data']['date'].isin([last_time])].index[0] - 1].iloc[
                          ::-1]).to_sql(f'KRW_{name}', self.con, if_exists='append', index=False)
-
                         continue
 
                 else:
-                    while (True):
+                    while True:
                         result2 = self.get_candle(ticker=name, to=to)
 
                         check_date = result2['data']['date'][(result2['data']['date'].isin([last_time]))]
 
                         if len(check_date) == 0:
-                            # 새로 갱신하는 데이터프레임에 local db 마지막 인덱스 없음 DB 갱신
+                            # New DataFrame does not have the last index from the local DB, update DB
                             result['data'] = result['data'].append(result2['data'], ignore_index=True)
 
                         else:
-                            # 새로 갱신하는 데이터프레임에 local db 마지막 인덱스가 있는지 확인
+                            # Check if the last index from the local DB exists in the new DataFrame
                             last_idx = check_date.index[0]
                             result['data'] = result['data'].append(result2['data'].iloc[:last_idx], ignore_index=True)
                             break
 
                         to = result2['data'].iloc[-1]['date'].replace('T', ' ')
 
-            except DatabaseError:
-                self.cursor.execute(
-                    f"CREATE TABLE KRW_{name}(date text, open float, high float, low float, close float, volume float)")
-
-                result = newcoin_gathering(name, end_date)
-
             except Exception as e:
-                logging.exception(e)
+                print(f"{self.interval} {name} Error: {str(e)}")
+                continue
 
             result['data'] = result['data'].iloc[::-1]
             result['data'].to_sql(f'KRW_{name}', self.con, if_exists='append', index=False)
+
+
 if __name__ == "__main__":
-    # 현재 날짜
-    now = datetime.now()
-
-    # 1년 전 날짜
-    one_year_ago = now - timedelta(days=365)
-
-    # 1년 전 날짜를 문자열로 변환 (YYYY-MM-DD 형식)
-    end_date = one_year_ago.strftime('%Y-%m-%d')
-    obj = Upbit_Gathering('KRW', '30min')
-    obj.gathering(end_date)
+    obj = Upbit_Gathering('KRW', '240min')
+    start_date = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
+    obj.gathering(start_date=start_date)
