@@ -139,9 +139,11 @@ for symbol_id, ticker, table in zip(df['symbol_id'], df['ticker'], df['table_nam
     rows.columns = [col.upper() if "_" not in col else col for col in rows.columns]
     rows.replace([np.inf, -np.inf], np.nan, inplace=True)
     try:
+
         rows.to_sql('upbit_spot_krw_30m', con=engine, if_exists='append', index=False, chunksize=10000)
         print(f"{table} to_sql success")
     except Exception as e:
+        
         print(f"{table} to_sql failed: {str(e)}")
 
 
