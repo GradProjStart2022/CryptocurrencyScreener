@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { setBookmark } from "../redux/store.js";
 
-const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
+const ATTENTION_URL = `${process.env.REACT_APP_API_ROOT}/users/api/attention/`;
 
 /**
  * 트레이딩뷰 심볼 이름을 받아

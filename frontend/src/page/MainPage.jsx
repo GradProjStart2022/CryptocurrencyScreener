@@ -18,8 +18,8 @@ import LoginInfo from "../component/LoginInfo.jsx";
 import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 
-const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
-const CHART_REDIRECT_URL = "http://localhost:3000/chart/tdview_widget";
+const ATTENTION_URL = `${process.env.REACT_APP_API_ROOT}/users/api/attention/`;
+const CHART_REDIRECT_URL = `${process.env.REACT_APP_HOME_URL}/chart/tdview_widget`;
 
 const reqLoginCss = css({
   background: "rgba(34,34,34,0.2)",

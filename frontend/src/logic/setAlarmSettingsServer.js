@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const FILTER_SERVER_URL = "http://localhost:8000/filter/api/filter/";
+const FILTER_SERVER_URL = `${process.env.REACT_APP_API_ROOT}/filter/api/filter/`;
 
 /**
  * 필터에 대해 변경된 알람 설정

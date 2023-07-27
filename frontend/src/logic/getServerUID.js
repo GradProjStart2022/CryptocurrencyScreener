@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setUID } from "../redux/store.js";
 
-const SERVER_GET_UID = "http://127.0.0.1:8000/users/api/list/";
+const SERVER_GET_UID = `${process.env.REACT_APP_API_ROOT}/users/api/list/`;
 
 /**
  * 사용자 이메일 주소 받아서 UID 받는 함수

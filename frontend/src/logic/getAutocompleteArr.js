@@ -1,8 +1,7 @@
 import axios from "axios";
 import { searchConstValue, searchObjValue } from "../model/search_const.js";
 
-const SERVER_ALL_JONGMOK_ARRAY_URL =
-  "http://127.0.0.1:8000/widget/search/?s=all";
+const SERVER_ALL_JONGMOK_ARRAY_URL = `${process.env.REACT_APP_API_ROOT}/widget/search/?s=all`;
 
 /**
  * 서버에서 전체 암호화폐 목록을 받아와
@@ -13,6 +12,14 @@ const SERVER_ALL_JONGMOK_ARRAY_URL =
  * @param 없음
  */
 const getSearchComplete = async () => {
+  console.log(
+    "process.env.REACT_APP_API_ROOT :>> ",
+    process.env.REACT_APP_API_ROOT
+  );
+  console.log(
+    "SERVER_ALL_JONGMOK_ARRAY_URL :>> ",
+    SERVER_ALL_JONGMOK_ARRAY_URL
+  );
   if (searchObjValue.length === 0) {
     axios
       .get(SERVER_ALL_JONGMOK_ARRAY_URL)

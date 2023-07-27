@@ -14,7 +14,7 @@ import SearchBar from "../component/SearchBar.jsx";
 import SideNavBar from "../component/SideNavbar.jsx";
 import BookmarkCoin from "../component/BookmarkCoin.jsx";
 
-const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
+const ATTENTION_URL = `${process.env.REACT_APP_API_ROOT}/users/api/attention/`;
 
 const BookmarkPage = () => {
   const navigate = useNavigate();

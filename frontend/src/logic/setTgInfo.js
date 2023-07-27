@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const TELEGRAM_SERVER_URL = "http://localhost:8000/users/api/telegram/";
+const TELEGRAM_SERVER_URL = `${process.env.REACT_APP_API_ROOT}/users/api/telegram/`;
 
 const setTgInfo = async (uid, token, bot_id) => {
   try {

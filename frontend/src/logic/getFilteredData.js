@@ -1,7 +1,7 @@
 import axios from "axios";
 import { isEmpty } from "lodash-es";
 
-const SCREEN_PRICE_URL = "http://127.0.0.1:8000/price/screening/";
+const SCREEN_PRICE_URL = `${process.env.REACT_APP_API_ROOT}/price/screening/`;
 
 /**
  * 서버에서 필터링된 종목 데이터 받아

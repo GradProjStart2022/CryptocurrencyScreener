@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setUserFilterList } from "../redux/store.js";
 
-const FILTER_API_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_API_URL = `${process.env.REACT_APP_API_ROOT}/filter/api/filter/`;
 
 /**
  * 사용자 이메일 받아서 서버에서 필터 목록 가져온 뒤에 redux store에 저장하는 함수
