@@ -1,7 +1,7 @@
 import axios from "axios";
 import { cloneDeep, isEmpty } from "lodash-es";
 
-const TOP5_SERVER_URL = "http://localhost:8000/filter/top5/";
+const TOP5_SERVER_URL = `${process.env.REACT_APP_API_ROOT}/filter/top5/`;
 
 /**
  * TOP5 지표 가져오는 로직

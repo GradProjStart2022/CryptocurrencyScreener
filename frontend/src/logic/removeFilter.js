@@ -2,7 +2,7 @@ import axios from "axios";
 import getUserFilter from "./getUserFilterFromServer.js";
 import getUserFilterSettings from "./getUserFilterSettings.js";
 
-const FILTER_API_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_API_URL = `${process.env.REACT_APP_API_ROOT}/filter/api/filter/`;
 
 /**
  * 필터 삭제 후 내부 필터 데이터 갱신하는 함수

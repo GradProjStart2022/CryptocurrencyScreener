@@ -19,7 +19,7 @@ import kakao_login_img from "../img/kakao_login_medium_wide.png";
 /// dotenv를 통해 기기별 환경변수에서 API 키 가져옴
 /// 카카오 로그인 상수 시작: REST API KEY/리다이렉트 URL/카카오 로그인 사이트 URL
 const CLIENT_ID = "929a5207f19097a18ebfa095a688914e";
-const REDIRECT_URI = "http://127.0.0.1:3000/users/kakao/callback/";
+const REDIRECT_URI = `${process.env.REACT_APP_HOME_URL}/users/kakao/callback/`;
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 /// 카카오 로그인 상수 끝
@@ -30,8 +30,7 @@ function Copyright(props) {
       variant="body2"
       color="text.secondary"
       align="center"
-      {...props}
-    >
+      {...props}>
       Copyright ©
       <Link color="inherit" href="https://ce.tukorea.ac.kr/">
         한국공학대학교 컴퓨터공학부 S2-6
@@ -67,8 +66,7 @@ const SigninPage = (arg) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -79,8 +77,7 @@ const SigninPage = (arg) => {
             component="form"
             onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 1 }}
-          >
+            sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -109,8 +106,7 @@ const SigninPage = (arg) => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+              sx={{ mt: 3, mb: 2 }}>
               로그인
             </Button>
           </Box>
@@ -121,8 +117,7 @@ const SigninPage = (arg) => {
           {/* 구글 로그인 버튼: 링크를 이동해 백엔드 로직을 이용해 로그인 수행 (현재 미작동) */}
           <GoogleButton
             onClick={() => {
-              window.location.href =
-                "http://localhost:3000/users/accounts/google/";
+              window.location.href = `${process.env.REACT_APP_HOME_URL}/users/accounts/google/`;
             }}
           />
           <br />

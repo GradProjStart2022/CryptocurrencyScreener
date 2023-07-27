@@ -1,7 +1,7 @@
 import axios from "axios";
 import getUserFilter from "./getUserFilterFromServer";
 
-const FILTER_SERVER_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_SERVER_URL = `${process.env.REACT_APP_API_ROOT}/filter/api/filter/`;
 
 /**
  * 필터 기본 정보 수정 함수

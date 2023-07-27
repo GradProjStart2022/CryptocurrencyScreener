@@ -1,7 +1,7 @@
 import axios from "axios";
 import { addBookmark } from "../redux/store.js";
 
-const ATTENTION_URL = "http://localhost:8000/users/api/attention/";
+const ATTENTION_URL = `${process.env.REACT_APP_API_ROOT}/users/api/attention/`;
 
 /**
  * 사용자가 누른 암호화폐를 서버 즐겨찾기에 추가하는 함수

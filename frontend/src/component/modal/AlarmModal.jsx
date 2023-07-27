@@ -63,13 +63,13 @@ const AlarmModal = (props) => {
    * 각 알람에 대해 읽음 처리하고 새 알람 상태 받아오는 콜백 로직
    * @param {number} alarm_id 알람ID
    */
-  const handleDelete = (alarm_id) => {
+  const handleDelete = async (alarm_id) => {
     let rslt = false;
     do {
-      rslt = readAlarm(alarm_id);
+      rslt = await readAlarm(alarm_id);
     } while (!rslt);
     do {
-      rslt = getAlarm(uid, setAlarmState);
+      rslt = await getAlarm(uid, setAlarmState);
     } while (!rslt);
   };
 

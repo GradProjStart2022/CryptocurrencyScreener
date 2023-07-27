@@ -2,7 +2,7 @@ import axios from "axios";
 import { isNil } from "lodash-es";
 import getUserFilter from "./getUserFilterFromServer.js";
 
-const FILTER_INIT_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_INIT_URL = `${process.env.REACT_APP_API_ROOT}/filter/api/filter/`;
 
 /**
  * 프론트에 최적화된 필터 정보 object 배열에서 필요한 요소만 가져와서

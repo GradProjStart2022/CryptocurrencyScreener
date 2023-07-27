@@ -3,7 +3,7 @@ import { isEmpty, isNil } from "lodash-es";
 
 import { addUserFilterData } from "../redux/store.js";
 
-const FILTER_SERVER_URL = "http://127.0.0.1:8000/filter/api/filter/";
+const FILTER_SERVER_URL = `${process.env.REACT_APP_API_ROOT}/filter/api/filter/`;
 const FILTER_SERVER_SETTINGS_URL = "/settings/";
 
 /**

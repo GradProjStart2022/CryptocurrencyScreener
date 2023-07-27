@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const ALARM_URL = "http://localhost:8000/alarm/";
+const ALARM_URL = `${process.env.REACT_APP_API_ROOT}/alarm/`;
 
 /**
  * 서버에서 알람 목록 받아오는 함수
