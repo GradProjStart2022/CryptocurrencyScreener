@@ -14,12 +14,22 @@ from price.models import Symbol, Price240m, Price30m
 
 @api_view(["GET"])
 def screening(request):
+    """
+    @param request:  filter_pk 필터기본키 table 분봉 테이블 date_range 스크리닝할 날짜단위
+    @return: 아래 data 형태의 json 반환
+    """
     filter_pk = request.GET.get("id")
     table = request.GET.get("table")  # 30m, 60m, 240m, 1d
     date_range = int(request.GET.get("date_range"))  # 일 수 기준
 
     try:
+        """
+        create_query는 스크리닝하는 함수
+        결과로 조건을 만족하는 symbol list를 반환
+        filtered_symbol을 이용하여 가장 최근 가격 데이터를 가져옴
+        """
         filtered_symbol = create_query(filter_pk, table, date_range)
+        print(filtered_symbol)
         prices = Price30m.objects.filter(symbol_id__in=filtered_symbol).filter(
             DATE=Subquery(
                 Price30m.objects.filter(symbol_id=OuterRef("symbol_id"))
