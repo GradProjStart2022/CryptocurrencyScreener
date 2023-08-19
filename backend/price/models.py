@@ -2,6 +2,10 @@ from django.db import models
 
 # Create your models here.
 class Symbol(models.Model):
+    """
+    Symbol DB Table
+    """
+
     symbol_id = models.AutoField(primary_key=True, name="symbol_id")
     TICKER = models.CharField(max_length=255)
     NAME_EN = models.CharField(max_length=255)
@@ -12,6 +16,10 @@ class Symbol(models.Model):
 
 
 class Price30m(models.Model):
+    """
+    Price30m DB Table (30분봉)
+    """
+
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
@@ -112,6 +120,10 @@ class Price30m(models.Model):
 
 
 class Price60m(models.Model):
+    """
+    Price60m DB Table (60분봉)
+    """
+
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
@@ -212,6 +224,10 @@ class Price60m(models.Model):
 
 
 class Price240m(models.Model):
+    """
+    Price240m DB Table (4시간봉)
+    """
+
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
@@ -312,6 +328,10 @@ class Price240m(models.Model):
 
 
 class Price1d(models.Model):
+    """
+    Price1d DB Table (일봉)
+    """
+
     # id = models.AutoField(primary_key=True, name="id")
     symbol = models.ForeignKey(
         Symbol,
