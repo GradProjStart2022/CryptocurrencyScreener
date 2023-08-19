@@ -6,6 +6,10 @@ from django.shortcuts import get_object_or_404
 
 # Create your models here.
 class Alarm(models.Model):
+    """
+    Alarm DB 테이블
+    """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="alarms")
     message = models.CharField(max_length=255)
     is_read = models.BooleanField(default=False)
@@ -14,6 +18,14 @@ class Alarm(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
+        """
+        알람이 저장될 때 만약에 텔레그램 알람이 활성화 되어있으면 DB에 저장하면서 텔레그램으로 알람 전달
+        @param force_insert: override
+        @param force_update: override
+        @param using: override
+        @param update_fields: override
+        @return: None
+        """
         try:
             telegram = Telegram.objects.get(user=self.user)
             token = telegram.Token
