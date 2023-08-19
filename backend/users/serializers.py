@@ -14,12 +14,20 @@ class CustomTokenRefreshSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    User Table 중 일부를 JSON으로 변환
+    """
+
     class Meta:
         model = User
         fields = ["id", "email"]
 
 
 class AttentionSerializer(serializers.ModelSerializer):
+    """
+    관심종목 Table 중 일부를 JSON으로 변환
+    """
+
     class Meta:
         model = Attention
         fields = ["id", "user", "cryptoname", "symbol"]
@@ -32,6 +40,10 @@ class AttentionSerializer(serializers.ModelSerializer):
 
 
 class TelegramSerializer(serializers.ModelSerializer):
+    """
+    텔레그램 Table을 JSON으로 변환
+    """
+
     class Meta:
         model = Telegram
         fields = "__all__"

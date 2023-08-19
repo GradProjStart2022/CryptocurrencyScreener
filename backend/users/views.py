@@ -29,12 +29,18 @@ KAKAO_CALLBACK_URI = BASE_URL + "users/kakao/callback/"
 # state = getattr(settings, "STATE")
 
 
+# Test
 def example(request):
     return render(request, "users/logintest.html")
 
 
 # 프론트에서 진행
 def kakao_login(request):
+    """
+    백엔드에서 카카오 로그인을 테스트 하기 위한 API
+    @param request:
+    @return:
+    """
     rest_api_key = getattr(settings, "KAKAO_REST_API_KEY")
     return redirect(
         f"https://kauth.kakao.com/oauth/authorize?client_id={rest_api_key}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
@@ -48,6 +54,11 @@ def kakao_login(request):
 
 
 def kakao_callback(request):
+    """
+    카카오 로그인 API 최적화 필요
+    @param request:
+    @return:
+    """
     rest_api_key = getattr(settings, "KAKAO_REST_API_KEY")
     code = request.GET.get("code")
     redirect_uri = KAKAO_CALLBACK_URI
@@ -150,6 +161,11 @@ class KakaoLogin(SocialLoginView):
 
 @api_view(["GET"])
 def list(request):
+    """
+    email로 User pk를 조회하는 API
+    @param request: email을 get 방식으로 보내야함
+    @return: UserSerializer 참고
+    """
     email = request.GET.get("email")
     try:
         queryset = User.objects.get(email=email)
@@ -174,6 +190,10 @@ def list(request):
 
 
 class AttentionViewSet(ModelViewSet):
+    """
+    관심종목 CRUD API
+    """
+
     queryset = Attention.objects.all()
     serializer_class = AttentionSerializer
     # filter_backends = [SearchFilter]
@@ -181,6 +201,13 @@ class AttentionViewSet(ModelViewSet):
 
     # email 검색
     def list(self, request, *args, **kwargs):
+        """
+        사용자의 이메일로 관심종목을 조회하는 API
+        @param request: get방식으로 email 필요
+        @param args: override
+        @param kwargs: override
+        @return: AttentionSerializer 참고
+        """
         email = request.GET.get("email")
         try:
             qs = Attention.objects.filter(user__email=email)
@@ -193,5 +220,9 @@ class AttentionViewSet(ModelViewSet):
 
 
 class TelegramViewSet(ModelViewSet):
+    """
+    텔레그램 DB CRUD API
+    """
+
     queryset = Telegram.objects.all()
     serializer_class = TelegramSerializer
