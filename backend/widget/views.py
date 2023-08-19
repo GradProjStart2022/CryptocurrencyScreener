@@ -14,6 +14,12 @@ from widget.serializers import WidgetSerializer
 # Create your views here
 # TODO 위젯코드 자동화.
 def import_csv(request):
+    """
+    위젯 코드를 넣기 위한 API 함수
+    CSV 파일을 이용하여 데이터를 넣는다.
+    @param request: widget 코드가 담긴 CSV
+    @return: 위젯
+    """
     if request.method == "POST":
         csv_file = request.FILES["csv_file"]
         decoded_file = csv_file.read().decode("utf-8").splitlines()
@@ -38,6 +44,13 @@ def import_csv(request):
 
 @api_view(["GET"])
 def list(request):
+    """
+    위젯코드를 조회하는 API
+    all 인 경우 모든 위젯 코드의 정보를 JSON으로 return
+    한국어로 조회할 때 영어로 조회할 때를 따로 처리 후 해당 종목만 반환
+    @param request:
+    @return: Widget 테이블에서 해당되는 컬럼들을 반환
+    """
     search = request.GET.get("s")
     q = Widget.objects.all()
     try:

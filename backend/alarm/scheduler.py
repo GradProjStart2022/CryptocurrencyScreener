@@ -19,6 +19,13 @@ logger = logging.getLogger(__name__)
 
 
 def start_scheduler():
+    """
+    알람 검사하는 스케쥴러
+    create_alarm
+    30분, 1시간, 4시간, 1일으로 4개가 각자 돌아가면서 검사
+    서버 실행 시간 기준으로 작동
+    @return: None
+    """
     scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
 
     # scheduler.add_job(
@@ -81,6 +88,12 @@ def start_scheduler():
 
 
 def create_alarm(time):
+    """
+    알람을 생성하는 함수
+    이전에 스크리닝 했던 것과 비교하여 만약에 결과 다르다면 알람을 생성
+    @param time: 검사 시간
+    @return: None
+    """
     print("Run create_alarm'.")
     logger.info("Run create_alarm'.")
     filters = Filter.objects.filter(alarm=True).filter(time=time)
@@ -100,6 +113,14 @@ def create_alarm(time):
 
 
 def is_different(id: int) -> str:
+    """
+    이 전 스크리닝 결과를 저장하는 Previous Table에서
+    현재 스크리닝 결과와 비교하여 만약에 결과가 다르면 알람 메세지를 반환
+    알람 메시지는 새로 생긴 종목과 제거된 종목을 포함하여 생성
+    아니면 0을 반환
+    @param id: filter Table pk
+    @return: create_message의 결과 or 0
+    """
     switcher = {
         1: "1d",
         30: "30m",
@@ -126,6 +147,14 @@ def is_different(id: int) -> str:
 
 
 def create_message(n: int, name: str, new: Set[int], old: Set[int]) -> str:
+    """
+    알람 메시지를 생성하는 함수
+    @param n: 총 변경된 종목 수
+    @param name: 필터 이름
+    @param new: 새로운 종목
+    @param old: 제거된 종목
+    @return: 알람 메세지 문자열
+    """
     new_symbol = list(
         Symbol.objects.filter(symbol_id__in=new).values_list("NAME_KR", flat=True)
     )

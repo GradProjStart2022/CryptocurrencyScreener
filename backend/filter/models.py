@@ -13,14 +13,24 @@ from users.models import User
 
 
 class Filter(models.Model):
+    """
+    합성필터
+    Filter DB Table
+    """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="filters")
     name = models.CharField(max_length=100)
     alarm = models.BooleanField(default=False)
     expression = models.CharField(max_length=100, null=True)
     time = models.BigIntegerField(null=True)
 
-    # 최대 10개 저장
     def save(self, *args, **kwargs):
+        """
+        필터가 저장될 떄 알람이 활성화 되어있으면 스크리닝 결과 저장 및 필터가 최대 10개인지 체크하고 저장
+        @param args:
+        @param kwargs:
+        @return:
+        """
         if self.alarm:
             previous = Previous(
                 filter_id=self.id,
@@ -37,6 +47,11 @@ class Filter(models.Model):
 
 
 class Setting(models.Model):
+    """
+    단위필터
+    Setting DB Table
+    """
+
     filter = models.ForeignKey(
         Filter, on_delete=models.CASCADE, related_name="settings"
     )
@@ -53,6 +68,12 @@ class Setting(models.Model):
 
 
 class Previous(models.Model):
+    """
+    이전 스크리닝 결과를 저장하는 테이블
+    새로 최신화 할때마다 이전에 있었던 결과를 삭제
+    Previous DB 테이블
+    """
+
     filter = models.OneToOneField(
         Filter, on_delete=models.CASCADE, related_name="previous"
     )

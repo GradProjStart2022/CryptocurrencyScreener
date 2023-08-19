@@ -41,6 +41,10 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    """
+    User DB Table
+    """
+
     username = None
     # nickname = models.CharField(max_length=128, null=True, verbose_name="닉네임")
     email = models.EmailField(max_length=255, unique=True, verbose_name="사용자 이메일")
@@ -58,6 +62,10 @@ class User(AbstractUser):
 
 
 class Attention(models.Model):
+    """
+    관심종목 DB Table
+    """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="attentions")
     cryptoname = models.CharField(max_length=100)
     symbol = models.CharField(max_length=100)
@@ -68,8 +76,13 @@ class Attention(models.Model):
             field_values.append(str(getattr(self, field.name, "")))
         return " ".join(field_values)
 
-    # 최대 3개까지 저장
     def save(self, *args, **kwargs):
+        """
+        DB에 저장될 떄 최대 3개인지 체크하여 가장 먼저 저장된 것 부터 삭제
+        @param args:
+        @param kwargs:
+        @return:
+        """
         if Attention.objects.filter(user=self.user).count() == 3:
             objects_filter = Attention.objects.filter(user=self.user)
             objects_filter[0].delete()
@@ -81,6 +94,10 @@ class Attention(models.Model):
 
 
 class Telegram(models.Model):
+    """
+    텔레그램 API에 사용되는 정보들을 저장하는 Table
+    """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     Token = models.CharField(max_length=255, unique=True)
     Chat_Id = models.CharField(max_length=255)
