@@ -40,6 +40,7 @@ def screening(request):
         result = []
 
         for price in prices:
+            print(1)
             symbol = Symbol.objects.get(symbol_id=price.symbol_id)
             data = {
                 "name_kr": symbol.NAME_KR.encode("utf-8").decode("utf-8"),
