@@ -16,10 +16,21 @@ from users.models import User
 
 
 class FilterViewSet(ModelViewSet):
+    """
+    Filter DB CRUD API
+    """
+
     queryset = Filter.objects.all()
     serializer_class = FilterSerializer
 
     def list(self, request, *args, **kwargs):
+        """
+        이메일로 사용자의 필터들을 조회하는 API
+        @param request:
+        @param args:
+        @param kwargs:
+        @return: FilterSerializer 참고
+        """
         email = request.GET.get("email")
 
         try:
@@ -30,6 +41,11 @@ class FilterViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
+        """
+        user pk로 필터를 저장하는 API
+        @param serializer:
+        @return:
+        """
         user_id = self.request.POST.get("user_id")
         serializer.save(user_id=user_id)
         # name = self.request.POST.get("name")
@@ -38,10 +54,22 @@ class FilterViewSet(ModelViewSet):
 
 
 class SettingViewSet(ModelViewSet):
+    """
+    단위필터 API
+    """
+
     queryset = Setting.objects.all()
     serializer_class = SettingSerializer
 
     def list(self, request, *args, **kwargs):
+        """
+        다수의 단위필터를 반환하는 API
+        filter pk를 필요
+        @param request: filter pk
+        @param args:
+        @param kwargs:
+        @return: SettingSerializer 참고
+        """
         try:
             qs = Setting.objects.filter(filter_id=self.kwargs["filter_pk"])
         except Setting.DoesNotExist:
@@ -50,6 +78,13 @@ class SettingViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
+        """
+        단위필터를 저장하는 API
+        @param request:
+        @param args:
+        @param kwargs:
+        @return:
+        """
         data = request.data
         if isinstance(data, list):
             serializer = self.get_serializer(data=request.data, many=True)
@@ -78,6 +113,13 @@ class SettingViewSet(ModelViewSet):
 
     @action(methods=["patch"], detail=False)
     def multi_update(self, request, *args, **kwargs):
+        """
+        다수의 단위필터를 저장하는 API
+        @param request:
+        @param args:
+        @param kwargs:
+        @return:
+        """
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(
             instance=queryset, data=request.data, many=True, partial=True
@@ -90,6 +132,11 @@ class SettingViewSet(ModelViewSet):
 
 @api_view(["GET"])
 def top5(request):
+    """
+    모든 유저가 가장 많이 사용하는 기술지표 5가지를 반환하는 API
+    @param request:
+    @return:
+    """
     # top_five = Setting.objects.annotate(num_indicator=Count("indicator")).order_by(
     #     "-num_indicator"
     # )[:5]
@@ -117,6 +164,11 @@ def top5(request):
 
 @api_view(["GET"])
 def recommend(request):
+    """
+    함께 사용된 기술지표를 추천하는 API
+    @param request: ex {"indicators": ["RSI", "BB"]}
+    @return:
+    """
     # data = {"indicators": ["RSI", "BB"]}
     # indicators = data["indicators"]
     json_data = json.loads(request.body)

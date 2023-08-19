@@ -5,6 +5,10 @@ from users.models import User
 
 
 class FilterSerializer(serializers.ModelSerializer):
+    """
+    Filter DB to JSON
+    """
+
     user_id = serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -19,6 +23,10 @@ class FilterSerializer(serializers.ModelSerializer):
 
 
 class SettingListSerializer(serializers.ListSerializer):
+    """
+    다수의 단위필터를 저장하는 Serializer
+    """
+
     def update(self, instance, validated_data):
         # instance is the queryset of objects to update
         # validated_data is the data to update with
@@ -40,6 +48,10 @@ class SettingListSerializer(serializers.ListSerializer):
 
 
 class SettingSerializer(serializers.ModelSerializer):
+    """
+    Setting DB to JSON
+    """
+
     filter = FilterSerializer(read_only=True)
 
     class Meta:
@@ -67,6 +79,10 @@ class SettingSerializer(serializers.ModelSerializer):
 
 
 class RecommendSerializer(serializers.ModelSerializer):
+    """
+    추천하는 기술지표를 JSON으로 반환
+    """
+
     class Meta:
         model = Setting
         fields = ["indicator"]
