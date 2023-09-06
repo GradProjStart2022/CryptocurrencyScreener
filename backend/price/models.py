@@ -6,7 +6,7 @@ class Symbol(models.Model):
     Symbol DB Table
     """
 
-    symbol_id = models.AutoField(primary_key=True, name="symbol_id")
+    id = models.AutoField(primary_key=True, verbose_name="심볼 순번")
     TICKER = models.CharField(max_length=255)
     NAME_EN = models.CharField(max_length=255)
     NAME_KR = models.CharField(max_length=255)
@@ -20,13 +20,16 @@ class Price30m(models.Model):
     Price30m DB Table (30분봉)
     """
 
+    id = models.AutoField(primary_key=True, verbose_name="심볼 순번")
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
-        related_name="price30m_symbol",
+        null=True,
+        verbose_name="심볼 순번",
+        db_column="symbol_id",
     )
     TICKER = models.CharField(max_length=255)
-    DATE = models.DateTimeField(null=True)
+    DATE = models.DateTimeField(verbose_name="일시")
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -116,7 +119,8 @@ class Price30m(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_spot_krw_30m"
+        unique_together = (("TICKER", "DATE"),)
+        db_table = "upbit_spot_krw_30min"
 
 
 class Price60m(models.Model):
@@ -124,13 +128,16 @@ class Price60m(models.Model):
     Price60m DB Table (60분봉)
     """
 
+    id = models.AutoField(primary_key=True, verbose_name="심볼 순번")
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
-        related_name="price60m_symbol",
+        null=True,
+        verbose_name="심볼 순번",
+        db_column="symbol_id",
     )
     TICKER = models.CharField(max_length=255)
-    DATE = models.DateTimeField(null=True)
+    DATE = models.DateTimeField(verbose_name="일시")
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -220,7 +227,8 @@ class Price60m(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_spot_krw_60m"
+        unique_together = (("TICKER", "DATE"),)
+        db_table = "upbit_spot_krw_60min"
 
 
 class Price240m(models.Model):
@@ -228,13 +236,16 @@ class Price240m(models.Model):
     Price240m DB Table (4시간봉)
     """
 
+    id = models.AutoField(primary_key=True, verbose_name="심볼 순번")
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
-        related_name="price240m_symbol",
+        null=True,
+        verbose_name="심볼 순번",
+        db_column="symbol_id",
     )
     TICKER = models.CharField(max_length=255)
-    DATE = models.DateTimeField(null=True)
+    DATE = models.DateTimeField(verbose_name="일시")
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -324,7 +335,8 @@ class Price240m(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_spot_krw_240m"
+        unique_together = (("TICKER", "DATE"),)
+        db_table = "upbit_spot_krw_240min"
 
 
 class Price1d(models.Model):
@@ -333,13 +345,16 @@ class Price1d(models.Model):
     """
 
     # id = models.AutoField(primary_key=True, name="id")
+    id = models.AutoField(primary_key=True, verbose_name="심볼 순번")
     symbol = models.ForeignKey(
         Symbol,
         on_delete=models.CASCADE,
-        related_name="price1d_symbol",
+        null=True,
+        verbose_name="심볼 순번",
+        db_column="symbol_id",
     )
     TICKER = models.CharField(max_length=255)
-    DATE = models.DateTimeField(null=True)
+    DATE = models.DateTimeField(verbose_name="일시")
     OPEN = models.FloatField(null=True)
     HIGH = models.FloatField(null=True)
     LOW = models.FloatField(null=True)
@@ -429,4 +444,5 @@ class Price1d(models.Model):
     VR = models.FloatField(null=True)
 
     class Meta:
-        db_table = "upbit_spot_krw_1d"
+        unique_together = (("TICKER", "DATE"),)
+        db_table = "upbit_spot_krw_1day"
