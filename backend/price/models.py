@@ -445,4 +445,4 @@ class Price1d(models.Model):
 
     class Meta:
         unique_together = (("TICKER", "DATE"),)
-        db_table = "upbit_spot_krw_1day"
+        db_table = "upbit_spot_krw_day"
