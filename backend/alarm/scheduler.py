@@ -156,10 +156,10 @@ def create_message(n: int, name: str, new: Set[int], old: Set[int]) -> str:
     @return: 알람 메세지 문자열
     """
     new_symbol = list(
-        Symbol.objects.filter(symbol_id__in=new).values_list("NAME_KR", flat=True)
+        Symbol.objects.filter(id__in=new).values_list("NAME_KR", flat=True)
     )
     old_symbol = list(
-        Symbol.objects.filter(symbol_id__in=old).values_list("NAME_KR", flat=True)
+        Symbol.objects.filter(id__in=old).values_list("NAME_KR", flat=True)
     )
 
     return f"{name} 필터에서 새로운 종목 {new_symbol[:5]} 등 추가되고 {old_symbol[:5]} 등 종목이 제거 되었습니다. 총 {n}개의 종목이 변경되었습니다."

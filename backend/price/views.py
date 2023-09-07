@@ -37,10 +37,13 @@ def screening(request):
                 .values("DATE")[:1]
             )
         )
+
+
+
         result = []
 
         for price in prices:
-            symbol = Symbol.objects.get(symbol_id=price.symbol_id)
+            symbol = Symbol.objects.get(id=price.symbol_id)
             data = {
                 "name_kr": symbol.NAME_KR.encode("utf-8").decode("utf-8"),
                 "name_en": symbol.NAME_EN,
@@ -56,7 +59,7 @@ def screening(request):
         json_data = json.dumps(result, ensure_ascii=False).encode("utf-8")
     except:
         return JsonResponse({"error": "screening Error"})
-
+    print(json_data)
     return HttpResponse(json_data, content_type="application/json; charset=utf-8")
 
 

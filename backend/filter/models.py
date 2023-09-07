@@ -132,35 +132,35 @@ def create_query(filter_pk: int, table: str, range: int) -> List[str]:
             filtered_data = (
                 Price30m.objects.filter(DATE__gte=date_range)
                 .filter(q_obj)
-                .values_list("symbol__symbol_id", flat=True)
+                .values_list("symbol__id", flat=True)
                 .distinct()
             )
         elif table == "60m":
             filtered_data = (
                 Price60m.objects.filter(DATE__gte=date_range)
                 .filter(q_obj)
-                .values_list("symbol__symbol_id", flat=True)
+                .values_list("symbol__id", flat=True)
                 .distinct()
             )
         elif table == "240m":
             filtered_data = (
                 Price240m.objects.filter(DATE__gte=date_range)
                 .filter(q_obj)
-                .values_list("symbol__symbol_id", flat=True)
+                .values_list("symbol__id", flat=True)
                 .distinct()
             )
         elif table == "1d":
             filtered_data = (
                 Price1d.objects.filter(DATE__gte=date_range)
                 .filter(q_obj)
-                .values_list("symbol__symbol_id", flat=True)
+                .values_list("symbol__id", flat=True)
                 .distinct()
             )
         else:
             filtered_data = (
                 Price240m.objects.filter(DATE__gte=date_range)
                 .filter(q_obj)
-                .values_list("symbol__symbol_id", flat=True)
+                .values_list("symbol__id", flat=True)
                 .distinct()
             )
     except Exception as e:
