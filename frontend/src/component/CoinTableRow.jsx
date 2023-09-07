@@ -57,11 +57,11 @@ const CoinTableRow = (props) => {
       {/* 종목코드 -> ticker */}
       <TableCell align="right">{row.ticker}</TableCell>
       {/* 저가 -> 구 가격 */}
-      <TableCell align="right">{row.LOW.toLocaleString()}</TableCell>
+      {/* <TableCell align="right">{row.LOW.toLocaleString()}</TableCell>
       {/* 고가 -> 구 전일대비 */}
-      <TableCell align="right">{row.HIGH.toLocaleString()}</TableCell>
+      {/* <TableCell align="right">{row.HIGH.toLocaleString()}</TableCell> */}
       {/* 거래량 -> 구 등락률 */}
-      <TableCell align="right">{row.VOLUME.toLocaleString()}</TableCell>
+      {/* <TableCell align="right">{row.VOLUME.toLocaleString()}</TableCell> */}
     </TableRow>
   );
 };

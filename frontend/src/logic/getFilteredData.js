@@ -71,6 +71,9 @@ const getFilteredData = async (
         symbol_ids.push(elem.symbol_id);
         price_data.push({
           id: index,
+          LOW: -1,
+          HIGH: -1,
+          VOLUME: -1,
           ...elem,
         });
       });
