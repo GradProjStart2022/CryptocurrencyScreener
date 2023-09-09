@@ -30,29 +30,28 @@ def screening(request):
         """
         filtered_symbol = create_query(filter_pk, table, date_range)
         print(filtered_symbol)
-        prices = Price30m.objects.filter(symbol_id__in=filtered_symbol).filter(
-            DATE=Subquery(
-                Price30m.objects.filter(symbol_id=OuterRef("symbol_id"))
-                .order_by("-DATE")
-                .values("DATE")[:1]
-            )
-        )
 
-
+        # prices = Price30m.objects.filter(symbol_id__in=filtered_symbol).filter(
+        #     DATE=Subquery(
+        #         Price30m.objects.filter(symbol_id=OuterRef("symbol_id"))
+        #         .order_by("-DATE")
+        #         .values("DATE")[:1]
+        #     )
+        # )
 
         result = []
 
-        for price in prices:
-            symbol = Symbol.objects.get(id=price.symbol_id)
+        for pk in filtered_symbol:
+            symbol = Symbol.objects.get(id=pk)
             data = {
                 "name_kr": symbol.NAME_KR.encode("utf-8").decode("utf-8"),
                 "name_en": symbol.NAME_EN,
                 "ticker": symbol.TICKER,
-                "symbol_id": price.symbol_id,
-                "timestamp": price.DATE.isoformat(),
-                "LOW": price.LOW,
-                "HIGH": price.HIGH,
-                "VOLUME": price.VOLUME,
+                "symbol_id": pk,
+                "timestamp": 0,
+                "LOW": 0,
+                "HIGH": 0,
+                "VOLUME": 0,
             }
             result.append(data)
 
