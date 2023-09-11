@@ -2,28 +2,28 @@ version: "3.2"
 services:
   front-web:
     restart: always
-    command: npm start
+    # command: npm start
     container_name: front-web
     build:
       context: ./frontend/
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     stdin_open: true
     networks:
       - app_network
 
   frontend-nginx:
-#    image: nginx:latest
+    #    image: nginx:latest
     container_name: frontend-nginx
     build:
       context: ./frontend/nginx/.
       dockerfile: Dockerfile
     ports:
       - "80:80"
-#    volumes:
-#      - ./nginx:/etc/nginx/conf.d
-#      - ./static:/staticfiles
+    #    volumes:
+    #      - ./nginx:/etc/nginx/conf.d
+    #      - ./static:/staticfiles
     depends_on:
       - front-web
     networks:
@@ -44,7 +44,7 @@ services:
       - app_network
 
   backend-nginx:
-#    image: nginx:latest
+    #    image: nginx:latest
     container_name: backend-nginx
     build:
       context: ./backend/nginx/.
@@ -52,7 +52,7 @@ services:
     ports:
       - "8000:8000/tcp"
     volumes:
-#      - ./nginx:/nginx/defalut.conf
+      #      - ./nginx:/nginx/defalut.conf
       - ./static:/staticfiles
     depends_on:
       - back-web
@@ -62,4 +62,3 @@ services:
 networks:
   app_network:
     driver: bridge
-
