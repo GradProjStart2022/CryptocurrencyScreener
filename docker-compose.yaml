@@ -1,31 +1,35 @@
 version: "3.2"
 services:
-  front-web:
-    restart: always
-    # command: npm start
-    container_name: front-web
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    # ports:
-    #   - "3000:3000"
-    stdin_open: true
-    networks:
-      - app_network
+  # front-web:
+  #   restart: always
+  #   command: npm start
+  #   container_name: front-web
+  #   build:
+  #     context: ./frontend/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   stdin_open: true
+  #   networks:
+  #     - app_network
 
   frontend-nginx:
     #    image: nginx:latest
     container_name: frontend-nginx
     build:
-      context: ./frontend/nginx/.
+      # context: ./frontend/nginx/.
+      context: ./frontend/
       dockerfile: Dockerfile
+    command: nginx -g "daemon off;"
     ports:
-      - "80:80"
+      - "3000:80"
+    expose:
+      - "80"
     #    volumes:
     #      - ./nginx:/etc/nginx/conf.d
     #      - ./static:/staticfiles
-    depends_on:
-      - front-web
+    # depends_on:
+    #   - front-web
     networks:
       - app_network
 
