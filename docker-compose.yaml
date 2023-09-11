@@ -1,43 +1,67 @@
 version: "3.2"
 services:
-  frontend:
+  front-web:
     restart: always
     command: npm start
-    container_name: frontend
+    container_name: front-web
     build:
       context: ./frontend/
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     stdin_open: true
+    networks:
+      - frontend_network
+
   frontend-nginx:
-    image: nginx:latest
+#    image: nginx:latest
     container_name: frontend-nginx
+    build:
+      context: ./frontend/nginx/.
+      dockerfile: Dockerfile
     ports:
-      - "80:80/tcp"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./static:/staticfiles
+      - "80:80"
+#    volumes:
+#      - ./nginx:/etc/nginx/conf.d
+#      - ./static:/staticfiles
     depends_on:
-      - frontend
-  backend:
+      - front-web
+    networks:
+      - frontend_network
+
+  back-web:
     build:
       context: ./backend/
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: back-web
     command: gunicorn screener.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./static:/usr/src/app/staticfiles
     expose:
       - "8000"
     restart: always
+    networks:
+      - backend_network
+
   backend-nginx:
-    image: nginx:latest
+#    image: nginx:latest
     container_name: backend-nginx
+    build:
+      context: ./backend/nginx/.
+      dockerfile: Dockerfile
     ports:
       - "8000:8000/tcp"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+#      - ./nginx:/nginx/defalut.conf
       - ./static:/staticfiles
     depends_on:
-      - backend
+      - back-web
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge
+
