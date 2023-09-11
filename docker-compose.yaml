@@ -11,7 +11,7 @@ services:
       - "3000:3000"
     stdin_open: true
     networks:
-      - frontend_network
+      - app_network
 
   frontend-nginx:
 #    image: nginx:latest
@@ -27,7 +27,7 @@ services:
     depends_on:
       - front-web
     networks:
-      - frontend_network
+      - app_network
 
   back-web:
     build:
@@ -41,7 +41,7 @@ services:
       - "8000"
     restart: always
     networks:
-      - backend_network
+      - app_network
 
   backend-nginx:
 #    image: nginx:latest
@@ -57,11 +57,9 @@ services:
     depends_on:
       - back-web
     networks:
-      - backend_network
+      - app_network
 
 networks:
-  backend_network:
-    driver: bridge
-  frontend_network:
+  app_network:
     driver: bridge
 
