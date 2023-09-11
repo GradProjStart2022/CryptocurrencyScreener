@@ -1,0 +1,43 @@
+version: "3.2"
+services:
+  frontend:
+    restart: always
+    command: npm start
+    container_name: frontend
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+  frontend-nginx:
+    image: nginx:latest
+    container_name: frontend-nginx
+    ports:
+      - "80:80/tcp"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./static:/staticfiles
+    depends_on:
+      - frontend
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    container_name: backend
+    command: gunicorn screener.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./static:/usr/src/app/staticfiles
+    expose:
+      - "8000"
+    restart: always
+  backend-nginx:
+    image: nginx:latest
+    container_name: backend-nginx
+    ports:
+      - "8000:8000/tcp"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./static:/staticfiles
+    depends_on:
+      - backend

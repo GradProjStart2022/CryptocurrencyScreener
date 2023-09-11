@@ -6,7 +6,7 @@ COPY requirements.txt ./
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 # Project를 /usr/src/app으로 복사
-COPY . .
+COPY . ./
 # 포트 설정
 EXPOSE 8000
 # gunicorn 실행
