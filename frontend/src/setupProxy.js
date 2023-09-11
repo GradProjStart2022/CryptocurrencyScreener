@@ -4,8 +4,12 @@ module.exports = function (app) {
   app.use(
     "/users",
     createProxyMiddleware({
-      target: "http://127.0.0.1:8000",
+      // target: "http://127.0.0.1:8000",
+      target: "back-web:8000",
       changeOrigin: true,
+      headers: {
+        "Connection": "keep-alive"
+      },
     })
   );
 };
