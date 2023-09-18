@@ -127,11 +127,11 @@ def kakao_callback(request):
         accept_json.pop("user", None)
         accept_json["access_token"] = access_token
         accept_json = dumps(accept_json)
-        # return JsonResponse(accept_json, status=status.HTTP_200_OK)
+        return JsonResponse(accept_json, status=status.HTTP_200_OK)
         # 변경부
-        return HttpResponseRedirect(
-            f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}"
-        )
+        # return HttpResponseRedirect(
+        #     f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}"
+        # )
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         data = {"access_token": access_token, "code": code}
@@ -145,12 +145,12 @@ def kakao_callback(request):
         accept_json.pop("user", None)
         accept_json["access_token"] = access_token
         accept_json = dumps(accept_json)
-        # return JsonResponse(accept_json, status=status.HTTP_200_OK)
+        return JsonResponse(accept_json, status=status.HTTP_200_OK)
         # 변경부
         # HttpResponseRedirect(f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}")
-        return HttpResponseRedirect(
-            f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}"
-        )
+        # return HttpResponseRedirect(
+        #     f"http://127.0.0.1:3000/login/kakao_complete?code={accept_json}"
+        # )
 
 
 class KakaoLogin(SocialLoginView):

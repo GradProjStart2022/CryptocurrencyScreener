@@ -12,6 +12,7 @@ import AlarmSettingsPage from "./page/AlarmSettingsPage.jsx";
 import BookmarkPage from "./page/BookmarkPage.jsx";
 import { KakaoLoginRedirect } from "./page/KakaoLoginRedirect";
 import { GoogleLoginRedirect } from "./page/GoogleLoginRedirect";
+import KakaoFirstRedirect from "./page/KakaoFirstRedirect";
 import TDWidgetRedirectPage from "./page/TDWidgetRedirectPage.jsx";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="kakao_complete" element={<KakaoLoginRedirect />} />
         <Route path="google_complete" element={<GoogleLoginRedirect />} />
       </Route>
+      <Route path="/users/kakao/callback/" element={<KakaoFirstRedirect />} />
       <Route path="/chart">
         {/* 전체 종목에 대한 정보 표시 페이지 */}
         <Route index element={<ChartListPage />} />
