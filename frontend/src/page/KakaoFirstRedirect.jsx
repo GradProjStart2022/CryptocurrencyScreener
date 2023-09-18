@@ -1,20 +1,19 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { redirect, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const KakaoFirstRedirect = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
 
-  // window.location.replace(
-  //   `${process.env.REACT_APP_API_ROOT}/users/kakao/callback?code=${code}`
-  // );
-
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_ROOT}/users/kakao/callback?code=${code}`
+        `${process.env.REACT_APP_API_ROOT}/users/kakao/callback?code=${code}`,
+        {
+          withCredentials: true,
+        }
       )
       .then((resp) => {
         alert(resp.data);
@@ -22,7 +21,7 @@ const KakaoFirstRedirect = () => {
       })
       .catch((e) => {
         alert(e);
-        // alert("모종의 이유로 로그인에 실패했습니다.");
+        // alert("모종의 이유로 로그인 전처리에 실패했습니다.");
         navigate("/", { replace: true });
       });
     // fetch(
