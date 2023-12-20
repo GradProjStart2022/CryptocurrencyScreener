@@ -10,6 +10,7 @@ import _upbit
 from datetime import datetime, timedelta
 import datetime
 from datetime import datetime, timedelta
+import time
 
 
 
@@ -297,6 +298,12 @@ class Upbit_Gathering():
 
 
 if __name__ == "__main__":
-    obj = Upbit_Gathering('KRW', '240min')
+    start = time.time()
+
+    obj = Upbit_Gathering('KRW', '30min')
     start_date = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
     obj.gathering(start_date=start_date)
+    end = time.time()
+    elapsed_time = end - start
+
+    print('총 실행 시간: {:.5f}초'.format(elapsed_time))
